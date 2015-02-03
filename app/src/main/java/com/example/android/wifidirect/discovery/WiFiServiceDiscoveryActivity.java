@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.wifidirect.discovery.WiFiChatFragment.MessageTarget;
 import com.example.android.wifidirect.discovery.WiFiDirectServicesList.DeviceClickListener;
@@ -55,6 +56,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     public static final String TAG = "wifidirectdemo";
 
+    private TabFragment tabFragment;
+
     @Getter @Setter private Toolbar toolbar;
 
     // TXT RECORD properties
@@ -77,7 +80,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     private WiFiChatFragment chatFragment;
     private WiFiDirectServicesList servicesList;
 
-    private TextView statusTxtView;
+//    private TextView statusTxtView;
 
     public Handler getHandler() {
         return handler;
@@ -95,7 +98,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
         this.setupToolBar();
 
-        statusTxtView = (TextView) findViewById(R.id.status_text);
+//        statusTxtView = (TextView) findViewById(R.id.status_text);
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -108,9 +111,16 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         channel = manager.initialize(this, getMainLooper(), null);
         startRegistrationAndDiscovery();
 
-        servicesList = new WiFiDirectServicesList();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container_root, servicesList, "services").commit();
+        tabFragment = TabFragment.newInstance();
+
+        this.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container_root,tabFragment,"tabfragment")
+                .commit();
+
+        this.getSupportFragmentManager().executePendingTransactions();
+//        servicesList = new WiFiDirectServicesList();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.container_root, servicesList, "services").commit();
 
     }
 
@@ -129,6 +139,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     @Override
     protected void onRestart() {
+
         Fragment frag = getSupportFragmentManager().findFragmentByTag("services");
         if (frag != null) {
             getSupportFragmentManager().beginTransaction().remove(frag).commit();
@@ -168,12 +179,26 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
             @Override
             public void onSuccess() {
-                appendStatus("Added Local Service");
+//                TabFragment tabFrag = (TabFragment)getSupportFragmentManager().findFragmentByTag("tabfragment");
+//                if(tabFrag!=null) {
+//                    WiFiDirectServicesList servicesList = tabFrag.getWiFiDirectServicesList();
+//                    if(servicesList!=null) {
+//                        servicesList.appendStatus("Added Local Service");
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added Local Service",Toast.LENGTH_SHORT).show();
+
+//                StatusText.getInstance().setStatus("Added Local Service");
+//                    }
+//                }
+//                tabFrag.getWiFiDirectServicesList()
+//                tabFrag.getWiFiDirectServicesList().appendStatus("Added Local Service");
+//                appendStatus("Added Local Service");
             }
 
             @Override
             public void onFailure(int error) {
-                appendStatus("Failed to add a service");
+
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed to add a service",Toast.LENGTH_SHORT).show();
+//                appendStatus("Failed to add a service");
             }
         });
 
@@ -201,8 +226,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                             // update the UI and add the item the discovered
                             // device.
-                            WiFiDirectServicesList fragment = (WiFiDirectServicesList) getSupportFragmentManager()
-                                    .findFragmentByTag("services");
+                            WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+//                                    (WiFiDirectServicesList) getSupportFragmentManager()
+//                                    .findFragmentByTag("services");
                             if (fragment != null) {
                                 WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
                                         .getListAdapter());
@@ -242,24 +268,30 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     @Override
                     public void onSuccess() {
-                        appendStatus("Added service discovery request");
+
+                        Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added service discovery request",Toast.LENGTH_SHORT).show();
+//                        appendStatus("Added service discovery request");
                     }
 
                     @Override
                     public void onFailure(int arg0) {
-                        appendStatus("Failed adding service discovery request");
+                        Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed adding service discovery request",Toast.LENGTH_SHORT).show();
+//                        appendStatus("Failed adding service discovery request");
                     }
                 });
         manager.discoverServices(channel, new ActionListener() {
 
             @Override
             public void onSuccess() {
-                appendStatus("Service discovery initiated");
+
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery initiated",Toast.LENGTH_SHORT).show();
+//                appendStatus("Service discovery initiated");
             }
 
             @Override
             public void onFailure(int arg0) {
-                appendStatus("Service discovery failed");
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery failed",Toast.LENGTH_SHORT).show();
+//                appendStatus("Service discovery failed");
 
             }
         });
@@ -287,12 +319,15 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
             @Override
             public void onSuccess() {
-                appendStatus("Connecting to service");
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Connecting to service",Toast.LENGTH_SHORT).show();
+//                appendStatus("Connecting to service");
             }
 
             @Override
             public void onFailure(int errorCode) {
-                appendStatus("Failed connecting to service");
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed connecting to service",Toast.LENGTH_SHORT).show();
+
+//                appendStatus("Failed connecting to service");
             }
         });
     }
@@ -359,11 +394,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         chatFragment = new WiFiChatFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container_root, chatFragment).commit();
-        statusTxtView.setVisibility(View.GONE);
+        tabFragment.getWiFiDirectServicesList().getStatusTxtView().setVisibility(View.GONE);
+//        statusTxtView.setVisibility(View.GONE);
     }
 
-    public void appendStatus(String status) {
-        String current = statusTxtView.getText().toString();
-        statusTxtView.setText(current + "\n" + status);
-    }
+
 }

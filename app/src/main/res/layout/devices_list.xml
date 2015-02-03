@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="top"
-    android:gravity="top" >
+    android:gravity="top"
+    android:orientation="vertical"
+    android:tag="services">
 
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        android:layout_height="451dp"></ListView>
 
     <LinearLayout
         android:id="@android:id/empty"
@@ -22,18 +22,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/finding_service" >
-        </TextView>
+            android:text="@string/finding_service"
+            android:textSize="20sp"></TextView>
 
-         <ProgressBar
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginLeft="20dip"
-            style="@android:style/Widget.ProgressBar.Small" >
-        </ProgressBar>
-       
+            android:layout_marginLeft="20dip"></ProgressBar>
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/status_text"
+        android:text="dsfasfasf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"></TextView>
 
 </LinearLayout>

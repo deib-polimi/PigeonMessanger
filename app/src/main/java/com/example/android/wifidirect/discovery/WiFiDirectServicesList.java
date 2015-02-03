@@ -15,6 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * A simple ListFragment that shows the available services as published by the
  * peers
@@ -22,6 +24,7 @@ import java.util.List;
 public class WiFiDirectServicesList extends ListFragment {
 
     WiFiDevicesAdapter listAdapter = null;
+    @Getter private TextView statusTxtView;
 
     interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService);
@@ -40,6 +43,8 @@ public class WiFiDirectServicesList extends ListFragment {
                 android.R.layout.simple_list_item_2, android.R.id.text1,
                 new ArrayList<WiFiP2pService>());
         setListAdapter(listAdapter);
+
+        statusTxtView = (TextView) this.getActivity().findViewById(R.id.status_text);
     }
 
     @Override
@@ -103,5 +108,11 @@ public class WiFiDirectServicesList extends ListFragment {
 
         }
     }
+
+
+//    public void appendStatus(String status) {
+//        String current = statusTxtView.getText().toString();
+//        statusTxtView.setText(current + "\n" + StatusText.getInstance().getStatus());
+//    }
 
 }
