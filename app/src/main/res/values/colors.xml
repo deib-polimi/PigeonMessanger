@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#424242</color>
+    <color name="primary_dark">#000000</color>
+    <color name="accent">#e5943d</color>
+    <color name="navigation_bar">#000000</color>
+    <color name="status_bar">#000000</color>
+    <color name="primary_text_color">#424242</color>
+    <color name="text_color">#424242</color>
+
+    <!-- Notification color text -->
+    <color name="black">#000000</color>
+    <color name="gray">#737373</color>
+
+    <!--Fab button-->
+    <color name="fab_primary_color">#1997e1</color>
+    <color name="fab_primary_pressed_color">#FFFFFF</color>
+    <color name="far_ripple_color">#81c6ef</color>
+
+</resources>
