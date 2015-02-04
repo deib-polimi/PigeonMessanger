@@ -15,6 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * This fragment handles chat related UI which includes a list view for messages
  * and a message entry field with send button.
@@ -22,7 +24,7 @@ import java.util.List;
 public class WiFiChatFragment extends Fragment {
 
     private View view;
-    private ChatManager chatManager;
+    @Getter private ChatManager chatManager;
     private TextView chatLine;
     private ListView listView;
     ChatMessageAdapter adapter = null;
@@ -48,16 +50,6 @@ public class WiFiChatFragment extends Fragment {
                             chatLine.setText("");
                             chatLine.clearFocus();
                         }
-                    }
-                });
-
-        view.findViewById(R.id.button1).setOnLongClickListener(
-                new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View arg0) {
-                        ((WiFiServiceDiscoveryActivity)getActivity()).disconnect();
-                        ((WiFiServiceDiscoveryActivity)getActivity()).startRegistrationAndDiscovery();
-                        return true;
                     }
                 });
 

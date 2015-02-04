@@ -63,13 +63,18 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     public static final String TAG = "wifidirectdemo";
 
+    @Getter
+    private int tabNum = 1;
+
     private WifiP2pDnsSdServiceInfo service;
 
     private TabFragment tabFragment;
 
     private boolean discoveryStatus = true, disconnectStatus, refreshStatus;
 
-    @Getter @Setter private Toolbar toolbar;
+    @Getter
+    @Setter
+    private Toolbar toolbar;
 
     // TXT RECORD properties
     public static final String TXTRECORD_PROP_AVAILABLE = "available";
@@ -87,6 +92,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     private BroadcastReceiver receiver = null;
     private WifiP2pDnsSdServiceRequest serviceRequest;
 
+    private Thread socketHandler;
+
     private Handler handler = new Handler(this);
 //    private WiFiChatFragment chatFragment;
 //    private WiFiDirectServicesList servicesList;
@@ -101,7 +108,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         this.handler = handler;
     }
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +133,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         tabFragment = TabFragment.newInstance();
 
         this.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container_root,tabFragment,"tabfragment")
+                .replace(R.id.container_root, tabFragment, "tabfragment")
                 .commit();
 
         this.getSupportFragmentManager().executePendingTransactions();
@@ -247,44 +256,44 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.discovery:
-                if(discoveryStatus) {
+                if (discoveryStatus) {
                     discoveryStatus = false;
-                    manager.removeLocalService(channel,service,new ActionListener() {
+                    manager.removeLocalService(channel, service, new ActionListener() {
                         @Override
                         public void onSuccess() {
-                            Log.d("TAG","removeLocalService success");
+                            Log.d("TAG", "removeLocalService success");
                         }
 
                         @Override
                         public void onFailure(int reason) {
-                            Log.d("TAG","removeLocalService failure " + reason);
+                            Log.d("TAG", "removeLocalService failure " + reason);
 
                         }
                     });
                     ServiceList.getInstance().getServiceList().clear();
                     item.setIcon(R.drawable.ic_action_search_stopped);
-                    manager.stopPeerDiscovery(channel,new ActionListener() {
+                    manager.stopPeerDiscovery(channel, new ActionListener() {
                         @Override
                         public void onSuccess() {
                             Log.d(TAG, "Discovery stopped");
-                            Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stopped",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stopped", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailure(int reason) {
                             Log.d(TAG, "Discovery stop failed. Reason :" + reason);
-                            Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stop failed",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stop failed", Toast.LENGTH_SHORT).show();
                         }
                     });
                     manager.clearServiceRequests(channel, new ActionListener() {
                         @Override
                         public void onSuccess() {
-                            Log.d(TAG,"clearServiceRequests success");
+                            Log.d(TAG, "clearServiceRequests success");
                         }
 
                         @Override
                         public void onFailure(int reason) {
-                            Log.d(TAG,"clearServiceRequests failed: " + reason);
+                            Log.d(TAG, "clearServiceRequests failed: " + reason);
                         }
                     });
                 } else {
@@ -321,19 +330,28 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     }
 
     public void disconnect() {
+
+        ((GroupOwnerSocketHandler)socketHandler).closeSocketAndKillThisThread();
+
+        if (tabNum == 1) {
+            tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
+        } else if (tabNum == 2) {
+            tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
+        }
+
         if (manager != null && channel != null) {
             manager.removeGroup(channel, new ActionListener() {
 
                 @Override
                 public void onFailure(int reasonCode) {
                     Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
-                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Disconnect failed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Disconnect failed", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "Disconnected");
-                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Disconnected",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
                 }
 
             });
@@ -355,12 +373,12 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
             @Override
             public void onSuccess() {
-                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added Local Service",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added Local Service", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int error) {
-                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed to add a service",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed to add a service", Toast.LENGTH_SHORT).show();
 //                appendStatus("Failed to add a service");
             }
         });
@@ -381,7 +399,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     @Override
                     public void onDnsSdServiceAvailable(String instanceName,
-                            String registrationType, WifiP2pDevice srcDevice) {
+                                                        String registrationType, WifiP2pDevice srcDevice) {
 
                         // A service has been discovered. Is this our app?
 
@@ -434,13 +452,13 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     @Override
                     public void onSuccess() {
 
-                        Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added service discovery request",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added service discovery request", Toast.LENGTH_SHORT).show();
 //                        appendStatus("Added service discovery request");
                     }
 
                     @Override
                     public void onFailure(int arg0) {
-                        Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed adding service discovery request",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed adding service discovery request", Toast.LENGTH_SHORT).show();
 //                        appendStatus("Failed adding service discovery request");
                     }
                 });
@@ -449,13 +467,13 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             @Override
             public void onSuccess() {
 
-                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery initiated",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery initiated", Toast.LENGTH_SHORT).show();
 //                appendStatus("Service discovery initiated");
             }
 
             @Override
             public void onFailure(int arg0) {
-                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery failed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery failed", Toast.LENGTH_SHORT).show();
 //                appendStatus("Service discovery failed");
 
             }
@@ -463,7 +481,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void connectP2p(WiFiP2pService service) {
+    public void connectP2p(WiFiP2pService service, int tabNum) {
+        Log.d(TAG, "connectP2p " + tabNum);
+        this.tabNum = tabNum;
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -484,13 +504,13 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
             @Override
             public void onSuccess() {
-                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Connecting to service",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Connecting to service", Toast.LENGTH_SHORT).show();
 //                appendStatus("Connecting to service");
             }
 
             @Override
             public void onFailure(int errorCode) {
-                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed connecting to service",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed connecting to service. Reason: " + errorCode, Toast.LENGTH_SHORT).show();
 
 //                appendStatus("Failed connecting to service");
             }
@@ -505,13 +525,21 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
-                (tabFragment.getWiFiChatFragment1()).pushMessage("Buddy: " + readMessage);
+                if (tabNum == 1) {
+                    (tabFragment.getWiFiChatFragment1()).pushMessage("Buddy: " + readMessage);
+                } else if (tabNum == 2) {
+                    (tabFragment.getWiFiChatFragment2()).pushMessage("Buddy: " + readMessage);
+                }
                 break;
 
             case MY_HANDLE:
                 Object obj = msg.obj;
-                (tabFragment.getWiFiChatFragment1()).setChatManager((ChatManager) obj);
 
+                if (tabNum == 1) {
+                    (tabFragment.getWiFiChatFragment1()).setChatManager((ChatManager) obj);
+                } else if (tabNum == 2) {
+                    (tabFragment.getWiFiChatFragment2()).setChatManager((ChatManager) obj);
+                }
         }
         return true;
     }
@@ -531,7 +559,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
-        Thread handler = null;
+
         /*
          * The group owner accepts connections using a server socket and then spawns a
          * client socket for every client. This is handled by {@code
@@ -541,9 +569,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
             try {
-                handler = new GroupOwnerSocketHandler(
-                        ((MessageTarget) this).getHandler());
-                handler.start();
+                socketHandler = new GroupOwnerSocketHandler(((MessageTarget) this).getHandler());
+                socketHandler.start();
             } catch (IOException e) {
                 Log.d(TAG,
                         "Failed to create a server thread - " + e.getMessage());
@@ -551,13 +578,12 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             }
         } else {
             Log.d(TAG, "Connected as peer");
-            handler = new ClientSocketHandler(
-                    ((MessageTarget) this).getHandler(),
-                    p2pInfo.groupOwnerAddress);
+            Thread handler = null;
+            handler = new ClientSocketHandler(((MessageTarget) this).getHandler(),p2pInfo.groupOwnerAddress);
             handler.start();
         }
 //        chatFragment = new WiFiChatFragment();
-        ((TabFragment)getSupportFragmentManager().findFragmentByTag("tabfragment")).getMViewPager().setCurrentItem(1);
+        ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment")).getMViewPager().setCurrentItem(tabNum);
 //        getSupportFragmentManager().beginTransaction()
 //                .replace(R.id.container_root, chatFragment).commit();
 //        tabFragment.getWiFiDirectServicesList().getStatusTxtView().setVisibility(View.GONE);

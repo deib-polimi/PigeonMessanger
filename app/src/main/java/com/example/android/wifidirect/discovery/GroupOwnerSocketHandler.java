@@ -41,14 +41,29 @@ public class GroupOwnerSocketHandler extends Thread {
             THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
 
+
+    public void closeSocketAndKillThisThread() {
+        if(socket!=null && !socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            pool.shutdown();
+        }
+    }
+
     @Override
     public void run() {
         while (true) {
             try {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
-                pool.execute(new ChatManager(socket.accept(), handler));
-                Log.d(TAG, "Launching the I/O handler");
+                if(socket!=null && !socket.isClosed()) {
+                    pool.execute(new ChatManager(socket.accept(), handler));
+                    Log.d(TAG, "Launching the I/O handler");
+                }
 
             } catch (IOException e) {
                 try {

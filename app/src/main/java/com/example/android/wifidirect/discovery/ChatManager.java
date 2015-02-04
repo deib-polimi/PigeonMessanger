@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Handles reading and writing of messages with socket buffers. Uses a Handler
  * to post messages to UI thread for UI updates.
@@ -17,6 +20,7 @@ public class ChatManager implements Runnable {
 
     private Socket socket = null;
     private Handler handler;
+    @Getter @Setter private boolean disable;
 
     public ChatManager(Socket socket, Handler handler) {
         this.socket = socket;
@@ -38,18 +42,20 @@ public class ChatManager implements Runnable {
             handler.obtainMessage(WiFiServiceDiscoveryActivity.MY_HANDLE, this)
                     .sendToTarget();
 
-            while (true) {
+            while (!disable) { //se non disabilitato
                 try {
                     // Read from the InputStream
-                    bytes = iStream.read(buffer);
-                    if (bytes == -1) {
-                        break;
-                    }
+                    if(iStream!=null && buffer!=null) {
+                        bytes = iStream.read(buffer);
+                        if (bytes == -1) {
+                            break;
+                        }
 
-                    // Send the obtained bytes to the UI Activity
-                    Log.d(TAG, "Rec:" + String.valueOf(buffer));
-                    handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ,
-                            bytes, -1, buffer).sendToTarget();
+                        // Send the obtained bytes to the UI Activity
+                        Log.d(TAG, "Rec:" + String.valueOf(buffer));
+                        handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ,
+                                bytes, -1, buffer).sendToTarget();
+                    }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                 }
