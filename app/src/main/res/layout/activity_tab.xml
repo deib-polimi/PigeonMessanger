@@ -19,8 +19,9 @@
         android:textColor="#FFFFFF"
         app:pstsIndicatorColor="#FFFFFF"
         app:pstsPaddingMiddle="true"
-        android:maxHeight="5dp"
-        />
+        android:maxHeight="20dp"
+        android:elevation="5dp"
+    />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

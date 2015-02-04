@@ -34,11 +34,12 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/status_text"
-        android:text="dsfasfasf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"></TextView>
+    <!--<TextView-->
+        <!--android:id="@+id/statu
+        s_text"-->
+        <!--android:text="dsfasfasf"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"></TextView>-->
 
 </LinearLayout>

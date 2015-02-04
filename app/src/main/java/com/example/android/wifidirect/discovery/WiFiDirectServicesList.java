@@ -23,8 +23,7 @@ import lombok.Getter;
  */
 public class WiFiDirectServicesList extends ListFragment {
 
-    WiFiDevicesAdapter listAdapter = null;
-    @Getter private TextView statusTxtView;
+    private WiFiDevicesAdapter listAdapter = null;
 
     interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService);
@@ -41,10 +40,13 @@ public class WiFiDirectServicesList extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         listAdapter = new WiFiDevicesAdapter(this.getActivity(),
                 android.R.layout.simple_list_item_2, android.R.id.text1,
-                new ArrayList<WiFiP2pService>());
+                ServiceList.getInstance().getServiceList());
         setListAdapter(listAdapter);
 
-        statusTxtView = (TextView) this.getActivity().findViewById(R.id.status_text);
+
+//        ((WiFiServiceDiscoveryActivity) getActivity()).setupToolBar();
+
+//        statusTxtView = (TextView) this.getActivity().findViewById(R.id.status_text);
     }
 
     @Override
@@ -58,12 +60,12 @@ public class WiFiDirectServicesList extends ListFragment {
 
     public class WiFiDevicesAdapter extends ArrayAdapter<WiFiP2pService> {
 
-        private List<WiFiP2pService> items;
+//        private List<WiFiP2pService> items;
 
         public WiFiDevicesAdapter(Context context, int resource,
                 int textViewResourceId, List<WiFiP2pService> items) {
             super(context, resource, textViewResourceId, items);
-            this.items = items;
+//            this.items = items;
         }
 
         @Override
@@ -74,7 +76,7 @@ public class WiFiDirectServicesList extends ListFragment {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(android.R.layout.simple_list_item_2, null);
             }
-            WiFiP2pService service = items.get(position);
+            WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
             if (service != null) {
                 TextView nameText = (TextView) v
                         .findViewById(android.R.id.text1);

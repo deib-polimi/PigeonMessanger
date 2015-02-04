@@ -43,14 +43,24 @@ public class WiFiChatFragment extends Fragment {
                     @Override
                     public void onClick(View arg0) {
                         if (chatManager != null) {
-                            chatManager.write(chatLine.getText().toString()
-                                    .getBytes());
+                            chatManager.write(chatLine.getText().toString().getBytes());
                             pushMessage("Me: " + chatLine.getText().toString());
                             chatLine.setText("");
                             chatLine.clearFocus();
                         }
                     }
                 });
+
+        view.findViewById(R.id.button1).setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View arg0) {
+                        ((WiFiServiceDiscoveryActivity)getActivity()).disconnect();
+                        ((WiFiServiceDiscoveryActivity)getActivity()).startRegistrationAndDiscovery();
+                        return true;
+                    }
+                });
+
         return view;
     }
 

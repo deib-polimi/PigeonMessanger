@@ -33,7 +33,7 @@ public class TabFragment extends Fragment {
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    @Getter ViewPager mViewPager;
 
     @Getter private WiFiDirectServicesList wiFiDirectServicesList;
     @Getter private WiFiChatFragment wiFiChatFragment1;
