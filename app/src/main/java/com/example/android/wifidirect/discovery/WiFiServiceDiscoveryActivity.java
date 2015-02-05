@@ -331,7 +331,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     public void disconnect() {
 
-        ((GroupOwnerSocketHandler)socketHandler).closeSocketAndKillThisThread();
+        if(socketHandler instanceof GroupOwnerSocketHandler) {
+            ((GroupOwnerSocketHandler)socketHandler).closeSocketAndKillThisThread();
+        } else if (socketHandler instanceof ClientSocketHandler) {
+            ((ClientSocketHandler)socketHandler).closeSocketAndKillThisThread();
+        }
 
         if (tabNum == 1) {
             tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
@@ -487,6 +491,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
+        config.groupOwnerIntent = 0; //per farlo collegare come client
         if (serviceRequest != null)
             manager.removeServiceRequest(channel, serviceRequest,
                     new ActionListener() {
@@ -578,9 +583,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             }
         } else {
             Log.d(TAG, "Connected as peer");
-            Thread handler = null;
-            handler = new ClientSocketHandler(((MessageTarget) this).getHandler(),p2pInfo.groupOwnerAddress);
-            handler.start();
+            socketHandler = new ClientSocketHandler(((MessageTarget) this).getHandler(),p2pInfo.groupOwnerAddress);
+            socketHandler.start();
         }
 //        chatFragment = new WiFiChatFragment();
         ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment")).getMViewPager().setCurrentItem(tabNum);

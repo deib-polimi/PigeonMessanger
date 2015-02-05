@@ -143,10 +143,10 @@ public class TabFragment extends Fragment {
                     wiFiDirectServicesList = new WiFiDirectServicesList();
                     return wiFiDirectServicesList;
                 case 1:
-                    wiFiChatFragment1 = new WiFiChatFragment();
+                    wiFiChatFragment1 = WiFiChatFragment.newInstance(1);
                     return wiFiChatFragment1;
                 default:
-                    wiFiChatFragment2 = new WiFiChatFragment();
+                    wiFiChatFragment2 = WiFiChatFragment.newInstance(2);
                     return wiFiChatFragment2;
             }
         }

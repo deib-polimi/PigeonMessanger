@@ -15,6 +15,7 @@ public class ClientSocketHandler extends Thread {
     private Handler handler;
     private ChatManager chat;
     private InetAddress mAddress;
+    private Socket socket;
 
     public ClientSocketHandler(Handler handler, InetAddress groupOwnerAddress) {
         this.handler = handler;
@@ -23,7 +24,7 @@ public class ClientSocketHandler extends Thread {
 
     @Override
     public void run() {
-        Socket socket = new Socket();
+        socket = new Socket();
         try {
             socket.bind(null);
             socket.connect(new InetSocketAddress(mAddress.getHostAddress(),
@@ -46,4 +47,17 @@ public class ClientSocketHandler extends Thread {
         return chat;
     }
 
+    public void closeSocketAndKillThisThread() {
+        if(socket!=null && !socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(!this.isInterrupted()) {
+            this.interrupt();
+        }
+    }
 }

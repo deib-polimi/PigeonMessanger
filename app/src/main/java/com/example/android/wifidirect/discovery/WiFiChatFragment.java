@@ -1,10 +1,12 @@
 
 package com.example.android.wifidirect.discovery;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +23,30 @@ import lombok.Getter;
  * This fragment handles chat related UI which includes a list view for messages
  * and a message entry field with send button.
  */
+@SuppressLint("ValidFragment")
 public class WiFiChatFragment extends Fragment {
 
+    private static int tabNumber;
     private View view;
-    @Getter private ChatManager chatManager;
+    @Getter
+    private ChatManager chatManager;
     private TextView chatLine;
     private ListView listView;
     ChatMessageAdapter adapter = null;
-    private List<String> items = new ArrayList<String>();
+    private List<String> items = new ArrayList<>();
+
+    public static WiFiChatFragment newInstance(int tabNumber1) {
+        WiFiChatFragment fragment = new WiFiChatFragment();
+        tabNumber = tabNumber1;
+        return fragment;
+    }
+
+    private WiFiChatFragment () {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
         listView = (ListView) view.findViewById(android.R.id.list);
@@ -45,13 +59,26 @@ public class WiFiChatFragment extends Fragment {
                     @Override
                     public void onClick(View arg0) {
                         if (chatManager != null) {
-                            chatManager.write(chatLine.getText().toString().getBytes());
+                            if (!chatManager.isDisable()) {
+                                chatManager.write(chatLine.getText().toString().getBytes());
+                            } else {
+                                Log.d("pippo", "chatmanager disabiltiato, ma ho tentato di inviare un messaggio");
+                                WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).add(chatLine.getText().toString());
+                            }
                             pushMessage("Me: " + chatLine.getText().toString());
                             chatLine.setText("");
                             chatLine.clearFocus();
+
                         }
                     }
                 });
+
+
+        //se ho la lista waitingToSendItems nn vuota, vuol dire che ho cose in attesa da mandare subito
+        if(!WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).isEmpty()) {
+            //manda tutto
+            Log.d("mando tutto", "mando tutto");
+        }
 
         return view;
     }
@@ -77,7 +104,7 @@ public class WiFiChatFragment extends Fragment {
         List<String> messages = null;
 
         public ChatMessageAdapter(Context context, int textViewResourceId,
-                List<String> items) {
+                                  List<String> items) {
             super(context, textViewResourceId, items);
         }
 
