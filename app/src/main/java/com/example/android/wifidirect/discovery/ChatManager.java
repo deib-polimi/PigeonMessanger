@@ -20,11 +20,12 @@ public class ChatManager implements Runnable {
 
     private Socket socket = null;
     private Handler handler;
-    @Getter @Setter private boolean disable;
+    @Getter @Setter private boolean disable = false;
 
-    public ChatManager(Socket socket, Handler handler) {
+    public ChatManager(Socket socket, Handler handler, boolean disable) {
         this.socket = socket;
         this.handler = handler;
+        this.disable = disable;
     }
 
     private InputStream iStream;
@@ -52,6 +53,7 @@ public class ChatManager implements Runnable {
 
                         // Send the obtained bytes to the UI Activity
                         Log.d(TAG, "Rec:" + String.valueOf(buffer));
+
                         handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                     }
                 } catch (IOException e) {

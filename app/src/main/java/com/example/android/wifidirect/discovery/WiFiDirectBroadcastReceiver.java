@@ -78,6 +78,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                         (ConnectionInfoListener) activity);
             } else {
                 // It's a disconnect
+                //quindi devo riavviare la discovery
+                Log.d("WiFiDirectBroadcastReceiver", "disconnect rilevata, startRegistrationAndDiscovery in avvio");
+                ((WiFiServiceDiscoveryActivity)activity).stopDiscoveryForced();
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION
                 .equals(action)) {

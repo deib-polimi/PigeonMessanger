@@ -95,10 +95,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     private Thread socketHandler;
 
     private Handler handler = new Handler(this);
-//    private WiFiChatFragment chatFragment;
-//    private WiFiDirectServicesList servicesList;
-
-//    private TextView statusTxtView;
 
     public Handler getHandler() {
         return handler;
@@ -120,10 +116,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter
-                .addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter
-                .addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
@@ -137,85 +131,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 .commit();
 
         this.getSupportFragmentManager().executePendingTransactions();
-//        servicesList = new WiFiDirectServicesList();
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.container_root, servicesList, "services").commit();
-
-
-//        this.setListener();
-
     }
-
-
-//    private void setListener() {
-//        final Button stop_discover = (Button)findViewById(R.id.stop_discover);
-//        Button disconnect = (Button)findViewById(R.id.disconnect);
-//        Button refresh = (Button)findViewById(R.id.refresh);
-//
-//        stop_discover.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if(discoveryStatus) {
-//                    discoveryStatus = false;
-//                    manager.removeLocalService(channel,service,new ActionListener() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Log.d("TAG","removeLocalService success");
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int reason) {
-//                            Log.d("TAG","removeLocalService failure " + reason);
-//
-//                        }
-//                    });
-//                    ServiceList.getInstance().getServiceList().clear();
-//                    stop_discover.setText("Start discovery");
-//                    manager.stopPeerDiscovery(channel,new ActionListener() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Log.d(TAG, "Discovery stopped");
-//                            Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stopped",Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int reason) {
-//                            Log.d(TAG, "Discovery stop failed. Reason :" + reason);
-//                            Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stop failed",Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                    manager.clearServiceRequests(channel, new ActionListener() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Log.d(TAG,"clearServiceRequests success");
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int reason) {
-//                            Log.d(TAG,"clearServiceRequests failed: " + reason);
-//                        }
-//                    });
-//                } else {
-//                    stop_discover.setText("Stop discovery");
-//                    ServiceList.getInstance().getServiceList().clear();
-//                    discoveryStatus = true;
-//                    startRegistrationAndDiscovery();
-//                }
-//
-//                WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
-////                                    (WiFiDirectServicesList) getSupportFragmentManager()
-////                                    .findFragmentByTag("services");
-//                if (fragment != null) {
-//                    WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
-//                            .getListAdapter());
-//                    adapter.notifyDataSetChanged();
-//                }
-//
-//            }
-//        });
-//
-//    }
 
 
     public void setupToolBar() {
@@ -243,6 +159,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     @Override
     protected void onStop() {
+//        tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
+
         this.disconnect();
 
         super.onStop();
@@ -313,12 +231,72 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
                 return true;
             case R.id.disconenct:
-                this.disconnect();
+                this.disconnectAndStartDiscovery();
                 return true;
             case R.id.refresh:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void stopDiscoveryForced () {
+        if (discoveryStatus) {
+            discoveryStatus = false;
+            manager.removeLocalService(channel, service, new ActionListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d("TAG", "removeLocalService success");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Log.d("TAG", "removeLocalService failure " + reason);
+
+                }
+            });
+            ServiceList.getInstance().getServiceList().clear();
+//            item.setIcon(R.drawable.ic_action_search_stopped);
+            manager.stopPeerDiscovery(channel, new ActionListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "Discovery stopped");
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stopped", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Log.d(TAG, "Discovery stop failed. Reason :" + reason);
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stop failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+            manager.clearServiceRequests(channel, new ActionListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "clearServiceRequests success");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Log.d(TAG, "clearServiceRequests failed: " + reason);
+                }
+            });
+        } else {
+//            item.setIcon(R.drawable.ic_action_search_searching);
+            ServiceList.getInstance().getServiceList().clear();
+
+        }
+
+        discoveryStatus = true;
+        startRegistrationAndDiscovery();
+
+        WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+//                                    (WiFiDirectServicesList) getSupportFragmentManager()
+//                                    .findFragmentByTag("services");
+        if (fragment != null) {
+            WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
+                    .getListAdapter());
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -337,9 +315,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             ((ClientSocketHandler)socketHandler).closeSocketAndKillThisThread();
         }
 
-        if (tabNum == 1) {
+        if (tabNum == 1 && tabFragment.getWiFiChatFragment1()!=null && tabFragment.getWiFiChatFragment1().getChatManager()!=null) {
             tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
-        } else if (tabNum == 2) {
+        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2()!=null && tabFragment.getWiFiChatFragment2().getChatManager()!=null) {
             tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
         }
 
@@ -364,6 +342,102 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
     }
 
+    public void disconnectAndStartDiscovery() {
+        if(socketHandler instanceof GroupOwnerSocketHandler) {
+            ((GroupOwnerSocketHandler)socketHandler).closeSocketAndKillThisThread();
+        } else if (socketHandler instanceof ClientSocketHandler) {
+            ((ClientSocketHandler)socketHandler).closeSocketAndKillThisThread();
+        }
+
+        if (tabNum == 1 && tabFragment.getWiFiChatFragment1()!=null && tabFragment.getWiFiChatFragment1().getChatManager()!=null) {
+            tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
+        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2()!=null && tabFragment.getWiFiChatFragment2().getChatManager()!=null) {
+            tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
+        }
+
+        if (manager != null && channel != null) {
+            manager.removeGroup(channel, new ActionListener() {
+
+                @Override
+                public void onFailure(int reasonCode) {
+                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Disconnect failed", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "Disconnected");
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+
+                    Log.d(TAG, "Discovery status: " + discoveryStatus);
+
+                    if (discoveryStatus) {
+                        discoveryStatus = false;
+                        manager.removeLocalService(channel, service, new ActionListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("TAG", "removeLocalService success");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d("TAG", "removeLocalService failure " + reason);
+
+                            }
+                        });
+                        ServiceList.getInstance().getServiceList().clear();
+//                        item.setIcon(R.drawable.ic_action_search_stopped);
+                        manager.stopPeerDiscovery(channel, new ActionListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d(TAG, "Discovery stopped");
+                                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stopped", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d(TAG, "Discovery stop failed. Reason :" + reason);
+                                Toast.makeText(WiFiServiceDiscoveryActivity.this, "Discovery stop failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        manager.clearServiceRequests(channel, new ActionListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d(TAG, "clearServiceRequests success");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d(TAG, "clearServiceRequests failed: " + reason);
+                            }
+                        });
+                    } else {
+//                        item.setIcon(R.drawable.ic_action_search_searching);
+                        ServiceList.getInstance().getServiceList().clear();
+                        discoveryStatus = true;
+
+                    }
+
+                    startRegistrationAndDiscovery();
+
+                    WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+//                                    (WiFiDirectServicesList) getSupportFragmentManager()
+//                                    .findFragmentByTag("services");
+                    if (fragment != null) {
+                        WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
+                                .getListAdapter());
+                        adapter.notifyDataSetChanged();
+                    }
+
+//                    startRegistrationAndDiscovery();
+                }
+
+            });
+        } else {
+            Log.d(TAG, "Disconnect impossible");
+        }
+    }
+
     /**
      * Registers a local service and then initiates a service discovery
      */
@@ -378,11 +452,13 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             @Override
             public void onSuccess() {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added Local Service", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Added Local Service");
             }
 
             @Override
             public void onFailure(int error) {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed to add a service", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Failed to add a service");
 //                appendStatus("Failed to add a service");
             }
         });
@@ -485,7 +561,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void connectP2p(WiFiP2pService service, int tabNum) {
+    public void connectP2p(WiFiP2pService service, final int tabNum) {
         Log.d(TAG, "connectP2p " + tabNum);
         this.tabNum = tabNum;
         WifiP2pConfig config = new WifiP2pConfig();
@@ -510,6 +586,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             @Override
             public void onSuccess() {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Connecting to service", Toast.LENGTH_SHORT).show();
+
 //                appendStatus("Connecting to service");
             }
 
@@ -524,6 +601,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     @Override
     public boolean handleMessage(Message msg) {
+
+        Log.d("handleMessage","handleMessage");
+
         switch (msg.what) {
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
@@ -539,11 +619,19 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
             case MY_HANDLE:
                 Object obj = msg.obj;
-
+                Log.d("handleMessage","MY_HANDLE");
                 if (tabNum == 1) {
                     (tabFragment.getWiFiChatFragment1()).setChatManager((ChatManager) obj);
                 } else if (tabNum == 2) {
                     (tabFragment.getWiFiChatFragment2()).setChatManager((ChatManager) obj);
+                }
+
+                if(tabNum==1) {
+                    Log.d(TAG, "svuoto la coda 1");
+                    tabFragment.getWiFiChatFragment1().sendForcedWaitingToSendQueue();
+                } else if (tabNum==2) {
+                    Log.d(TAG, "svuoto la coda 2");
+                    tabFragment.getWiFiChatFragment2().sendForcedWaitingToSendQueue();
                 }
         }
         return true;
@@ -586,12 +674,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             socketHandler = new ClientSocketHandler(((MessageTarget) this).getHandler(),p2pInfo.groupOwnerAddress);
             socketHandler.start();
         }
-//        chatFragment = new WiFiChatFragment();
         ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment")).getMViewPager().setCurrentItem(tabNum);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.container_root, chatFragment).commit();
-//        tabFragment.getWiFiDirectServicesList().getStatusTxtView().setVisibility(View.GONE);
-//        statusTxtView.setVisibility(View.GONE);
     }
 
 

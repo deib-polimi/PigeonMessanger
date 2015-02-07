@@ -41,7 +41,7 @@ public class WiFiChatFragment extends Fragment {
         return fragment;
     }
 
-    private WiFiChatFragment () {
+    private WiFiChatFragment() {
     }
 
     @Override
@@ -73,15 +73,35 @@ public class WiFiChatFragment extends Fragment {
                     }
                 });
 
-
-        //se ho la lista waitingToSendItems nn vuota, vuol dire che ho cose in attesa da mandare subito
-        if(!WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).isEmpty()) {
-            //manda tutto
-            Log.d("mando tutto", "mando tutto");
-        }
-
         return view;
     }
+
+
+    public void sendForcedWaitingToSendQueue() {
+        String combineMessages = new String();
+        List<String> listCopy = WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber);
+        for (String message : listCopy) {
+            if(!message.equals("") && !message.equals("\n")  ) {
+                combineMessages = combineMessages + "\n" + message;
+            }
+        }
+        combineMessages = combineMessages + "\n";
+
+        if (chatManager != null) {
+            if (!chatManager.isDisable()) {
+                chatManager.write((combineMessages).getBytes());
+                WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).clear();
+//                    WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).remove(message);
+            } else {
+                Log.d("sendForcedWaitingToSendQueue", "chatmanager disabiltiato, ma ho tentato di inviare un messaggio");
+            }
+//                pushMessage("Me: " + chatLine.getText().toString());
+//                chatLine.setText("");
+//                chatLine.clearFocus();
+
+        }
+    }
+
 
     public interface MessageTarget {
         public Handler getHandler();
