@@ -67,6 +67,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     @Getter
     private int tabNum = 1;
 
+    @Getter @Setter private boolean blockForcesDiscoveryInBroadcastReceiver = false;
+
     private WifiP2pDnsSdServiceInfo service;
 
     private TabFragment tabFragment;
@@ -162,7 +164,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     protected void onStop() {
 //        tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
 
-        this.disconnect();
+        this.disconnectBecauseActivityOnStop();
         super.onStop();
     }
 
@@ -176,18 +178,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             case R.id.discovery:
                 if (discoveryStatus) {
                     discoveryStatus = false;
-                    manager.removeLocalService(channel, service, new ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d("TAG", "removeLocalService success");
-                        }
 
-                        @Override
-                        public void onFailure(int reason) {
-                            Log.d("TAG", "removeLocalService failure " + reason);
-
-                        }
-                    });
                     ServiceList.getInstance().getServiceList().clear();
                     item.setIcon(R.drawable.ic_action_search_stopped);
                     manager.stopPeerDiscovery(channel, new ActionListener() {
@@ -214,6 +205,17 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                             Log.d(TAG, "clearServiceRequests failed: " + reason);
                         }
                     });
+                    manager.clearLocalServices(channel, new ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("TAG", "removeLocalService success");
+                        }
+
+                        @Override
+                        public void onFailure(int reason) {
+                            Log.d("TAG", "removeLocalService failure " + reason);
+                        }
+                    });
                 } else {
                     item.setIcon(R.drawable.ic_action_search_searching);
                     ServiceList.getInstance().getServiceList().clear();
@@ -231,7 +233,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
                 return true;
             case R.id.disconenct:
-                this.disconnectAndStartDiscovery();
+                this.manualItemMenuDisconnectAndStartDiscovery();
                 return true;
             case R.id.refresh:
                 return true;
@@ -241,21 +243,12 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     }
 
     public void stopDiscoveryForced () {
+        Log.d("stopDiscoveryForced", "stopDiscoveryForced");
+        ServiceList.getInstance().getServiceList().clear();
+
         if (discoveryStatus) {
             discoveryStatus = false;
-            manager.removeLocalService(channel, service, new ActionListener() {
-                @Override
-                public void onSuccess() {
-                    Log.d("TAG", "removeLocalService success");
-                }
 
-                @Override
-                public void onFailure(int reason) {
-                    Log.d("TAG", "removeLocalService failure " + reason);
-
-                }
-            });
-            ServiceList.getInstance().getServiceList().clear();
 //            item.setIcon(R.drawable.ic_action_search_stopped);
             manager.stopPeerDiscovery(channel, new ActionListener() {
                 @Override
@@ -281,9 +274,20 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     Log.d(TAG, "clearServiceRequests failed: " + reason);
                 }
             });
+            manager.clearLocalServices(channel, new ActionListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d("TAG", "clearLocalServices success");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Log.d("TAG", "clearLocalServices failure " + reason);
+                }
+            });
         } else {
 //            item.setIcon(R.drawable.ic_action_search_searching);
-            ServiceList.getInstance().getServiceList().clear();
+//            ServiceList.getInstance().getServiceList().clear();
 
         }
 
@@ -315,7 +319,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
     }
 
-    public void disconnect() {
+    public void disconnectBecauseActivityOnStop() {
 
         if(socketHandler instanceof GroupOwnerSocketHandler) {
             ((GroupOwnerSocketHandler)socketHandler).closeSocketAndKillThisThread();
@@ -351,7 +355,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
     }
 
-    public void disconnectAndStartDiscovery() {
+    public void manualItemMenuDisconnectAndStartDiscovery() {
+        //serve per far si che il broadcast receiver ricevera' la notifica di disconnect, ma essendo che l'ho richiesta io
+        //dopo i metodi disconnect e discovery sono eseguiti 2 volte. Quindi per evitarlo, faccio si che se richiesto questo metodo,
+        //quello chiamato automaticamente dal broadcast receiver non possa essere chiamato
+        this.blockForcesDiscoveryInBroadcastReceiver = true;
+
+
+        Log.d("manualItemMenuDisconnectAndStartDiscovery", "manualItemMenuDisconnectAndStartDiscovery");
         if(socketHandler instanceof GroupOwnerSocketHandler) {
             ((GroupOwnerSocketHandler)socketHandler).closeSocketAndKillThisThread();
         } else if (socketHandler instanceof ClientSocketHandler) {
@@ -380,21 +391,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     Log.d(TAG, "Discovery status: " + discoveryStatus);
 
+                    ServiceList.getInstance().getServiceList().clear();
+
                     if (discoveryStatus) {
                         discoveryStatus = false;
-                        manager.removeLocalService(channel, service, new ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d("TAG", "removeLocalService success");
-                            }
 
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.d("TAG", "removeLocalService failure " + reason);
-
-                            }
-                        });
-                        ServiceList.getInstance().getServiceList().clear();
 //                        item.setIcon(R.drawable.ic_action_search_stopped);
                         manager.stopPeerDiscovery(channel, new ActionListener() {
                             @Override
@@ -420,11 +421,20 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                                 Log.d(TAG, "clearServiceRequests failed: " + reason);
                             }
                         });
+                        manager.clearLocalServices(channel, new ActionListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("TAG", "removeLocalService success");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d("TAG", "removeLocalService failure " + reason);
+                            }
+                        });
                     } else {
 //                        item.setIcon(R.drawable.ic_action_search_searching);
-                        ServiceList.getInstance().getServiceList().clear();
                         discoveryStatus = true;
-
                     }
 
                     startRegistrationAndDiscovery();
@@ -438,6 +448,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                         adapter.notifyDataSetChanged();
                     }
 
+//                    blockForcesDiscoveryInBroadcastReceiver = false;
 //                    startRegistrationAndDiscovery();
                 }
 
@@ -478,6 +489,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     private void discoverService() {
 
+        ServiceList.getInstance().getServiceList().clear();
         /*
          * Register listeners for DNS-SD services. These are callbacks invoked
          * by the system when a service is actually discovered.
@@ -557,6 +569,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             public void onSuccess() {
 
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery initiated", Toast.LENGTH_SHORT).show();
+                blockForcesDiscoveryInBroadcastReceiver = false;
 //                appendStatus("Service discovery initiated");
             }
 

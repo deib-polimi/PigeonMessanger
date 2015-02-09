@@ -1,5 +1,7 @@
 package com.example.android.wifidirect.discovery;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import lombok.Getter;
 public class ServiceList {
 
     @Getter
-    private List<WiFiP2pService> serviceList;
+    private static List<WiFiP2pService> serviceList;
 
     private static ServiceList instance = new ServiceList();
 
@@ -21,6 +23,7 @@ public class ServiceList {
      * @return istanza della classe.
      */
     public static ServiceList getInstance() {
+        Log.d("ServiceList", "size: " + serviceList.size());
         return instance;
     }
 

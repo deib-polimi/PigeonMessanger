@@ -81,10 +81,14 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
             } else {
                 // It's a disconnect
                 //quindi devo riavviare la discovery
+
                 Log.d("WiFiDirectBroadcastReceiver", "disconnect rilevata, startRegistrationAndDiscovery in avvio");
                 ((WiFiServiceDiscoveryActivity)activity).changeColorToGrayAllChats();
-                ((WiFiServiceDiscoveryActivity)activity).stopDiscoveryForced();
+                if(!((WiFiServiceDiscoveryActivity)activity).isBlockForcesDiscoveryInBroadcastReceiver()) {
+                    ((WiFiServiceDiscoveryActivity) activity).stopDiscoveryForced();
+                }
                 ((WiFiServiceDiscoveryActivity)activity).setDisableAllChatManagers();
+//                ((WiFiServiceDiscoveryActivity)activity).setBlockForcesDiscoveryInBroadcastReceiver(true);
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION
                 .equals(action)) {
