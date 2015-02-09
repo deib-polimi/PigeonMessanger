@@ -307,6 +307,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         return true;
     }
 
+    public void setDisableAllChatManagers() {
+        if (tabNum == 1 && tabFragment.getWiFiChatFragment1()!=null && tabFragment.getWiFiChatFragment1().getChatManager()!=null) {
+            tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
+        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2()!=null && tabFragment.getWiFiChatFragment2().getChatManager()!=null) {
+            tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
+        }
+    }
+
     public void disconnect() {
 
         if(socketHandler instanceof GroupOwnerSocketHandler) {
@@ -615,6 +623,18 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 } else if (tabNum == 2) {
                     (tabFragment.getWiFiChatFragment2()).pushMessage("Buddy: " + readMessage);
                 }
+
+
+                if(!WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNum).isEmpty()) {
+
+                    if (tabNum == 1) {
+                        Log.d(TAG, "MESSAGE_READ-svuoto la coda 1");
+                        tabFragment.getWiFiChatFragment1().sendForcedWaitingToSendQueue();
+                    } else if (tabNum == 2) {
+                        Log.d(TAG, "MESSAGE_READ-svuoto la coda 2");
+                        tabFragment.getWiFiChatFragment2().sendForcedWaitingToSendQueue();
+                    }
+                }
                 break;
 
             case MY_HANDLE:
@@ -627,10 +647,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
 
                 if(tabNum==1) {
-                    Log.d(TAG, "svuoto la coda 1");
+                    Log.d(TAG, "MY_HANDLE-svuoto la coda 1");
                     tabFragment.getWiFiChatFragment1().sendForcedWaitingToSendQueue();
                 } else if (tabNum==2) {
-                    Log.d(TAG, "svuoto la coda 2");
+                    Log.d(TAG, "MY_HANDLE-svuoto la coda 2");
                     tabFragment.getWiFiChatFragment2().sendForcedWaitingToSendQueue();
                 }
         }
