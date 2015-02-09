@@ -29,6 +29,7 @@ import lombok.Setter;
 public class WiFiChatFragment extends Fragment {
 
     private static int tabNumber;
+    @Getter @Setter private boolean grayScale = true;
     @Getter @Setter static private WifiP2pDevice device;
     private View view;
     @Getter private ChatManager chatManager;
@@ -122,6 +123,12 @@ public class WiFiChatFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void updateAfterColorChange() {
+        if(adapter!=null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     /**
      * ArrayAdapter to manage chat messages.
      */
@@ -146,15 +153,19 @@ public class WiFiChatFragment extends Fragment {
             if (message != null && !message.isEmpty()) {
                 TextView nameText = (TextView) v
                         .findViewById(android.R.id.text1);
-
                 if (nameText != null) {
                     nameText.setText(message);
-                    if (message.startsWith("Me: ")) {
-                        nameText.setTextAppearance(getActivity(),
-                                R.style.normalText);
+                    nameText.setTextAppearance(getActivity(),R.style.normalText);
+                    if(grayScale) {
+                        nameText.setTextColor(getResources().getColor(R.color.gray));
                     } else {
-                        nameText.setTextAppearance(getActivity(),
-                                R.style.boldText);
+                        if (message.startsWith("Me: ")) {
+                            nameText.setTextAppearance(getActivity(),
+                                    R.style.normalText);
+                        } else {
+                            nameText.setTextAppearance(getActivity(),
+                                    R.style.boldText);
+                        }
                     }
                 }
             }

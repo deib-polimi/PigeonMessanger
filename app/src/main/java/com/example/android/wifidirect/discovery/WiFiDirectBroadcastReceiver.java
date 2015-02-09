@@ -76,10 +76,13 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                         "Connected to p2p network. Requesting network details");
                 manager.requestConnectionInfo(channel,
                         (ConnectionInfoListener) activity);
+                ((WiFiServiceDiscoveryActivity)activity).changeColorAllChats();
+
             } else {
                 // It's a disconnect
                 //quindi devo riavviare la discovery
                 Log.d("WiFiDirectBroadcastReceiver", "disconnect rilevata, startRegistrationAndDiscovery in avvio");
+                ((WiFiServiceDiscoveryActivity)activity).changeColorToGrayAllChats();
                 ((WiFiServiceDiscoveryActivity)activity).stopDiscoveryForced();
                 ((WiFiServiceDiscoveryActivity)activity).setDisableAllChatManagers();
             }

@@ -328,6 +328,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2()!=null && tabFragment.getWiFiChatFragment2().getChatManager()!=null) {
             tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
         }
+        this.changeColorToGrayAllChats();
 
         if (manager != null && channel != null) {
             manager.removeGroup(channel, new ActionListener() {
@@ -576,6 +577,29 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
 
 
+    }
+
+    public void changeColorToGrayAllChats() {
+        if(tabFragment!=null) {
+            if(tabFragment.getWiFiChatFragment1()!=null) {
+                tabFragment.getWiFiChatFragment1().setGrayScale(true);
+                tabFragment.getWiFiChatFragment1().updateAfterColorChange();
+            }
+            if(tabFragment.getWiFiChatFragment2()!=null) {
+                tabFragment.getWiFiChatFragment2().setGrayScale(true);
+                tabFragment.getWiFiChatFragment2().updateAfterColorChange();
+            }
+        }
+    }
+
+    public void changeColorAllChats() {
+        if(tabNum==1 && tabFragment!=null && tabFragment.getWiFiChatFragment1()!=null ) {
+            tabFragment.getWiFiChatFragment1().setGrayScale(false);
+            tabFragment.getWiFiChatFragment1().updateAfterColorChange();
+        } else if(tabNum==2  && tabFragment!=null && tabFragment.getWiFiChatFragment2()!=null ) {
+            tabFragment.getWiFiChatFragment2().setGrayScale(false);
+            tabFragment.getWiFiChatFragment2().updateAfterColorChange();
+        }
     }
 
     @Override
