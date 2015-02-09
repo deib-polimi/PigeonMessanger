@@ -18,6 +18,7 @@ import android.net.wifi.p2p.WifiP2pManager.DnsSdServiceResponseListener;
 import android.net.wifi.p2p.WifiP2pManager.DnsSdTxtRecordListener;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
+import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -162,7 +163,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 //        tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
 
         this.disconnect();
-
         super.onStop();
     }
 
@@ -568,10 +568,27 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         });
     }
 
+    public void setWifiP2pDevice(WiFiP2pService service1, int tabNum) {
+        if (tabNum == 1 && tabFragment.getWiFiChatFragment1()!=null) {
+            tabFragment.getWiFiChatFragment1().setDevice(service1.device);
+        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2()!=null) {
+            tabFragment.getWiFiChatFragment2().setDevice(service1.device);
+        }
+
+
+    }
+
     @Override
     public void connectP2p(WiFiP2pService service, final int tabNum) {
         Log.d(TAG, "connectP2p " + tabNum);
         this.tabNum = tabNum;
+
+        if(tabFragment.getWiFiChatFragment1().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
+            this.tabNum = 1;
+        } else if(tabFragment.getWiFiChatFragment2().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
+            this.tabNum = 2;
+        }
+
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -678,7 +695,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
          * client socket for every client. This is handled by {@code
          * GroupOwnerSocketHandler}
          */
-
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
             try {
@@ -694,7 +710,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             socketHandler = new ClientSocketHandler(((MessageTarget) this).getHandler(),p2pInfo.groupOwnerAddress);
             socketHandler.start();
         }
-        ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment")).getMViewPager().setCurrentItem(tabNum);
+
+
+        TabFragment tabfrag = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
+        tabfrag.getMViewPager().setCurrentItem(tabNum);
     }
 
 

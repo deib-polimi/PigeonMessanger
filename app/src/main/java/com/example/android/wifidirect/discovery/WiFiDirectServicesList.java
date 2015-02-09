@@ -33,6 +33,7 @@ public class WiFiDirectServicesList extends ListFragment {
 
     interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService, int tabNum);
+        public void setWifiP2pDevice(WiFiP2pService service1, int tabNum);
     }
 
     @Override
@@ -86,6 +87,7 @@ public class WiFiDirectServicesList extends ListFragment {
                     Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
 
 
+                    ((DeviceClickListener) getActivity()).setWifiP2pDevice((WiFiP2pService)getListView().getItemAtPosition(position), tabnum);
                     ((DeviceClickListener) getActivity()).connectP2p((WiFiP2pService)getListView().getItemAtPosition(position),tabnum);
                     ((TextView) this.getView().findViewById(android.R.id.text2)).setText("Connecting");
 

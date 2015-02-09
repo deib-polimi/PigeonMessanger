@@ -3,6 +3,7 @@ package com.example.android.wifidirect.discovery;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This fragment handles chat related UI which includes a list view for messages
@@ -27,15 +29,19 @@ import lombok.Getter;
 public class WiFiChatFragment extends Fragment {
 
     private static int tabNumber;
+    @Getter @Setter static private WifiP2pDevice device;
     private View view;
-    @Getter
-    private ChatManager chatManager;
+    @Getter private ChatManager chatManager;
     private TextView chatLine;
     private ListView listView;
     ChatMessageAdapter adapter = null;
     private List<String> items = new ArrayList<>();
 
     public static WiFiChatFragment newInstance(int tabNumber1) {
+        Log.d("WifiChatFragment", "NEW _ INSTANCE CALLED!!!!!!");
+        if(device!=null) {
+            Log.d("WifiChatFragment", "device: " + device.deviceAddress + ", " + device.deviceName);
+        }
         WiFiChatFragment fragment = new WiFiChatFragment();
         tabNumber = tabNumber1;
         return fragment;
