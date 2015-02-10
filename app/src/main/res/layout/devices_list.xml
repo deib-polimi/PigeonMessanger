@@ -7,32 +7,38 @@
     android:orientation="vertical"
     android:tag="services">
 
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="451dp"></ListView>
-
     <LinearLayout
-        android:id="@android:id/empty"
+        android:id="@+id/layoutFindingServices"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dip">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/finding_service"
-            android:textSize="20sp"></TextView>
+            android:textSize="20sp"
+            android:id="@+id/finding_servive_textview"></TextView>
 
         <ProgressBar
             style="@android:style/Widget.ProgressBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginLeft="20dip"></ProgressBar>
+            android:layout_marginLeft="20dip"
+            android:id="@+id/progressbar"></ProgressBar>
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!--<ListView-->
+        <!--android:id="@android:id/list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="451dp"></ListView>-->
 
     <!--<TextView-->
         <!--android:id="@+id/statu

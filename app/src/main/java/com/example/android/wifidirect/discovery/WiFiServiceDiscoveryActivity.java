@@ -26,6 +26,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +34,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +65,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         ConnectionInfoListener {
 
     public static final String TAG = "wifidirectdemo";
+
+    private int textViewHeight;
 
     @Getter
     private int tabNum = 1;
@@ -184,6 +189,13 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 if (discoveryStatus) {
                     discoveryStatus = false;
 
+                    //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
+                    if(tabFragment!=null && tabFragment.getWiFiDirectServicesList()!=null && tabFragment.getWiFiDirectServicesList().getView()!=null && textViewHeight>0) {
+                        //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
+                        ((LinearLayout.LayoutParams)(tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = textViewHeight;
+                        ((LinearLayout)(tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.VISIBLE);
+                    }
+
                     ServiceList.getInstance().getServiceList().clear();
                     item.setIcon(R.drawable.ic_action_search_stopped);
                     manager.stopPeerDiscovery(channel, new ActionListener() {
@@ -232,8 +244,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 //                                    (WiFiDirectServicesList) getSupportFragmentManager()
 //                                    .findFragmentByTag("services");
                 if (fragment != null) {
-                    WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
-                            .getListAdapter());
+                    WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -263,6 +274,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     public void stopDiscoveryForced () {
         Log.d("stopDiscoveryForced", "stopDiscoveryForced");
         ServiceList.getInstance().getServiceList().clear();
+
+        if(tabFragment!=null && tabFragment.getWiFiDirectServicesList()!=null && tabFragment.getWiFiDirectServicesList().getView()!=null && textViewHeight>0 ) {
+            //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
+            ((LinearLayout.LayoutParams)(tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = textViewHeight;
+            ((LinearLayout)(tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.VISIBLE);
+
+//            (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.progressbar)).setVisibility(View.VISIBLE);
+        }
 
         if (discoveryStatus) {
             discoveryStatus = false;
@@ -316,8 +335,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 //                                    (WiFiDirectServicesList) getSupportFragmentManager()
 //                                    .findFragmentByTag("services");
         if (fragment != null) {
-            WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
-                    .getListAdapter());
+            WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
             adapter.notifyDataSetChanged();
         }
     }
@@ -461,8 +479,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 //                                    (WiFiDirectServicesList) getSupportFragmentManager()
 //                                    .findFragmentByTag("services");
                     if (fragment != null) {
-                        WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
-                                .getListAdapter());
+                        WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
                         adapter.notifyDataSetChanged();
                     }
 
@@ -530,13 +547,19 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 //                                    (WiFiDirectServicesList) getSupportFragmentManager()
 //                                    .findFragmentByTag("services");
                             if (fragment != null) {
-                                WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
-                                        .getListAdapter());
+                                WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
                                 WiFiP2pService service = new WiFiP2pService();
                                 service.device = srcDevice;
                                 service.instanceName = instanceName;
                                 service.serviceRegistrationType = registrationType;
-//                                adapter.add(service);
+
+                                if(((tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight()) > 0) {
+                                    textViewHeight = (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight();
+                                }
+                                //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
+                                ((LinearLayout.LayoutParams)(tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = 0;
+                                ((LinearLayout)(tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.INVISIBLE);
+
                                 ServiceList.getInstance().addService(service);
                                 adapter.notifyDataSetChanged();
                                 Log.d(TAG, "onBonjourServiceAvailable " + instanceName);
