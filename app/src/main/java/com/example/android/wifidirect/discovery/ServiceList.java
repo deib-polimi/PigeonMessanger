@@ -1,5 +1,6 @@
 package com.example.android.wifidirect.discovery;
 
+import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -29,6 +30,21 @@ public class ServiceList {
 
     private ServiceList() {
         serviceList = new ArrayList<>();
+    }
+
+    public void addService(WiFiP2pService service) {
+        boolean add = true;
+        for (WiFiP2pService element : serviceList) {
+            if (element.device.equals(service.device) && element.instanceName.equals(service.instanceName)) {
+                add = false; //gia' presente
+            }
+        }
+
+        if(add) {
+            serviceList.add(service);
+        }
+
+//        Log.d("serviceListElement", "State: " + add + ". Element: " + service.device + ", "  + service.instanceName + ", " + service.serviceRegistrationType);
     }
 
 }

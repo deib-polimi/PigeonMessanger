@@ -157,6 +157,12 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         if (frag != null) {
             getSupportFragmentManager().beginTransaction().remove(frag).commit();
         }
+
+        TabFragment tabfrag = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
+        if(tabfrag!=null) {
+            tabfrag.getMViewPager().setCurrentItem(0);
+        }
+
         super.onRestart();
     }
 
@@ -231,14 +237,27 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                             .getListAdapter());
                     adapter.notifyDataSetChanged();
                 }
+
+                this.setTabFragmentToPage(0);
+
                 return true;
             case R.id.disconenct:
+
+                this.setTabFragmentToPage(0);
+
                 this.manualItemMenuDisconnectAndStartDiscovery();
                 return true;
             case R.id.refresh:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void setTabFragmentToPage(int numPage) {
+        TabFragment tabfrag1 = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
+        if(tabfrag1!=null) {
+            tabfrag1.getMViewPager().setCurrentItem(numPage);
         }
     }
 
@@ -519,10 +538,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                                 service.instanceName = instanceName;
                                 service.serviceRegistrationType = registrationType;
 //                                adapter.add(service);
-                                ServiceList.getInstance().getServiceList().add(service);
+                                ServiceList.getInstance().addService(service);
                                 adapter.notifyDataSetChanged();
-                                Log.d(TAG, "onBonjourServiceAvailable "
-                                        + instanceName);
+                                Log.d(TAG, "onBonjourServiceAvailable " + instanceName);
                             }
                         }
 
@@ -537,9 +555,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     public void onDnsSdTxtRecordAvailable(
                             String fullDomainName, Map<String, String> record,
                             WifiP2pDevice device) {
-                        Log.d(TAG,
-                                device.deviceName + " is "
-                                        + record.get(TXTRECORD_PROP_AVAILABLE));
+                        Log.d(TAG,device.deviceName + " is "  + record.get(TXTRECORD_PROP_AVAILABLE));
                     }
                 });
 

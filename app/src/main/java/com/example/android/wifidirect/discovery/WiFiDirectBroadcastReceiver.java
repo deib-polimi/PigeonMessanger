@@ -74,9 +74,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 // info to find group owner IP
                 Log.d(WiFiServiceDiscoveryActivity.TAG,
                         "Connected to p2p network. Requesting network details");
-                manager.requestConnectionInfo(channel,
-                        (ConnectionInfoListener) activity);
+                manager.requestConnectionInfo(channel,(ConnectionInfoListener) activity);
                 ((WiFiServiceDiscoveryActivity)activity).changeColorAllChats();
+                ((WiFiServiceDiscoveryActivity)activity).setTabFragmentToPage(((WiFiServiceDiscoveryActivity)activity).getTabNum());
 
             } else {
                 // It's a disconnect
@@ -88,6 +88,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                     ((WiFiServiceDiscoveryActivity) activity).stopDiscoveryForced();
                 }
                 ((WiFiServiceDiscoveryActivity)activity).setDisableAllChatManagers();
+
+                //reimposta il viewpager al tab 0 con la servicelist
+                ((WiFiServiceDiscoveryActivity)activity).setTabFragmentToPage(0);
+
 //                ((WiFiServiceDiscoveryActivity)activity).setBlockForcesDiscoveryInBroadcastReceiver(true);
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION
