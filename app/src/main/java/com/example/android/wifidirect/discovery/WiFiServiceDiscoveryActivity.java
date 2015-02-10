@@ -38,7 +38,6 @@ import android.widget.Toast;
 
 import com.example.android.wifidirect.discovery.WiFiChatFragment.MessageTarget;
 import com.example.android.wifidirect.discovery.WiFiDirectServicesList.DeviceClickListener;
-import com.example.android.wifidirect.discovery.WiFiDirectServicesList.WiFiDevicesAdapter;
 
 import java.io.IOException;
 import java.util.HashMap;
