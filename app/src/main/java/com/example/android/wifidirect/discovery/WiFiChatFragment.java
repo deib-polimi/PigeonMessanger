@@ -29,6 +29,7 @@ import lombok.Setter;
 public class WiFiChatFragment extends Fragment {
 
     private static int tabNumber;
+    @Getter @Setter private static boolean firstStartSendAddress;
     @Getter @Setter private boolean grayScale = true;
     @Getter @Setter static private WifiP2pDevice device;
     private View view;
@@ -51,6 +52,10 @@ public class WiFiChatFragment extends Fragment {
     private WiFiChatFragment() {
     }
 
+    interface ReconnectInterface {
+        public void reconnectToService(WiFiP2pService wifiP2pService);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,15 +72,26 @@ public class WiFiChatFragment extends Fragment {
                     public void onClick(View arg0) {
                         if (chatManager != null) {
                             if (!chatManager.isDisable()) {
+                                Log.d("pippo", "chatmanager state: enable");
                                 chatManager.write(chatLine.getText().toString().getBytes());
                             } else {
                                 Log.d("pippo", "chatmanager disabiltiato, ma ho tentato di inviare un messaggio");
                                 WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).add(chatLine.getText().toString());
+
+                                Log.d("pippo", "tento la riconnessione");
+                                //tento la riconnessione
+                                List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
+                                if(device!=null) {
+                                    WiFiP2pService service = ServiceList.getInstance().getServiceByDevice(device);
+                                    Log.d("pippo", "device: " + device.deviceName + ", address: " + device.deviceAddress + ", service: " + service);
+                                    ((ReconnectInterface) getActivity()).reconnectToService(service);
+                                } else {
+                                    Log.d("pippo","device = null, non posso fare nulla");
+                                }
                             }
                             pushMessage("Me: " + chatLine.getText().toString());
                             chatLine.setText("");
                             chatLine.clearFocus();
-
                         }
                     }
                 });

@@ -1,5 +1,6 @@
 package com.example.android.wifidirect.discovery;
 
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
 import android.util.Log;
 
@@ -13,8 +14,7 @@ import lombok.Getter;
  */
 public class ServiceList {
 
-    @Getter
-    private static List<WiFiP2pService> serviceList;
+    @Getter private List<WiFiP2pService> serviceList;
 
     private static ServiceList instance = new ServiceList();
 
@@ -24,7 +24,6 @@ public class ServiceList {
      * @return istanza della classe.
      */
     public static ServiceList getInstance() {
-        Log.d("ServiceList", "size: " + serviceList.size());
         return instance;
     }
 
@@ -47,4 +46,13 @@ public class ServiceList {
 //        Log.d("serviceListElement", "State: " + add + ". Element: " + service.device + ", "  + service.instanceName + ", " + service.serviceRegistrationType);
     }
 
+    public WiFiP2pService getServiceByDevice(WifiP2pDevice device) {
+        for (WiFiP2pService element : serviceList) {
+            if (element.device.deviceAddress.equals(device.deviceAddress)
+                    && element.device.deviceName.equals(device.deviceName) ) {
+                return element;
+            }
+        }
+        return null;
+    }
 }

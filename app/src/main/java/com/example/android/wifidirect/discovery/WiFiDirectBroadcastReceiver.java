@@ -94,12 +94,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 //                ((WiFiServiceDiscoveryActivity)activity).setBlockForcesDiscoveryInBroadcastReceiver(true);
             }
-        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION
-                .equals(action)) {
-
-            WifiP2pDevice device = (WifiP2pDevice) intent
-                    .getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-            Log.d(WiFiServiceDiscoveryActivity.TAG, "Device status -" + device.status);
+        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
+            WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+            LocalP2PDevice.getInstance().setLocalDevice(device);
+            Log.d(WiFiServiceDiscoveryActivity.TAG, "Local Device status -" + device.status);
 
         }
     }
