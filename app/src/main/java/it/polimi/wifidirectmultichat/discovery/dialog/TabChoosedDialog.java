@@ -89,11 +89,11 @@ public class TabChoosedDialog extends DialogFragment {
         tab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Log.d("dialog", "tab2");
+                Log.d("dialog", "tab3");
 
                 Intent i = new Intent();
                 Bundle extras = new Bundle();
-                extras.putInt("tab", 2);
+                extras.putInt("tab", 3);
                 extras.putInt("position",position);
                 i.putExtras(extras);
 
@@ -105,11 +105,11 @@ public class TabChoosedDialog extends DialogFragment {
         tab4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Log.d("dialog", "tab2");
+                Log.d("dialog", "tab4");
 
                 Intent i = new Intent();
                 Bundle extras = new Bundle();
-                extras.putInt("tab", 2);
+                extras.putInt("tab", 4);
                 extras.putInt("position",position);
                 i.putExtras(extras);
 
@@ -121,11 +121,11 @@ public class TabChoosedDialog extends DialogFragment {
         tab5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Log.d("dialog", "tab2");
+                Log.d("dialog", "tab5");
 
                 Intent i = new Intent();
                 Bundle extras = new Bundle();
-                extras.putInt("tab", 2);
+                extras.putInt("tab", 5);
                 extras.putInt("position",position);
                 i.putExtras(extras);
 

@@ -44,10 +44,12 @@ public class ServiceList {
 //        Log.d("serviceListElement", "State: " + add + ". Element: " + service.device + ", "  + service.instanceName + ", " + service.serviceRegistrationType);
     }
 
+    //a volte non si sa perche' non riesce ad ottenere il nome durante la fase di discovery, quindi in questo metodo controllo solo il mac address
     public WiFiP2pService getServiceByDevice(WifiP2pDevice device) {
         for (WiFiP2pService element : serviceList) {
-            if (element.device.deviceAddress.equals(device.deviceAddress)
-                    && element.device.deviceName.equals(device.deviceName) ) {
+            if (element.device.deviceAddress.equals(device.deviceAddress) ) {
+//                    && element.device.deviceName.equals(device.deviceName)
+
                 return element;
             }
         }

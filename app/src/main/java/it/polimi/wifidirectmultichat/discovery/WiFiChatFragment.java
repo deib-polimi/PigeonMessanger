@@ -79,7 +79,7 @@ public class WiFiChatFragment extends Fragment {
                                 Log.d("pippo", "chatmanager disabiltiato, ma ho tentato di inviare un messaggio");
                                 WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).add(chatLine.getText().toString());
 
-                                Log.d("pippo", "tento la riconnessione");
+                                Log.d("pippo", "tento la riconnessione. Il valore di tabNum e': " + tabNumber);
                                 //tento la riconnessione
                                 List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
                                 WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber);
