@@ -1,9 +1,8 @@
 
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.wifi.WpsInfo;
@@ -19,35 +18,28 @@ import android.net.wifi.p2p.WifiP2pManager.DnsSdServiceResponseListener;
 import android.net.wifi.p2p.WifiP2pManager.DnsSdTxtRecordListener;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
-import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.wifidirect.discovery.WiFiChatFragment.MessageTarget;
-import com.example.android.wifidirect.discovery.WiFiDirectServicesList.DeviceClickListener;
+import it.polimi.wifidirectmultichat.discovery.WiFiChatFragment.MessageTarget;
+import it.polimi.wifidirectmultichat.discovery.WiFiDirectServicesList.DeviceClickListener;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import it.polimi.wifidirectmultichat.R;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -558,7 +550,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                                 service.instanceName = instanceName;
                                 service.serviceRegistrationType = registrationType;
 
-                                if (((tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight()) > 0) {
+                                if (tabFragment!=null && tabFragment.getWiFiDirectServicesList()!=null
+                                        && tabFragment.getWiFiDirectServicesList().getView()!=null
+                                        && ((tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight()) > 0) {
                                     textViewHeight = (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight();
                                 }
                                 //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
@@ -626,11 +620,19 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     }
 
     public void setWifiP2pDevice(WiFiP2pService service1, int tabNum) {
-        if (tabNum == 1 && tabFragment.getWiFiChatFragment1() != null) {
-            tabFragment.getWiFiChatFragment1().setDevice(service1.device);
-        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2() != null) {
-            tabFragment.getWiFiChatFragment2().setDevice(service1.device);
-        }
+        Log.d("setWifiP2pDevice","setWifiP2pDevice tabnum= " + tabNum + ", device= " + service1.device);
+        DeviceTabList.getInstance().addDevice(service1.device);
+
+        Log.d("setWifiP2pDevice","setWifiP2pDevice added in tab= " + DeviceTabList.getInstance().indexOfElement(service1.device));
+
+
+//        if (tabNum == 1 && tabFragment.getWiFiChatFragment1() != null && tabFragment.getWiFiChatFragment1().getDevice()==null) {
+//            Log.d("setWifiP2pDevice","setWifiP2pDevice tabnum= " + tabNum + ", device= " + tabFragment.getWiFiChatFragment1().getDevice());
+//            tabFragment.getWiFiChatFragment1().setDevice(service1.device);
+//        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2() != null && tabFragment.getWiFiChatFragment2().getDevice()==null) {
+//            Log.d("setWifiP2pDevice","setWifiP2pDevice tabnum= " + tabNum + ", device= " + tabFragment.getWiFiChatFragment2().getDevice());
+//            tabFragment.getWiFiChatFragment2().setDevice(service1.device);
+//        }
 
 
     }
@@ -650,9 +652,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     public void changeColorAllChats() {
         if (tabNum == 1 && tabFragment != null && tabFragment.getWiFiChatFragment1() != null) {
+            Log.d("changeColorAllChats","tabNum: " + tabNum + ", chatfragment=" + tabFragment.getWiFiChatFragment1() );
             tabFragment.getWiFiChatFragment1().setGrayScale(false);
             tabFragment.getWiFiChatFragment1().updateAfterColorChange();
         } else if (tabNum == 2 && tabFragment != null && tabFragment.getWiFiChatFragment2() != null) {
+            Log.d("changeColorAllChats","tabNum: " + tabNum + ", chatfragment=" + tabFragment.getWiFiChatFragment2() );
             tabFragment.getWiFiChatFragment2().setGrayScale(false);
             tabFragment.getWiFiChatFragment2().updateAfterColorChange();
         }
@@ -663,11 +667,23 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         Log.d(TAG, "connectP2p " + tabNum);
         this.tabNum = tabNum;
 
-        if (tabFragment.getWiFiChatFragment1().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
-            this.tabNum = 1;
-        } else if (tabFragment.getWiFiChatFragment2().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
-            this.tabNum = 2;
+        Log.d("connectP2p-1",DeviceTabList.getInstance().getDeviceList().get(tabNum) + "");
+
+        if(DeviceTabList.getInstance().containsElement(service.device)) {
+            this.tabNum = DeviceTabList.getInstance().indexOfElement(service.device);
         }
+
+//        this.tabNum = DeviceTabList.getInstance().indexOfElement(service.device);
+
+        if(this.tabNum == -1) {
+            Log.d("ERROR","ERROR TABNUM=-1");
+        }
+
+//        if (tabFragment.getWiFiChatFragment1().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
+//            this.tabNum = 1;
+//        } else if (tabFragment.getWiFiChatFragment2().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
+//            this.tabNum = 2;
+//        }
 
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
@@ -737,11 +753,27 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     WifiP2pDevice p2pDevice = new WifiP2pDevice();
                     p2pDevice.deviceAddress = readMessage.split("___")[1];
                     p2pDevice.deviceName = readMessage.split("___")[2];
-                    if (tabNum == 1) {
-                        (tabFragment.getWiFiChatFragment1()).setDevice(p2pDevice);
-                    } else if (tabNum == 2) {
-                        (tabFragment.getWiFiChatFragment2()).setDevice(p2pDevice);
+
+                    if(!DeviceTabList.getInstance().containsElement(p2pDevice)) {
+                        Log.d("handleMessage","elemento non presente! OK");
+                        if(DeviceTabList.getInstance().getDeviceList().get(tabNum)==null) {
+                            Log.d("handleMessage","elemento in tabnum= " + tabNum + " nullo");
+                            DeviceTabList.getInstance().getDeviceList().set(tabNum, p2pDevice);
+                        } else {
+                            Log.d("handleMessage","elemento in tabnum= " + tabNum + " non nullo");
+                            DeviceTabList.getInstance().getDeviceList().add(p2pDevice);
+                        }
+                    } else {
+                        Log.d("handleMessage","elemento presente! OK");
                     }
+
+//                    if (tabNum == 1 && tabFragment.getWiFiChatFragment1().getDevice()==null) {
+//                        Log.d("handleMessage","setdevice-1");
+//                        (tabFragment.getWiFiChatFragment1()).setDevice(p2pDevice);
+//                    } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2().getDevice()==null) {
+//                        Log.d("handleMessage","setdevice-2");
+//                        (tabFragment.getWiFiChatFragment2()).setDevice(p2pDevice);
+//                    }
                 }
 //                else {
                     if (tabNum == 1) {

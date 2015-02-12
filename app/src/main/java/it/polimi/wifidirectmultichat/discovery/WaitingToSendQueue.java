@@ -1,9 +1,7 @@
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 
 /**

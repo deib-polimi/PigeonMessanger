@@ -44,6 +44,59 @@
             android:layout_marginTop="6dp"
             android:textSize="16sp"
             android:text="Tab 2" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:id="@+id/tab3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:text="Tab 3" />
+
+        <Button
+            android:id="@+id/tab4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:text="Tab 4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:id="@+id/tab5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:text="Tab 5" />
+
     </LinearLayout>
 
 </RelativeLayout>

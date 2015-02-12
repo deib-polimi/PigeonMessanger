@@ -1,30 +1,20 @@
 
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.example.android.wifidirect.discovery.dialog.TabChoosedDialog;
+import it.polimi.wifidirectmultichat.discovery.dialog.TabChoosedDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import it.polimi.wifidirectmultichat.R;
 import lombok.Getter;
 
 /**

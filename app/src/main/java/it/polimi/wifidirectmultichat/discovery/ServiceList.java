@@ -1,8 +1,6 @@
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,5 @@
 
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project

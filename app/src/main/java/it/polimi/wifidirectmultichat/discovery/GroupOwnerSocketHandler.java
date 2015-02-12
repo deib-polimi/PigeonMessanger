@@ -1,5 +1,5 @@
 
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import android.os.Handler;
 import android.util.Log;

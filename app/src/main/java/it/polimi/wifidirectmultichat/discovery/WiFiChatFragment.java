@@ -1,5 +1,5 @@
 
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.polimi.wifidirectmultichat.R;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +32,6 @@ public class WiFiChatFragment extends Fragment {
     private static int tabNumber;
     @Getter @Setter private static boolean firstStartSendAddress;
     @Getter @Setter private boolean grayScale = true;
-    @Getter @Setter static private WifiP2pDevice device;
     private View view;
     @Getter private ChatManager chatManager;
     private TextView chatLine;
@@ -41,6 +41,7 @@ public class WiFiChatFragment extends Fragment {
 
     public static WiFiChatFragment newInstance(int tabNumber1) {
         Log.d("WifiChatFragment", "NEW _ INSTANCE CALLED!!!!!!");
+        WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber1);
         if(device!=null) {
             Log.d("WifiChatFragment", "device: " + device.deviceAddress + ", " + device.deviceName);
         }
@@ -81,6 +82,7 @@ public class WiFiChatFragment extends Fragment {
                                 Log.d("pippo", "tento la riconnessione");
                                 //tento la riconnessione
                                 List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
+                                WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber);
                                 if(device!=null) {
                                     WiFiP2pService service = ServiceList.getInstance().getServiceByDevice(device);
                                     Log.d("pippo", "device: " + device.deviceName + ", address: " + device.deviceAddress + ", service: " + service);

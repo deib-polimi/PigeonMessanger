@@ -1,19 +1,15 @@
-package com.example.android.wifidirect.discovery;
+package it.polimi.wifidirectmultichat.discovery;
 
 import android.app.Activity;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.List;
+import it.polimi.wifidirectmultichat.R;
 
 /**
  * Created by Stefano Cappa on 10/02/15.

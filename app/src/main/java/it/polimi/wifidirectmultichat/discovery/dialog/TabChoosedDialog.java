@@ -1,4 +1,4 @@
-package com.example.android.wifidirect.discovery.dialog;
+package it.polimi.wifidirectmultichat.discovery.dialog;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.android.wifidirect.discovery.R;
+import it.polimi.wifidirectmultichat.R;
+
 
 /**
  *
@@ -21,7 +22,7 @@ import com.example.android.wifidirect.discovery.R;
  */
 public class TabChoosedDialog extends DialogFragment {
 
-    static private Button tab1, tab2;
+    static private Button tab1, tab2, tab3, tab4, tab5;
     static private int position;
 
     static public TabChoosedDialog newInstance(int position1) {
@@ -43,6 +44,9 @@ public class TabChoosedDialog extends DialogFragment {
         this.getDialog().setTitle("Quale tab?");
         tab1 = (Button) v.findViewById(R.id.tab1);
         tab2 = (Button) v.findViewById(R.id.tab2);
+        tab3 = (Button) v.findViewById(R.id.tab3);
+        tab4 = (Button) v.findViewById(R.id.tab4);
+        tab5 = (Button) v.findViewById(R.id.tab5);
 
         this.setListener();
 
@@ -82,5 +86,54 @@ public class TabChoosedDialog extends DialogFragment {
                 dismiss();
             }
         });
+        tab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Log.d("dialog", "tab2");
+
+                Intent i = new Intent();
+                Bundle extras = new Bundle();
+                extras.putInt("tab", 2);
+                extras.putInt("position",position);
+                i.putExtras(extras);
+
+                //notifica al fragment al metodo onActivityResult
+                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                dismiss();
+            }
+        });
+        tab4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Log.d("dialog", "tab2");
+
+                Intent i = new Intent();
+                Bundle extras = new Bundle();
+                extras.putInt("tab", 2);
+                extras.putInt("position",position);
+                i.putExtras(extras);
+
+                //notifica al fragment al metodo onActivityResult
+                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                dismiss();
+            }
+        });
+        tab5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Log.d("dialog", "tab2");
+
+                Intent i = new Intent();
+                Bundle extras = new Bundle();
+                extras.putInt("tab", 2);
+                extras.putInt("position",position);
+                i.putExtras(extras);
+
+                //notifica al fragment al metodo onActivityResult
+                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                dismiss();
+            }
+        });
+
     }
 }
