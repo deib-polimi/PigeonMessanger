@@ -91,8 +91,6 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 //reimposta il viewpager al tab 0 con la servicelist
                 ((WiFiServiceDiscoveryActivity)activity).setTabFragmentToPage(0);
-
-//                ((WiFiServiceDiscoveryActivity)activity).setBlockForcesDiscoveryInBroadcastReceiver(true);
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);

@@ -74,7 +74,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     @Getter
     private TabFragment tabFragment;
 
-    private boolean discoveryStatus = true, disconnectStatus, refreshStatus;
+    private boolean discoveryStatus = true;
 
     @Getter
     @Setter
@@ -103,11 +103,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     public Handler getHandler() {
         return handler;
     }
-
-    public void setHandler(Handler handler) {
-        this.handler = handler;
-    }
-
 
     @Override
     public void reconnectToService(WiFiP2pService wifiP2pService) {
@@ -196,8 +191,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     @Override
     protected void onStop() {
-//        tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
-
         this.disconnectBecauseActivityOnStop();
         super.onStop();
     }
@@ -265,8 +258,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
 
                 WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
-//                                    (WiFiDirectServicesList) getSupportFragmentManager()
-//                                    .findFragmentByTag("services");
                 if (fragment != null) {
                     WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
                     adapter.notifyDataSetChanged();
@@ -324,14 +315,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
             ((LinearLayout.LayoutParams) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = textViewHeight;
             ((LinearLayout) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.VISIBLE);
-
-//            (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.progressbar)).setVisibility(View.VISIBLE);
         }
 
         if (discoveryStatus) {
             discoveryStatus = false;
 
-//            item.setIcon(R.drawable.ic_action_search_stopped);
             manager.stopPeerDiscovery(channel, new ActionListener() {
                 @Override
                 public void onSuccess() {
@@ -397,11 +385,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 chatFragment.getChatManager().setDisable(true);
             }
         }
-//        if (tabNum == 1 && tabFragment.getWiFiChatFragment1() != null && tabFragment.getWiFiChatFragment1().getChatManager() != null) {
-//            tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
-//        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2() != null && tabFragment.getWiFiChatFragment2().getChatManager() != null) {
-//            tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
-//        }
     }
 
     public void disconnectBecauseActivityOnStop() {
@@ -453,16 +436,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
         this.setDisableAllChatManagers();
 
-//        if(tabFragment.getChatFragmentByTab(tabNum) !=null && tabFragment.getChatFragmentByTab(tabNum).getChatManager() !=null ) {
-//            tabFragment.getChatFragmentByTab(tabNum).getChatManager().setDisable(true);
-//        }
-
-//        if (tabNum == 1 && tabFragment.getWiFiChatFragment1() != null && tabFragment.getWiFiChatFragment1().getChatManager() != null) {
-//            tabFragment.getWiFiChatFragment1().getChatManager().setDisable(true);
-//        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2() != null && tabFragment.getWiFiChatFragment2().getChatManager() != null) {
-//            tabFragment.getWiFiChatFragment2().getChatManager().setDisable(true);
-//        }
-
         if (manager != null && channel != null) {
             manager.removeGroup(channel, new ActionListener() {
 
@@ -484,7 +457,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     if (discoveryStatus) {
                         discoveryStatus = false;
 
-//                        item.setIcon(R.drawable.ic_action_search_stopped);
                         manager.stopPeerDiscovery(channel, new ActionListener() {
                             @Override
                             public void onSuccess() {
@@ -521,24 +493,18 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                             }
                         });
                     } else {
-//                        item.setIcon(R.drawable.ic_action_search_searching);
                         discoveryStatus = true;
                     }
 
                     startRegistrationAndDiscovery();
 
                     WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
-//                                    (WiFiDirectServicesList) getSupportFragmentManager()
-//                                    .findFragmentByTag("services");
                     if (fragment != null) {
                         WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
                         if (adapter != null) {
                             adapter.notifyDataSetChanged();
                         }
                     }
-
-//                    blockForcesDiscoveryInBroadcastReceiver = false;
-//                    startRegistrationAndDiscovery();
                 }
 
             });
@@ -568,7 +534,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             public void onFailure(int error) {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed to add a service", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Failed to add a service");
-//                appendStatus("Failed to add a service");
             }
         });
 
@@ -598,8 +563,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                             // update the UI and add the item the discovered
                             // device.
                             WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
-//                                    (WiFiDirectServicesList) getSupportFragmentManager()
-//                                    .findFragmentByTag("services");
                             if (fragment != null) {
                                 WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
                                 WiFiP2pService service = new WiFiP2pService();
@@ -651,13 +614,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     public void onSuccess() {
 
                         Toast.makeText(WiFiServiceDiscoveryActivity.this, "Added service discovery request", Toast.LENGTH_SHORT).show();
-//                        appendStatus("Added service discovery request");
                     }
 
                     @Override
                     public void onFailure(int arg0) {
                         Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed adding service discovery request", Toast.LENGTH_SHORT).show();
-//                        appendStatus("Failed adding service discovery request");
                     }
                 });
         manager.discoverServices(channel, new ActionListener() {
@@ -667,13 +628,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery initiated", Toast.LENGTH_SHORT).show();
                 blockForcesDiscoveryInBroadcastReceiver = false;
-//                appendStatus("Service discovery initiated");
             }
 
             @Override
             public void onFailure(int arg0) {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Service discovery failed", Toast.LENGTH_SHORT).show();
-//                appendStatus("Service discovery failed");
 
             }
         });
@@ -684,16 +643,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         DeviceTabList.getInstance().addDevice(service1.device);
 
         Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + DeviceTabList.getInstance().indexOfElement(service1.device) + 1);
-
-
-//        if (tabNum == 1 && tabFragment.getWiFiChatFragment1() != null && tabFragment.getWiFiChatFragment1().getDevice()==null) {
-//            Log.d("setWifiP2pDevice","setWifiP2pDevice tabnum= " + tabNum + ", device= " + tabFragment.getWiFiChatFragment1().getDevice());
-//            tabFragment.getWiFiChatFragment1().setDevice(service1.device);
-//        } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2() != null && tabFragment.getWiFiChatFragment2().getDevice()==null) {
-//            Log.d("setWifiP2pDevice","setWifiP2pDevice tabnum= " + tabNum + ", device= " + tabFragment.getWiFiChatFragment2().getDevice());
-//            tabFragment.getWiFiChatFragment2().setDevice(service1.device);
-//        }
-
 
     }
 
@@ -715,20 +664,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
             }
         }
-//        if(tabFragment!=null && tabFragment.getChatFragmentByTab(tabNum) !=null ) {
-//            tabFragment.getChatFragmentByTab(tabNum).setGrayScale(false);
-//            tabFragment.getChatFragmentByTab(tabNum).updateAfterColorChange();
-//        }
-//
-//        if (tabNum == 1 && tabFragment != null && tabFragment.getWiFiChatFragment1() != null) {
-//            Log.d("changeColorAllChats","tabNum: " + tabNum + ", chatfragment=" + tabFragment.getWiFiChatFragment1() );
-//            tabFragment.getWiFiChatFragment1().setGrayScale(false);
-//            tabFragment.getWiFiChatFragment1().updateAfterColorChange();
-//        } else if (tabNum == 2 && tabFragment != null && tabFragment.getWiFiChatFragment2() != null) {
-//            Log.d("changeColorAllChats","tabNum: " + tabNum + ", chatfragment=" + tabFragment.getWiFiChatFragment2() );
-//            tabFragment.getWiFiChatFragment2().setGrayScale(false);
-//            tabFragment.getWiFiChatFragment2().updateAfterColorChange();
-//        }
     }
 
     @Override
@@ -743,17 +678,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             this.tabNum = DeviceTabList.getInstance().indexOfElement(service.device) + 1;
         }
 
-//        this.tabNum = DeviceTabList.getInstance().indexOfElement(service.device);
-
         if (this.tabNum == -1) {
             Log.d("ERROR", "ERROR TABNUM=-1");
         }
-
-//        if (tabFragment.getWiFiChatFragment1().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
-//            this.tabNum = 1;
-//        } else if (tabFragment.getWiFiChatFragment2().getDevice().deviceAddress.equals(service.device.deviceAddress)) {
-//            this.tabNum = 2;
-//        }
 
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
@@ -781,26 +708,17 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             @Override
             public void onSuccess() {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Connecting to service", Toast.LENGTH_SHORT).show();
-
-//                appendStatus("Connecting to service");
             }
 
             @Override
             public void onFailure(int errorCode) {
                 Toast.makeText(WiFiServiceDiscoveryActivity.this, "Failed connecting to service. Reason: " + errorCode, Toast.LENGTH_SHORT).show();
-
-//                appendStatus("Failed connecting to service");
             }
         });
     }
 
     public void sendAddress(String deviceMacAddress, String name) {
         WiFiChatFragment frag = tabFragment.getChatFragmentByTab(tabNum);
-//        if (tabNum == 1) {
-//            frag = tabFragment.getWiFiChatFragment1();
-//        } else {
-//            frag = tabFragment.getWiFiChatFragment2();
-//        }
         Log.d("sendAddress", "chatmanager is " + frag.getChatManager());
         if (frag.getChatManager() != null) {
             frag.getChatManager().write(("ADDRESS" + "___" + deviceMacAddress + "___" + name).getBytes());
@@ -822,7 +740,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 Log.d(TAG, readMessage);
                 if (readMessage.contains("ADDRESS")) {
                     Log.d("ADDRESS", "ADDRESS_____ : " + readMessage);
-//                    WifiP2pDevice p2pDevice = new WifiP2pDevice();
                     p2pDevice = new WifiP2pDevice();
                     p2pDevice.deviceAddress = readMessage.split("___")[1];
                     p2pDevice.deviceName = readMessage.split("___")[2];
@@ -841,16 +758,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     } else {
                         Log.d("handleMessage", "elemento presente! OK");
                     }
-
-//                    if (tabNum == 1 && tabFragment.getWiFiChatFragment1().getDevice()==null) {
-//                        Log.d("handleMessage","setdevice-1");
-//                        (tabFragment.getWiFiChatFragment1()).setDevice(p2pDevice);
-//                    } else if (tabNum == 2 && tabFragment.getWiFiChatFragment2().getDevice()==null) {
-//                        Log.d("handleMessage","setdevice-2");
-//                        (tabFragment.getWiFiChatFragment2()).setDevice(p2pDevice);
-//                    }
                 }
-//                else {
 
                 Log.d("handleMessage", "handleMessage, MESSAGE_READ , il tabNum globale activity ore e': " + tabNum);
 
@@ -866,40 +774,21 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                 }
 
+
+
+                //SU STA RIGA NEL TELEFONO DI AFFO MI HA LANCIATO ECCEZIONE
                 tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
-
-
-//                    if (tabNum == 1) {
-//                        (tabFragment.getWiFiChatFragment1()).pushMessage("Buddy: " + readMessage);
-//                    } else if (tabNum == 2) {
-//                        (tabFragment.getWiFiChatFragment2()).pushMessage("Buddy: " + readMessage);
-//                    }
-
 
                 if (!WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNum).isEmpty()) {
                     Log.d(TAG, "MESSAGE_READ-svuoto la coda " + tabNum);
                     tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
-//                        if (tabNum == 1) {
-//                            Log.d(TAG, "MESSAGE_READ-svuoto la coda 1");
-//                            tabFragment.getWiFiChatFragment1().sendForcedWaitingToSendQueue();
-//                        } else if (tabNum == 2) {
-//                            Log.d(TAG, "MESSAGE_READ-svuoto la coda 2");
-//                            tabFragment.getWiFiChatFragment2().sendForcedWaitingToSendQueue();
-//                        }
                 }
-//                }
                 break;
 
             case MY_HANDLE:
                 Object obj = msg.obj;
                 Log.d("handleMessage", "MY_HANDLE");
                 tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
-//                if (tabNum == 1) {
-//                    (tabFragment.getWiFiChatFragment1()).setChatManager((ChatManager) obj);
-//                } else if (tabNum == 2) {
-//                    (tabFragment.getWiFiChatFragment2()).setChatManager((ChatManager) obj);
-//                }
-
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
@@ -915,13 +804,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                 Log.d(TAG, "MY_HANDLE-svuoto la coda " + tabNum);
                 tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
-//                if (tabNum == 1) {
-//                    Log.d(TAG, "MY_HANDLE-svuoto la coda 1");
-//                    tabFragment.getWiFiChatFragment1().sendForcedWaitingToSendQueue();
-//                } else if (tabNum == 2) {
-//                    Log.d(TAG, "MY_HANDLE-svuoto la coda 2");
-//                    tabFragment.getWiFiChatFragment2().sendForcedWaitingToSendQueue();
-//                }
         }
         return true;
     }
@@ -965,35 +847,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
         final TabFragment tabfrag = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
         tabfrag.getMViewPager().setCurrentItem(tabNum);
-
-//        for(WiFiP2pService serv : ServiceList.getServiceList()) {
-//            Log.d("service_print","serv: " + serv.device.);
-//        }
-
-        //quando la connessione e' stabilita, richiedo il device associato al groupowner e lo setto.
-
-//        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-//            @Override
-//            public void onGroupInfoAvailable(WifiP2pGroup group) {
-//
-//                //se questo dispositivo NON E' il group owner, allora setto il device come il group owner, cioe'
-//                //imposto il dspositivo di destinazione a cui connettersi come il group owner
-//                if (!group.isGroupOwner()) {
-//                    Log.d("onGroupInfoAvailable", "groupowneraddress: " + group.getOwner().deviceAddress);
-//                    if (tabNum == 1) {
-////                            && tabfrag.getWiFiChatFragment1().getDevice() == null) {
-//                        Log.d("device_set_1", "device: " + group.getOwner().deviceAddress);
-//                        tabfrag.getWiFiChatFragment1().setDevice(group.getOwner());
-//                    } else if (tabNum == 2) {
-//                        tabfrag.getWiFiChatFragment2().setDevice(group.getOwner());
-//                        Log.d("device_set_2", "device: " + group.getOwner().deviceAddress);
-//                    }
-//                }
-//            }
-//        });
-
-
-//        tabfrag.getWiFiChatFragment1().setDevice(service);
     }
 
 

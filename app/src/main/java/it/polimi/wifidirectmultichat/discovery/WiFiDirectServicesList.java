@@ -48,7 +48,6 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
         View rootView = inflater.inflate(R.layout.devices_list, container, false);
         rootView.setTag(TAG);
 
-        // BEGIN_INCLUDE(initializeRecyclerView)
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -58,9 +57,7 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
         mRecyclerView.setHasFixedSize(true);// allows for optimizations if all item views are of the same size:
 
         mAdapter = new WiFiDevicesAdapter(this.getActivity(),this);
-        // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
-//        mRecyclerView.setItemAnimator(new GarageDoorItemAnimator());
 
         return rootView;
     }
@@ -72,22 +69,12 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-//        savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, mCurrentLayoutManagerType);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        listAdapter = new WiFiDevicesAdapter(this.getActivity(),
-//                android.R.layout.simple_list_item_2, android.R.id.text1,
-//                ServiceList.getInstance().getServiceList());
-//        setListAdapter(listAdapter);
-
-
-//        ((WiFiServiceDiscoveryActivity) getActivity()).setupToolBar();
-
-//        statusTxtView = (TextView) this.getActivity().findViewById(R.id.status_text);
     }
 
     @Override
@@ -104,39 +91,8 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
             tabChoosedDialog.show(getFragmentManager(), "tabchooserdialog");
             getFragmentManager().executePendingTransactions();
         }
-//
-//        Download download = DownloadList.getInstance().getDownloadList().get(mRecyclerView.getChildPosition(view));
-//        ArrayList<String> listDetail = new ArrayList<>();
-//        listDetail.add(download.getFileWeb().getUri().toString());
-//        listDetail.add(download.getDownloadPath());
-//        listDetail.add(download.getFileWeb().getChosenfileName());
-//        listDetail.add(download.getFileWeb().getConnectionMode());
-//        listDetail.add(download.getFileWeb().getHash());
-//        listDetail.add(download.getFileWeb().getHashAlgorithm());
-//
-//        Intent detailIntent = new Intent(this.getActivity(), ItemDetailActivity.class);
-//        detailIntent.putExtra(ItemDetailFragment.ARG_POSITION, mRecyclerView.getChildPosition(view));
-//        detailIntent.putStringArrayListExtra("details_list",listDetail);
-//        this.getActivity().startActivity(detailIntent);
 
     }
-
-//    @Override
-//    public void onListItemClick(ListView l, View v, int position, long id) {
-//
-//        TabChoosedDialog tabChoosedDialog = (TabChoosedDialog) getFragmentManager().findFragmentByTag("tabchooserdialog");
-//
-//        if (tabChoosedDialog == null) {
-//            tabChoosedDialog = TabChoosedDialog.newInstance(position);
-//
-//            tabChoosedDialog.setTargetFragment(this, TABCHOOSER);
-//
-//            tabChoosedDialog.show(getFragmentManager(), "tabchooserdialog");
-//            getFragmentManager().executePendingTransactions();
-//        }
-//
-//
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -153,8 +109,6 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
                     WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
                     ((DeviceClickListener) getActivity()).setWifiP2pDevice(service, tabnum);
                     ((DeviceClickListener) getActivity()).connectP2p(service, tabnum);
-//                    ((TextView) this.getView().findViewById(android.R.id.text2)).setText("Connecting");
-
 
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // After Cancel code.

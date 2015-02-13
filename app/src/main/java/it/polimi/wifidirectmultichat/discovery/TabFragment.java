@@ -90,15 +90,12 @@ public class TabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        this.connectionFragment = WiFiDirectConnectionFragment.newInstance("","");
-
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
-//        setHasOptionsMenu(true);
     }
 
     @Override
