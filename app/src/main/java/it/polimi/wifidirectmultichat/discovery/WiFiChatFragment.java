@@ -7,6 +7,8 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +37,10 @@ public class WiFiChatFragment extends Fragment {
     @Getter private ChatManager chatManager;
     private static WiFiChatFragment chatFrag;
     private TextView chatLine;
-    private ListView listView;
-    ChatMessageAdapter adapter = null;
-    private List<String> items = new ArrayList<>();
+    @Getter WiFiChatMessageAdapter adapter = null;
+    @Getter private List<String> items = new ArrayList<>();
+
+    private RecyclerView mRecyclerView;
 
     public static WiFiChatFragment newInstance() {
         Log.d("WifiChatFragment", "NEW _ INSTANCE CALLED!!!!!!");
@@ -63,11 +66,20 @@ public class WiFiChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("WifiChatFragment_oncreateview","tabNumber" + tabNumber);
         view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewChat);
+
+        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager.scrollToPosition(0);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setHasFixedSize(true);// allows for optimizations if all item views are of the same size:
+
+        adapter = new WiFiChatMessageAdapter(this);
+        mRecyclerView.setAdapter(adapter);
+
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
-        listView = (ListView) view.findViewById(android.R.id.list);
-        adapter = new ChatMessageAdapter(getActivity(), android.R.id.text1,
-                items);
-        listView.setAdapter(adapter);
+
         view.findViewById(R.id.button1).setOnClickListener(
                 new View.OnClickListener() {
 
@@ -140,7 +152,8 @@ public class WiFiChatFragment extends Fragment {
 
     public void pushMessage(String readMessage) {
         Log.d("WifiChatFragment push","tabNumber" + tabNumber);
-        adapter.add(readMessage);
+//        adapter.add(readMessage);
+        items.add(readMessage);
         adapter.notifyDataSetChanged();
     }
 
@@ -151,48 +164,48 @@ public class WiFiChatFragment extends Fragment {
         }
     }
 
-    /**
-     * ArrayAdapter to manage chat messages.
-     */
-    public class ChatMessageAdapter extends ArrayAdapter<String> {
-
-        List<String> messages = null;
-
-        public ChatMessageAdapter(Context context, int textViewResourceId,
-                                  List<String> items) {
-            super(context, textViewResourceId, items);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Log.d("WifiChatFragment adaptergetview","tabNumber" + tabNumber);
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater) getActivity()
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(android.R.layout.simple_list_item_1, null);
-            }
-            String message = items.get(position);
-            if (message != null && !message.isEmpty()) {
-                TextView nameText = (TextView) v
-                        .findViewById(android.R.id.text1);
-                if (nameText != null) {
-                    nameText.setText(message);
-                    nameText.setTextAppearance(getActivity(),R.style.normalText);
-                    if(grayScale) {
-                        nameText.setTextColor(getResources().getColor(R.color.gray));
-                    } else {
-                        if (message.startsWith("Me: ")) {
-                            nameText.setTextAppearance(getActivity(),
-                                    R.style.normalText);
-                        } else {
-                            nameText.setTextAppearance(getActivity(),
-                                    R.style.boldText);
-                        }
-                    }
-                }
-            }
-            return v;
-        }
-    }
+//        /**
+//         * ArrayAdapter to manage chat messages.
+//         */
+//    public class ChatMessageAdapter extends ArrayAdapter<String> {
+//
+//        List<String> messages = null;
+//
+//        public ChatMessageAdapter(Context context, int textViewResourceId,
+//                                  List<String> items) {
+//            super(context, textViewResourceId, items);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            Log.d("WifiChatFragment adaptergetview","tabNumber" + tabNumber);
+//            View v = convertView;
+//            if (v == null) {
+//                LayoutInflater vi = (LayoutInflater) getActivity()
+//                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                v = vi.inflate(android.R.layout.simple_list_item_1, null);
+//            }
+//            String message = items.get(position);
+//            if (message != null && !message.isEmpty()) {
+//                TextView nameText = (TextView) v
+//                        .findViewById(android.R.id.text1);
+//                if (nameText != null) {
+//                    nameText.setText(message);
+//                    nameText.setTextAppearance(getActivity(),R.style.normalText);
+//                    if(grayScale) {
+//                        nameText.setTextColor(getResources().getColor(R.color.gray));
+//                    } else {
+//                        if (message.startsWith("Me: ")) {
+//                            nameText.setTextAppearance(getActivity(),
+//                                    R.style.normalText);
+//                        } else {
+//                            nameText.setTextAppearance(getActivity(),
+//                                    R.style.boldText);
+//                        }
+//                    }
+//                }
+//            }
+//            return v;
+//        }
+//    }
 }

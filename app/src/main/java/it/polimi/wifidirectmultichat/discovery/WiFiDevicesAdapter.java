@@ -45,7 +45,7 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
             this.context = context;
             this.parent = view;
 
-            nameText = (TextView) view.findViewById(R.id.text1);
+            nameText = (TextView) view.findViewById(R.id.message);
             macAddressText = (TextView) view.findViewById(R.id.text2);
             statusText = (TextView) view.findViewById(R.id.text3);
         }

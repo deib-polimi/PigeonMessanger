@@ -4,16 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@android:id/list"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dip"
-        android:transcriptMode="alwaysScroll" >
+        android:layout_marginBottom="50dip"/>
 
-        <!-- Preview: listitem=@android:layout/simple_list_item_1 -->
-
-    </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,3 +38,13 @@
     </LinearLayout>
 
 </FrameLayout>
+
+
+    <!--<ListView-->
+    <!--android:id="@android:id/list"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginBottom="50dip"-->
+    <!--android:transcriptMode="alwaysScroll" >-->
+    <!-- Preview: listitem=@android:layout/simple_list_item_1 -->
+    <!--</ListView>-->
