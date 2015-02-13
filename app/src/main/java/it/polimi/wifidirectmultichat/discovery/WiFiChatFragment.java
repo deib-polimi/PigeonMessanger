@@ -26,40 +26,43 @@ import lombok.Setter;
  * This fragment handles chat related UI which includes a list view for messages
  * and a message entry field with send button.
  */
-@SuppressLint("ValidFragment")
 public class WiFiChatFragment extends Fragment {
 
-    private static int tabNumber;
+    @Getter @Setter private Integer tabNumber;
     @Getter @Setter private static boolean firstStartSendAddress;
     @Getter @Setter private boolean grayScale = true;
     private View view;
     @Getter private ChatManager chatManager;
+    private static WiFiChatFragment chatFrag;
     private TextView chatLine;
     private ListView listView;
     ChatMessageAdapter adapter = null;
     private List<String> items = new ArrayList<>();
 
-    public static WiFiChatFragment newInstance(int tabNumber1) {
+    public static WiFiChatFragment newInstance() {
         Log.d("WifiChatFragment", "NEW _ INSTANCE CALLED!!!!!!");
-        WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber1);
-        if(device!=null) {
-            Log.d("WifiChatFragment", "device: " + device.deviceAddress + ", " + device.deviceName);
-        }
+//        WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber1);
+//        if(device!=null) {
+//            Log.d("WifiChatFragment", "device: " + device.deviceAddress + ", " + device.deviceName);
+//        }
         WiFiChatFragment fragment = new WiFiChatFragment();
-        tabNumber = tabNumber1;
+        chatFrag = fragment;
+//        Log.d("WifiChatFragment_creato","tabNumber" + tabNumber);
         return fragment;
     }
 
-    private WiFiChatFragment() {
+    public WiFiChatFragment() {
     }
 
-    interface ReconnectInterface {
+    interface CallbackActivity {
         public void reconnectToService(WiFiP2pService wifiP2pService);
+        public int getFragmentPositionInTabList(WiFiChatFragment fragment);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("WifiChatFragment_oncreateview","tabNumber" + tabNumber);
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
         listView = (ListView) view.findViewById(android.R.id.list);
@@ -79,14 +82,14 @@ public class WiFiChatFragment extends Fragment {
                                 Log.d("pippo", "chatmanager disabiltiato, ma ho tentato di inviare un messaggio");
                                 WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).add(chatLine.getText().toString());
 
-                                Log.d("pippo", "tento la riconnessione. Il valore di tabNum e': " + tabNumber);
+                                Log.d("pippo", "tento la riconnessione. Il valore di tabNum e': " + ((CallbackActivity) getActivity()).getFragmentPositionInTabList(chatFrag));
                                 //tento la riconnessione
                                 List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
-                                WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber);
+                                WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber - 1);
                                 if(device!=null) {
                                     WiFiP2pService service = ServiceList.getInstance().getServiceByDevice(device);
                                     Log.d("pippo", "device: " + device.deviceName + ", address: " + device.deviceAddress + ", service: " + service);
-                                    ((ReconnectInterface) getActivity()).reconnectToService(service);
+                                    ((CallbackActivity) getActivity()).reconnectToService(service);
                                 } else {
                                     Log.d("pippo","device = null, non posso fare nulla");
                                 }
@@ -137,11 +140,13 @@ public class WiFiChatFragment extends Fragment {
     }
 
     public void pushMessage(String readMessage) {
+        Log.d("WifiChatFragment push","tabNumber" + tabNumber);
         adapter.add(readMessage);
         adapter.notifyDataSetChanged();
     }
 
     public void updateAfterColorChange() {
+        Log.d("WifiChatFragment aftercolor","tabNumber" + tabNumber);
         if(adapter!=null) {
             adapter.notifyDataSetChanged();
         }
@@ -161,6 +166,7 @@ public class WiFiChatFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            Log.d("WifiChatFragment adaptergetview","tabNumber" + tabNumber);
             View v = convertView;
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getActivity()

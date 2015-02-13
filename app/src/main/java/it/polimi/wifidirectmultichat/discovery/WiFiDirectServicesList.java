@@ -35,6 +35,13 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
         public void setWifiP2pDevice(WiFiP2pService service1, int tabNum);
     }
 
+    public static WiFiDirectServicesList newInstance() {
+        WiFiDirectServicesList fragment = new WiFiDirectServicesList();
+        return fragment;
+    }
+
+    public WiFiDirectServicesList() {}
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +65,10 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
         return rootView;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

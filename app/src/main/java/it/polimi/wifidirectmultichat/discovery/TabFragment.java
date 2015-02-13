@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import it.polimi.wifidirectmultichat.R;
@@ -27,7 +29,7 @@ import lombok.Getter;
  */
 public class TabFragment extends Fragment {
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    @Getter private SectionsPagerAdapter mSectionsPagerAdapter;
 
 //    private WiFiDirectConnectionFragment connectionFragment;
 
@@ -36,12 +38,8 @@ public class TabFragment extends Fragment {
      */
     @Getter ViewPager mViewPager;
 
-    @Getter private WiFiDirectServicesList wiFiDirectServicesList;
-    @Getter private static WiFiChatFragment wiFiChatFragment1;
-    @Getter private static WiFiChatFragment wiFiChatFragment2;
-    @Getter private static WiFiChatFragment wiFiChatFragment3;
-    @Getter private static WiFiChatFragment wiFiChatFragment4;
-    @Getter private static WiFiChatFragment wiFiChatFragment5;
+    @Getter private static WiFiDirectServicesList wiFiDirectServicesList;
+    @Getter private static List<WiFiChatFragment> wiFiChatFragmentList;
 
 
     /**
@@ -53,16 +51,39 @@ public class TabFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static TabFragment newInstance() {
         TabFragment fragment = new TabFragment();
-        wiFiChatFragment1 =  WiFiChatFragment.newInstance(1);
-        wiFiChatFragment2 =  WiFiChatFragment.newInstance(2);
-        wiFiChatFragment3 =  WiFiChatFragment.newInstance(3);
-        wiFiChatFragment4 =  WiFiChatFragment.newInstance(4);
-        wiFiChatFragment5 =  WiFiChatFragment.newInstance(5);
+        wiFiChatFragmentList = new ArrayList<>();
+
+        WiFiChatFragment frag = WiFiChatFragment.newInstance();
+        frag.setTabNumber(new Integer(1));
+        wiFiChatFragmentList.add(frag);
+
+        frag = WiFiChatFragment.newInstance();
+        frag.setTabNumber(new Integer(2));
+        wiFiChatFragmentList.add(frag);
+
+        frag = WiFiChatFragment.newInstance();
+        frag.setTabNumber(new Integer(3));
+        wiFiChatFragmentList.add(frag);
+
+        frag = WiFiChatFragment.newInstance();
+        frag.setTabNumber(new Integer(4));
+        wiFiChatFragmentList.add(frag);
+
+        frag = WiFiChatFragment.newInstance();
+        frag.setTabNumber(new Integer(5));
+        wiFiChatFragmentList.add(frag);
+
+        wiFiDirectServicesList = WiFiDirectServicesList.newInstance();
+
         return fragment;
     }
 
     public TabFragment() {
         // Required empty public constructor
+    }
+
+    public int getItemTabNumber(WiFiChatFragment fragment) {
+        return this.mSectionsPagerAdapter.getItemPosition(fragment);
     }
 
     @Override
@@ -141,37 +162,17 @@ public class TabFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-//
-//            ist = new WiFiDirectServicesList();
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.container_root, servicesList, "services").commit();
-
-            switch (position) {
-                case 0:
-                    wiFiDirectServicesList = new WiFiDirectServicesList();
-                    return wiFiDirectServicesList;
-                case 2:
-//                    wiFiChatFragment2 = WiFiChatFragment.newInstance(2);
-                    return wiFiChatFragment2;
-                case 3:
-//                    wiFiChatFragment3 = WiFiChatFragment.newInstance(3);
-                    return wiFiChatFragment3;
-                case 4:
-//                    wiFiChatFragment3 = WiFiChatFragment.newInstance(3);
-                    return wiFiChatFragment4;
-                case 5:
-//                    wiFiChatFragment1 = WiFiChatFragment.newInstance(1);
-                    return wiFiChatFragment5;
-                default:
-//                    wiFiChatFragment4 = WiFiChatFragment.newInstance(4);
-                    return wiFiChatFragment1;
+            if(position==0) {
+//                wiFiDirectServicesList = new WiFiDirectServicesList();
+                return wiFiDirectServicesList;
+            } else {
+                return wiFiChatFragmentList.get(position-1);
             }
         }
 
         @Override
         public int getCount() {
-            // Show 5 total pages.
-            return 6;
+            return wiFiChatFragmentList.size() + 1; //perche' il primo fragment (non nella lista) e' quello con la lista dei servizi
         }
 
         @Override
@@ -199,18 +200,7 @@ public class TabFragment extends Fragment {
 
 
     public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
-        switch(tabNumber) {
-            case 2 :
-                return wiFiChatFragment2;
-            case 3 :
-                return wiFiChatFragment3;
-            case 4 :
-                return wiFiChatFragment4;
-            case 5 :
-                return wiFiChatFragment5;
-            default:
-                return wiFiChatFragment1;
-        }
+        return wiFiChatFragmentList.get(tabNumber-1);
     }
 
 

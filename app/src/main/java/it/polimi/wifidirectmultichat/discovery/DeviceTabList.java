@@ -13,7 +13,7 @@ import lombok.Getter;
 public class DeviceTabList {
 
     @Getter private List<WifiP2pDevice> deviceList;
-    private static final int MAXIMUM_SIZE = 6;
+    private static final int MAXIMUM_SIZE = 5;
 
     private static DeviceTabList instance = new DeviceTabList();
 
@@ -28,7 +28,6 @@ public class DeviceTabList {
 
     private DeviceTabList() {
         deviceList = new ArrayList<>(MAXIMUM_SIZE);
-        deviceList.add(new WifiP2pDevice()); //rappresenta il primo tab, che e' riservato alla servicelist che non posso toccare
         deviceList.add(null);
         deviceList.add(null);
         deviceList.add(null);
@@ -70,7 +69,8 @@ public class DeviceTabList {
 
     public int indexOfElement(WifiP2pDevice device) {
         for (int i=0; i<deviceList.size(); i++) {
-            if (deviceList.get(i)!=null && deviceList.get(i).deviceAddress.equals(device.deviceAddress) && deviceList.get(i).deviceName.equals(device.deviceName)) {
+            if (deviceList.get(i)!=null && deviceList.get(i).deviceAddress.equals(device.deviceAddress)
+                    && deviceList.get(i).deviceName.equals(device.deviceName)) {
                 return i;
             }
         }
