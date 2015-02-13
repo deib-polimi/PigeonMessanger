@@ -39,11 +39,6 @@ public class WaitingToSendQueue {
             default:  //1 e negli altri casi, per sicurezza da sempre la 1
                 return waitingToSendItemsTab1;
         }
-//        if(number==1) {
-//            return waitingToSendItemsTab1;
-//        } else {
-//            return waitingToSendItemsTab2;
-//        }
     }
 
     private WaitingToSendQueue() {

@@ -35,6 +35,7 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
         private final View parent;
         private TextView nameText;
         private TextView statusText;
+        private TextView macAddressText;
 
         private Activity context;
 
@@ -45,7 +46,8 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
             this.parent = view;
 
             nameText = (TextView) view.findViewById(R.id.text1);
-            statusText = (TextView) view.findViewById(R.id.text2);
+            macAddressText = (TextView) view.findViewById(R.id.text2);
+            statusText = (TextView) view.findViewById(R.id.text3);
         }
 
 
@@ -73,6 +75,7 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
         WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
         if (service != null) {
             viewHolder.nameText.setText(service.device.deviceName + " - " + service.instanceName);
+            viewHolder.macAddressText.setText(service.device.deviceAddress);
             viewHolder.statusText.setText(getDeviceStatus(service.device.status));
         }
 

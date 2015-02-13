@@ -30,13 +30,13 @@ public final class R {
 		public static final int background_tab_pressed = 0x7f06000b;
 	}
 	public static final class drawable {
-		public static final int background_tab = 0x7f020033;
+		public static final int background_tab = 0x7f020034;
 	}
 	public static final class id {
 		public static final int bold = 0x7f08001b;
 		public static final int italic = 0x7f08001c;
 		public static final int normal = 0x7f08000a;
-		public static final int tab_title = 0x7f080058;
+		public static final int tab_title = 0x7f08005b;
 	}
 	public static final class layout {
 		public static final int tab = 0x7f03001f;

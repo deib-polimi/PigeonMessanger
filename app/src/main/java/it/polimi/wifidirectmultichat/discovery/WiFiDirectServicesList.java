@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import it.polimi.wifidirectmultichat.discovery.dialog.TabChoosedDialog;
 
@@ -27,6 +28,7 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
     private static final int TABCHOOSER = 5; //numero costante scelto a caso
 
     private RecyclerView mRecyclerView;
+    private TextView localDeviceNameText, localDeviceAddressText;
     @Getter private WiFiDevicesAdapter mAdapter;
 
     interface DeviceClickListener {
@@ -59,22 +61,13 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
         mAdapter = new WiFiDevicesAdapter(this.getActivity(),this);
         mRecyclerView.setAdapter(mAdapter);
 
+        localDeviceNameText = (TextView) rootView.findViewById(R.id.localDeviceName);
+        localDeviceAddressText = (TextView) rootView.findViewById(R.id.localDeviceAddress);
+
+        localDeviceNameText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceName);
+        localDeviceAddressText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
+
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

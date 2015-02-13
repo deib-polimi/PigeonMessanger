@@ -60,8 +60,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     public static final String TAG = "wifidirectdemo";
 
-    private int textViewHeight;
-
     @Getter
     private int tabNum = 1;
 
@@ -206,13 +204,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 if (discoveryStatus) {
                     discoveryStatus = false;
 
-                    //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
-                    if (tabFragment != null && tabFragment.getWiFiDirectServicesList() != null && tabFragment.getWiFiDirectServicesList().getView() != null && textViewHeight > 0) {
-                        //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
-                        ((LinearLayout.LayoutParams) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = textViewHeight;
-                        ((LinearLayout) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.VISIBLE);
-                    }
-
                     ServiceList.getInstance().getServiceList().clear();
                     item.setIcon(R.drawable.ic_action_search_stopped);
                     manager.stopPeerDiscovery(channel, new ActionListener() {
@@ -272,7 +263,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                 this.manualItemMenuDisconnectAndStartDiscovery();
                 return true;
-            case R.id.refresh:
+            case R.id.cancelConnection:
 
                 this.setTabFragmentToPage(0);
 
@@ -310,12 +301,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     public void stopDiscoveryForced() {
         Log.d("stopDiscoveryForced", "stopDiscoveryForced");
         ServiceList.getInstance().getServiceList().clear();
-
-        if (tabFragment != null && tabFragment.getWiFiDirectServicesList() != null && tabFragment.getWiFiDirectServicesList().getView() != null && textViewHeight > 0) {
-            //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
-            ((LinearLayout.LayoutParams) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = textViewHeight;
-            ((LinearLayout) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.VISIBLE);
-        }
 
         if (discoveryStatus) {
             discoveryStatus = false;
@@ -570,17 +555,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                                 service.instanceName = instanceName;
                                 service.serviceRegistrationType = registrationType;
 
-                                if (tabFragment != null && tabFragment.getWiFiDirectServicesList() != null
-                                        && tabFragment.getWiFiDirectServicesList().getView() != null
-                                        && ((tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight()) > 0) {
-                                    textViewHeight = (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getHeight();
-                                }
-
-                                //avendo trovato elementi, faccio scomparire il messaggio di ricerca e la sua progressbar
-                                if (tabFragment != null && tabFragment.getWiFiDirectServicesList() != null && tabFragment.getWiFiDirectServicesList().getView() != null) {
-                                    ((LinearLayout.LayoutParams) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices)).getLayoutParams()).height = 0;
-                                    ((LinearLayout) (tabFragment.getWiFiDirectServicesList().getView().findViewById(R.id.layoutFindingServices))).setVisibility(View.INVISIBLE);
-                                }
 
                                 ServiceList.getInstance().addService(service);
                                 adapter.notifyDataSetChanged();
@@ -642,7 +616,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         Log.d("setWifiP2pDevice", "setWifiP2pDevice tabnum= " + tabNum + ", device= " + service1.device);
         DeviceTabList.getInstance().addDevice(service1.device);
 
-        Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + DeviceTabList.getInstance().indexOfElement(service1.device) + 1);
+        Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + (DeviceTabList.getInstance().indexOfElement(service1.device) + 1));
 
     }
 

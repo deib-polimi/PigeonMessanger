@@ -177,7 +177,7 @@ public class TabFragment extends Fragment {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return (new String("Connessione")).toUpperCase(l);
+                    return (new String("Services")).toUpperCase(l);
                 case 1:
                     return (new String("Chat1")).toUpperCase(l);
                 case 2:

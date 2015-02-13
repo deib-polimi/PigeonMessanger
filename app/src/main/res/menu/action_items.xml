@@ -12,13 +12,13 @@
 
     <item
         android:id="@+id/disconenct"
-        android:icon="@drawable/ic_action_remove"
+        android:icon="@drawable/ic_action_disconnect"
         android:title="Disconnect"
         app:showAsAction="always|withText" />
 
     <item
-        android:id="@+id/refresh"
-        android:icon="@drawable/ic_action_refresh"
+        android:id="@+id/cancelConnection"
+        android:icon="@drawable/ic_action_remove"
         android:title="Refresh"
         app:showAsAction="always|withText" />
 

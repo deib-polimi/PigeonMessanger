@@ -47,7 +47,6 @@ public class WiFiChatFragment extends Fragment {
 //        }
         WiFiChatFragment fragment = new WiFiChatFragment();
         chatFrag = fragment;
-//        Log.d("WifiChatFragment_creato","tabNumber" + tabNumber);
         return fragment;
     }
 
