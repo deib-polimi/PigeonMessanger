@@ -1,8 +1,6 @@
 
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.wifidirectmultichat.discovery.chatmessages;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,14 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import it.polimi.wifidirectmultichat.R;
+import it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager;
+import it.polimi.wifidirectmultichat.discovery.DeviceTabList;
+import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -56,7 +57,7 @@ public class WiFiChatFragment extends Fragment {
     public WiFiChatFragment() {
     }
 
-    interface CallbackActivity {
+    public interface CallbackActivity {
         public void reconnectToService(WiFiP2pService wifiP2pService);
         public int getFragmentPositionInTabList(WiFiChatFragment fragment);
     }
@@ -65,7 +66,7 @@ public class WiFiChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("WifiChatFragment_oncreateview","tabNumber" + tabNumber);
-        view = inflater.inflate(R.layout.fragment_chat, container, false);
+        view = inflater.inflate(R.layout.services_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewChat);
 
@@ -152,7 +153,6 @@ public class WiFiChatFragment extends Fragment {
 
     public void pushMessage(String readMessage) {
         Log.d("WifiChatFragment push","tabNumber" + tabNumber);
-//        adapter.add(readMessage);
         items.add(readMessage);
         adapter.notifyDataSetChanged();
     }
@@ -164,48 +164,4 @@ public class WiFiChatFragment extends Fragment {
         }
     }
 
-//        /**
-//         * ArrayAdapter to manage chat messages.
-//         */
-//    public class ChatMessageAdapter extends ArrayAdapter<String> {
-//
-//        List<String> messages = null;
-//
-//        public ChatMessageAdapter(Context context, int textViewResourceId,
-//                                  List<String> items) {
-//            super(context, textViewResourceId, items);
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            Log.d("WifiChatFragment adaptergetview","tabNumber" + tabNumber);
-//            View v = convertView;
-//            if (v == null) {
-//                LayoutInflater vi = (LayoutInflater) getActivity()
-//                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                v = vi.inflate(android.R.layout.simple_list_item_1, null);
-//            }
-//            String message = items.get(position);
-//            if (message != null && !message.isEmpty()) {
-//                TextView nameText = (TextView) v
-//                        .findViewById(android.R.id.text1);
-//                if (nameText != null) {
-//                    nameText.setText(message);
-//                    nameText.setTextAppearance(getActivity(),R.style.normalText);
-//                    if(grayScale) {
-//                        nameText.setTextColor(getResources().getColor(R.color.gray));
-//                    } else {
-//                        if (message.startsWith("Me: ")) {
-//                            nameText.setTextAppearance(getActivity(),
-//                                    R.style.normalText);
-//                        } else {
-//                            nameText.setTextAppearance(getActivity(),
-//                                    R.style.boldText);
-//                        }
-//                    }
-//                }
-//            }
-//            return v;
-//        }
-//    }
 }

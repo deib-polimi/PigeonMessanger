@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.wifidirectmultichat.discovery.socketmanagers;
 
 import android.os.Handler;
 import android.util.Log;
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import it.polimi.wifidirectmultichat.discovery.WiFiServiceDiscoveryActivity;
 
 public class ClientSocketHandler extends Thread {
 

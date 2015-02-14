@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.wifidirectmultichat.discovery.services;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 
@@ -32,7 +32,8 @@ public class ServiceList {
     public void addService(WiFiP2pService service) {
         boolean add = true;
         for (WiFiP2pService element : serviceList) {
-            if (element.device.equals(service.device) && element.instanceName.equals(service.instanceName)) {
+            if (element.getDevice().equals(service.getDevice())
+                    && element.getInstanceName().equals(service.getInstanceName())) {
                 add = false; //gia' presente
             }
         }
@@ -40,16 +41,12 @@ public class ServiceList {
         if(add) {
             serviceList.add(service);
         }
-
-//        Log.d("serviceListElement", "State: " + add + ". Element: " + service.device + ", "  + service.instanceName + ", " + service.serviceRegistrationType);
     }
 
     //a volte non si sa perche' non riesce ad ottenere il nome durante la fase di discovery, quindi in questo metodo controllo solo il mac address
     public WiFiP2pService getServiceByDevice(WifiP2pDevice device) {
         for (WiFiP2pService element : serviceList) {
-            if (element.device.deviceAddress.equals(device.deviceAddress) ) {
-//                    && element.device.deviceName.equals(device.deviceName)
-
+            if (element.getDevice().deviceAddress.equals(device.deviceAddress) ) {
                 return element;
             }
         }

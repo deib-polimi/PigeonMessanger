@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.wifidirectmultichat.discovery.services;
 
 import android.app.Activity;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -14,15 +14,11 @@ import it.polimi.wifidirectmultichat.R;
 /**
  * Created by Stefano Cappa on 10/02/15.
  */
-public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.ViewHolder> {
+public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapter.ViewHolder> {
 
-    //        private List<WiFiP2pService> items;
-    private Activity context;
     private ItemClickListener itemClickListener;
 
-    public WiFiDevicesAdapter(Activity context, @NonNull ItemClickListener itemClickListener) {
-//        super(context, resource, textViewResourceId, items);
-        this.context = context;
+    public WiFiServicesAdapter(@NonNull ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
         setHasStableIds(true);
     }
@@ -37,12 +33,9 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
         private TextView statusText;
         private TextView macAddressText;
 
-        private Activity context;
-
-        public ViewHolder(View view, Activity context) {
+        public ViewHolder(View view) {
             super(view);
 
-            this.context = context;
             this.parent = view;
 
             nameText = (TextView) view.findViewById(R.id.message);
@@ -64,7 +57,7 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.service_row, viewGroup, false);
 
-        return new ViewHolder(v,context);
+        return new ViewHolder(v);
     }
 
 
@@ -74,9 +67,9 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
 
         WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
         if (service != null) {
-            viewHolder.nameText.setText(service.device.deviceName + " - " + service.instanceName);
-            viewHolder.macAddressText.setText(service.device.deviceAddress);
-            viewHolder.statusText.setText(getDeviceStatus(service.device.status));
+            viewHolder.nameText.setText(service.getDevice().deviceName + " - " + service.getInstanceName());
+            viewHolder.macAddressText.setText(service.getDevice().deviceAddress);
+            viewHolder.statusText.setText(getDeviceStatus(service.getDevice().status));
         }
 
         viewHolder.setOnClickListener(new View.OnClickListener() {
@@ -96,29 +89,6 @@ public class WiFiDevicesAdapter extends RecyclerView.Adapter<WiFiDevicesAdapter.
     public interface ItemClickListener {
         void itemClicked(final View view);
     }
-//
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        View v = convertView;
-//        if (v == null) {
-//            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            v = vi.inflate(android.R.layout.simple_list_item_2, null);
-//        }
-//        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
-//        if (service != null) {
-//            TextView nameText = (TextView) v
-//                    .findViewById(android.R.id.text1);
-//
-//            if (nameText != null) {
-//                nameText.setText(service.device.deviceName + " - " + service.instanceName);
-//            }
-//            TextView statusText = (TextView) v
-//                    .findViewById(android.R.id.text2);
-//            statusText.setText(getDeviceStatus(service.device.status));
-//        }
-//        return v;
-//    }
 
     public static String getDeviceStatus(int statusCode) {
         switch (statusCode) {

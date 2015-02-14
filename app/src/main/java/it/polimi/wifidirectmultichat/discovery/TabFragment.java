@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import it.polimi.wifidirectmultichat.R;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiDirectServicesList;
 import lombok.Getter;
 
 
@@ -30,8 +32,6 @@ import lombok.Getter;
 public class TabFragment extends Fragment {
 
     @Getter private SectionsPagerAdapter mSectionsPagerAdapter;
-
-//    private WiFiDirectConnectionFragment connectionFragment;
 
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
@@ -79,7 +79,6 @@ public class TabFragment extends Fragment {
     }
 
     public TabFragment() {
-        // Required empty public constructor
     }
 
     public int getItemTabNumber(WiFiChatFragment fragment) {
@@ -160,7 +159,6 @@ public class TabFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if(position==0) {
-//                wiFiDirectServicesList = new WiFiDirectServicesList();
                 return wiFiDirectServicesList;
             } else {
                 return wiFiChatFragmentList.get(position-1);
@@ -199,39 +197,4 @@ public class TabFragment extends Fragment {
     public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
         return wiFiChatFragmentList.get(tabNumber-1);
     }
-
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.about, container, false);
-            return rootView;
-        }
-    }
-
 }

@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.wifidirectmultichat.discovery.socketmanagers;
 
 import android.os.Handler;
 import android.util.Log;
@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import it.polimi.wifidirectmultichat.discovery.WiFiServiceDiscoveryActivity;
 import lombok.Getter;
 import lombok.Setter;
 

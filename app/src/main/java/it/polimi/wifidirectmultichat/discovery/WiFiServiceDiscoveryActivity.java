@@ -28,37 +28,33 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import it.polimi.wifidirectmultichat.discovery.WiFiChatFragment.MessageTarget;
-import it.polimi.wifidirectmultichat.discovery.WiFiDirectServicesList.DeviceClickListener;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment.MessageTarget;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
+import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiDirectServicesList;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiDirectServicesList.DeviceClickListener;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import it.polimi.wifidirectmultichat.R;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter;
+import it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager;
+import it.polimi.wifidirectmultichat.discovery.socketmanagers.ClientSocketHandler;
+import it.polimi.wifidirectmultichat.discovery.socketmanagers.GroupOwnerSocketHandler;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * The main activity for the sample. This activity registers a local service and
- * perform discovery over Wi-Fi p2p network. It also hosts a couple of fragments
- * to manage chat operations. When the app is launched, the device publishes a
- * chat service and also tries to discover services published by other peers. On
- * selecting a peer published service, the app initiates a Wi-Fi P2P (Direct)
- * connection with the peer. On successful connection with a peer advertising
- * the same service, the app opens up sockets to initiate a chat.
- * {@code WiFiChatFragment} is then added to the the main activity which manages
- * the interface and messaging needs for a chat session.
- */
 public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         DeviceClickListener, WiFiChatFragment.CallbackActivity, Handler.Callback, MessageTarget,
         ConnectionInfoListener {
 
-    public static final String TAG = "wifidirectdemo";
+    public static final String TAG = "polimip2p";
 
     @Getter
     private int tabNum = 1;
@@ -80,14 +76,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     // TXT RECORD properties
     public static final String TXTRECORD_PROP_AVAILABLE = "available";
-    public static final String SERVICE_INSTANCE = "_wifidemotest";
+    public static final String SERVICE_INSTANCE = "_polimip2p";
     public static final String SERVICE_REG_TYPE = "_presence._tcp";
 
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
     private WifiP2pManager manager;
 
-    static final int SERVER_PORT = 4545;
+    public static final int SERVER_PORT = 4545;
 
     private final IntentFilter intentFilter = new IntentFilter();
     private Channel channel;
@@ -162,7 +158,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (toolbar != null) {
-            toolbar.setTitle("Multi-Group Chat");
+            toolbar.setTitle("WiFiDirect Chat");
             toolbar.setTitleTextColor(Color.WHITE);
 
             toolbar.inflateMenu(R.menu.action_items);
@@ -250,7 +246,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                 WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
                 if (fragment != null) {
-                    WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
+                    WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -347,7 +343,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
         WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
         if (fragment != null) {
-            WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
+            WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
@@ -485,7 +481,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
                     if (fragment != null) {
-                        WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
+                        WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
                         if (adapter != null) {
                             adapter.notifyDataSetChanged();
                         }
@@ -542,18 +538,17 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                                                         String registrationType, WifiP2pDevice srcDevice) {
 
                         // A service has been discovered. Is this our app?
-
                         if (instanceName.equalsIgnoreCase(SERVICE_INSTANCE)) {
 
                             // update the UI and add the item the discovered
                             // device.
                             WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
                             if (fragment != null) {
-                                WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment.getMAdapter());
+                                WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
                                 WiFiP2pService service = new WiFiP2pService();
-                                service.device = srcDevice;
-                                service.instanceName = instanceName;
-                                service.serviceRegistrationType = registrationType;
+                                service.setDevice(srcDevice);
+                                service.setInstanceName(instanceName);
+                                service.setServiceRegistrationType(registrationType);
 
 
                                 ServiceList.getInstance().addService(service);
@@ -613,10 +608,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     }
 
     public void setWifiP2pDevice(WiFiP2pService service1, int tabNum) {
-        Log.d("setWifiP2pDevice", "setWifiP2pDevice tabnum= " + tabNum + ", device= " + service1.device);
-        DeviceTabList.getInstance().addDevice(service1.device);
+        Log.d("setWifiP2pDevice", "setWifiP2pDevice tabnum= " + tabNum + ", device= " + service1.getDevice());
+        DeviceTabList.getInstance().addDevice(service1.getDevice());
 
-        Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + (DeviceTabList.getInstance().indexOfElement(service1.device) + 1));
+        Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + (DeviceTabList.getInstance().indexOfElement(service1.getDevice()) + 1));
 
     }
 
@@ -647,9 +642,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
         Log.d("connectP2p-1", DeviceTabList.getInstance().getDeviceList().get(tabNum - 1) + "");
 
-        if (DeviceTabList.getInstance().containsElement(service.device)) {
-            Log.d("connectP2p-2", "containselement: " + service.device);
-            this.tabNum = DeviceTabList.getInstance().indexOfElement(service.device) + 1;
+        if (DeviceTabList.getInstance().containsElement(service.getDevice())) {
+            Log.d("connectP2p-2", "containselement: " + service.getDevice());
+            this.tabNum = DeviceTabList.getInstance().indexOfElement(service.getDevice()) + 1;
         }
 
         if (this.tabNum == -1) {
@@ -657,7 +652,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
 
         WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = service.device.deviceAddress;
+        config.deviceAddress = service.getDevice().deviceAddress;
         config.wps.setup = WpsInfo.PBC;
         config.groupOwnerIntent = 0; //per farlo collegare come client
         if (serviceRequest != null)

@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.wifidirectmultichat.discovery.services;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import it.polimi.wifidirectmultichat.discovery.LocalP2PDevice;
 import it.polimi.wifidirectmultichat.discovery.dialog.TabChoosedDialog;
 
 import it.polimi.wifidirectmultichat.R;
@@ -22,16 +23,18 @@ import lombok.Getter;
  * A simple ListFragment that shows the available services as published by the
  * peers
  */
-public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapter.ItemClickListener {
+public class WiFiDirectServicesList extends Fragment implements
+        WiFiServicesAdapter.ItemClickListener, TabChoosedDialog.MyDialogCallbackInterface {
+
     private static final String TAG = "RecyclerViewFragment";
 
-    private static final int TABCHOOSER = 5; //numero costante scelto a caso
+    private static final int TABCHOOSER = 5; //numero costante scelto a caso, NON LEGATO AL NUMERO DI DEVICE O DI CHAT. NON MODIFICARLO!!!
 
     private RecyclerView mRecyclerView;
     private TextView localDeviceNameText, localDeviceAddressText;
-    @Getter private WiFiDevicesAdapter mAdapter;
+    @Getter private WiFiServicesAdapter mAdapter;
 
-    interface DeviceClickListener {
+    public interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService, int tabNum);
 
         public void setWifiP2pDevice(WiFiP2pService service1, int tabNum);
@@ -58,7 +61,7 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);// allows for optimizations if all item views are of the same size:
 
-        mAdapter = new WiFiDevicesAdapter(this.getActivity(),this);
+        mAdapter = new WiFiServicesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
         localDeviceNameText = (TextView) rootView.findViewById(R.id.localDeviceName);
@@ -88,31 +91,13 @@ public class WiFiDirectServicesList extends Fragment implements WiFiDevicesAdapt
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TABCHOOSER:
-                if (resultCode == Activity.RESULT_OK) {
-                    // After Ok code.
-                    Bundle bundle = data.getExtras();
-                    int tabnum = bundle.getInt("tab");
-                    int position = bundle.getInt("position");
-                    Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
+    public void startConnection(int tabnum, int position) {
+        // After Ok code.
+        Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
 
-
-                    WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
-                    ((DeviceClickListener) getActivity()).setWifiP2pDevice(service, tabnum);
-                    ((DeviceClickListener) getActivity()).connectP2p(service, tabnum);
-
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // After Cancel code.
-                    Log.d("Tabchooserdialog", "Non ho premuto i pulsanti");
-                }
-
-                break;
-            default:
-                break;
-        }
-
+        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
+        ((DeviceClickListener) getActivity()).setWifiP2pDevice(service, tabnum);
+        ((DeviceClickListener) getActivity()).connectP2p(service, tabnum);
     }
 }
 

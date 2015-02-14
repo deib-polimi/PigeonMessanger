@@ -1,9 +1,7 @@
 package it.polimi.wifidirectmultichat.discovery.dialog;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +13,7 @@ import it.polimi.wifidirectmultichat.R;
 
 /**
  *
- * Created by Stefano Cappa on 04/02/15.
- *
- * Classe che rappresenta il DialogFragment.
+ *  Created by Stefano Cappa on 04/02/15.
  *
  */
 public class TabChoosedDialog extends DialogFragment {
@@ -35,6 +31,10 @@ public class TabChoosedDialog extends DialogFragment {
         if (getDialog() != null && getRetainInstance())
             getDialog().setOnDismissListener(null);
         super.onDestroyView();
+    }
+
+    public interface MyDialogCallbackInterface {
+        public void startConnection(int tabnum, int position);
     }
 
     @Override
@@ -59,14 +59,7 @@ public class TabChoosedDialog extends DialogFragment {
             public void onClick(View arg0) {
                 Log.d("dialog", "tab1");
 
-                Intent i = new Intent();
-                Bundle extras = new Bundle();
-                extras.putInt("tab", 1);
-                extras.putInt("position",position);
-                i.putExtras(extras);
-
-                //notifica al fragment al metodo onActivityResult
-                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                ((MyDialogCallbackInterface)getTargetFragment()).startConnection(1,position);
                 dismiss();
             }
         });
@@ -75,14 +68,7 @@ public class TabChoosedDialog extends DialogFragment {
             public void onClick(View arg0) {
                 Log.d("dialog", "tab2");
 
-                Intent i = new Intent();
-                Bundle extras = new Bundle();
-                extras.putInt("tab", 2);
-                extras.putInt("position",position);
-                i.putExtras(extras);
-
-                //notifica al fragment al metodo onActivityResult
-                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                ((MyDialogCallbackInterface)getTargetFragment()).startConnection(2,position);
                 dismiss();
             }
         });
@@ -91,14 +77,7 @@ public class TabChoosedDialog extends DialogFragment {
             public void onClick(View arg0) {
                 Log.d("dialog", "tab3");
 
-                Intent i = new Intent();
-                Bundle extras = new Bundle();
-                extras.putInt("tab", 3);
-                extras.putInt("position",position);
-                i.putExtras(extras);
-
-                //notifica al fragment al metodo onActivityResult
-                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                ((MyDialogCallbackInterface)getTargetFragment()).startConnection(3,position);
                 dismiss();
             }
         });
@@ -107,14 +86,7 @@ public class TabChoosedDialog extends DialogFragment {
             public void onClick(View arg0) {
                 Log.d("dialog", "tab4");
 
-                Intent i = new Intent();
-                Bundle extras = new Bundle();
-                extras.putInt("tab", 4);
-                extras.putInt("position",position);
-                i.putExtras(extras);
-
-                //notifica al fragment al metodo onActivityResult
-                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                ((MyDialogCallbackInterface)getTargetFragment()).startConnection(4,position);
                 dismiss();
             }
         });
@@ -123,14 +95,7 @@ public class TabChoosedDialog extends DialogFragment {
             public void onClick(View arg0) {
                 Log.d("dialog", "tab5");
 
-                Intent i = new Intent();
-                Bundle extras = new Bundle();
-                extras.putInt("tab", 5);
-                extras.putInt("position",position);
-                i.putExtras(extras);
-
-                //notifica al fragment al metodo onActivityResult
-                getTargetFragment().onActivityResult(getTargetRequestCode(), ActionBarActivity.RESULT_OK, i);
+                ((MyDialogCallbackInterface)getTargetFragment()).startConnection(5,position);
                 dismiss();
             }
         });
