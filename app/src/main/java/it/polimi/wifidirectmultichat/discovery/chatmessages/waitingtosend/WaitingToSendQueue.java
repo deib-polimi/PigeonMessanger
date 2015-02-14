@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 public class WaitingToSendQueue {
 
-    @Getter private List<WaitingToSendListElement> waitingToSend;
+    private List<WaitingToSendListElement> waitingToSend;
 
     private static WaitingToSendQueue instance = new WaitingToSendQueue();
 
@@ -25,9 +25,16 @@ public class WaitingToSendQueue {
     }
 
     public List<String> waitingToSendItemsList (int number) {
-        if(waitingToSend.size() < number) {
-            waitingToSend.add(new WaitingToSendListElement());
+
+        if (number - 1 >= 0 && number - 1 <= waitingToSend.size() - 1) {
+            waitingToSend.set(number - 1, new WaitingToSendListElement());
+        } else {
+            waitingToSend.add(number - 1, new WaitingToSendListElement());
         }
+
+//        if(waitingToSend.size() < number) {
+//            waitingToSend.add(number, new WaitingToSendListElement());
+//        }
         return waitingToSend.get(number - 1).getWaitingToSendList();
     }
 

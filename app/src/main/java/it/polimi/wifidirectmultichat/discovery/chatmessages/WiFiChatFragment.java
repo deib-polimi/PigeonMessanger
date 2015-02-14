@@ -97,7 +97,7 @@ public class WiFiChatFragment extends Fragment {
                                 Log.d("pippo", "tento la riconnessione. Il valore di tabNum e': " + ((CallbackActivity) getActivity()).getFragmentPositionInTabList(chatFrag));
                                 //tento la riconnessione
                                 List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
-                                WifiP2pDevice device = DeviceTabList.getInstance().getDeviceList().get(tabNumber - 1);
+                                WifiP2pDevice device = DeviceTabList.getInstance().getDevice(tabNumber - 1);
                                 if(device!=null) {
                                     WiFiP2pService service = ServiceList.getInstance().getServiceByDevice(device);
                                     Log.d("pippo", "device: " + device.deviceName + ", address: " + device.deviceAddress + ", service: " + service);

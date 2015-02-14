@@ -37,7 +37,7 @@ public class WiFiDirectServicesList extends Fragment implements
     public interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService, int tabNum);
 
-        public void setWifiP2pDevice(WiFiP2pService service1, int tabNum);
+        public void setWifiP2pDevice(WiFiP2pService service1);
     }
 
     public static WiFiDirectServicesList newInstance() {
@@ -96,7 +96,7 @@ public class WiFiDirectServicesList extends Fragment implements
         Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
 
         WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
-        ((DeviceClickListener) getActivity()).setWifiP2pDevice(service, tabnum);
+        ((DeviceClickListener) getActivity()).setWifiP2pDevice(service);
         ((DeviceClickListener) getActivity()).connectP2p(service, tabnum);
     }
 }

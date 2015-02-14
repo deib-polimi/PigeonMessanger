@@ -103,7 +103,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         if (wifiP2pService != null) {
             //tabnum lo setto a caso, tanto il programma capisce da solo qual'e' quello corretto
             Log.d("reconnectToService", "reconnectToService");
-            this.setWifiP2pDevice(wifiP2pService, 1);
+            this.setWifiP2pDevice(wifiP2pService);
             this.connectP2p(wifiP2pService, 1);
         }
     }
@@ -607,8 +607,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         });
     }
 
-    public void setWifiP2pDevice(WiFiP2pService service1, int tabNum) {
-        Log.d("setWifiP2pDevice", "setWifiP2pDevice tabnum= " + tabNum + ", device= " + service1.getDevice());
+    public void setWifiP2pDevice(WiFiP2pService service1) {
+        Log.d("setWifiP2pDevice", "setWifiP2pDevice device= " + service1.getDevice());
         DeviceTabList.getInstance().addDevice(service1.getDevice());
 
         Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + (DeviceTabList.getInstance().indexOfElement(service1.getDevice()) + 1));
@@ -640,7 +640,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         Log.d(TAG, "connectP2p " + tabNum);
         this.tabNum = tabNum;
 
-        Log.d("connectP2p-1", DeviceTabList.getInstance().getDeviceList().get(tabNum - 1) + "");
+        Log.d("connectP2p-1", DeviceTabList.getInstance().getDevice(tabNum - 1) + "");
 
         if (DeviceTabList.getInstance().containsElement(service.getDevice())) {
             Log.d("connectP2p-2", "containselement: " + service.getDevice());
@@ -707,7 +707,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
-                if (readMessage.contains("ADDRESS")) {
+                if (readMessage.contains("ADDRESS") && readMessage.split("___").length==3) {
                     Log.d("ADDRESS", "ADDRESS_____ : " + readMessage);
                     p2pDevice = new WifiP2pDevice();
                     p2pDevice.deviceAddress = readMessage.split("___")[1];
@@ -717,12 +717,15 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
                         Log.d("handleMessage", "elemento non presente! OK");
-                        if (DeviceTabList.getInstance().getDeviceList().get(tabNum -1 ) == null) {
+                        if (DeviceTabList.getInstance().getDevice(tabNum -1 ) == null) {
                             Log.d("handleMessage", "elemento in tabnum= " + (tabNum-1) + " nullo");
-                            DeviceTabList.getInstance().getDeviceList().set(tabNum-1, p2pDevice);
+                            DeviceTabList.getInstance().setDevice(tabNum-1, p2pDevice);
+
+                            Log.d("handleMessage", "device settato il precendeza = " + DeviceTabList.getInstance().getDevice(tabNum -1 ).deviceAddress);
+
                         } else {
                             Log.d("handleMessage", "elemento in tabnum= " + (tabNum-1) + " non nullo");
-                            DeviceTabList.getInstance().getDeviceList().add(p2pDevice);
+                            DeviceTabList.getInstance().addDevice(p2pDevice);
                         }
                     } else {
                         Log.d("handleMessage", "elemento presente! OK");

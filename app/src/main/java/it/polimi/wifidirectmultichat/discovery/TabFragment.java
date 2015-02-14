@@ -195,6 +195,6 @@ public class TabFragment extends Fragment {
 
 
     public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
-        return wiFiChatFragmentList.get(tabNumber-1);
+        return wiFiChatFragmentList.get(tabNumber - 1);
     }
 }
