@@ -707,7 +707,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
-                if (readMessage.contains("ADDRESS") && readMessage.split("___").length==3) {
+                if (readMessage.contains("ADDRESS") && readMessage.split("___").length == 3) {
                     Log.d("ADDRESS", "ADDRESS_____ : " + readMessage);
                     p2pDevice = new WifiP2pDevice();
                     p2pDevice.deviceAddress = readMessage.split("___")[1];
@@ -717,14 +717,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
                         Log.d("handleMessage", "elemento non presente! OK");
-                        if (DeviceTabList.getInstance().getDevice(tabNum -1 ) == null) {
-                            Log.d("handleMessage", "elemento in tabnum= " + (tabNum-1) + " nullo");
-                            DeviceTabList.getInstance().setDevice(tabNum-1, p2pDevice);
+                        if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
+                            Log.d("handleMessage", "elemento in tabnum= " + (tabNum - 1) + " nullo");
+                            DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
 
-                            Log.d("handleMessage", "device settato il precendeza = " + DeviceTabList.getInstance().getDevice(tabNum -1 ).deviceAddress);
+                            Log.d("handleMessage", "device settato il precendeza = " + DeviceTabList.getInstance().getDevice(tabNum - 1).deviceAddress);
 
                         } else {
-                            Log.d("handleMessage", "elemento in tabnum= " + (tabNum-1) + " non nullo");
+                            Log.d("handleMessage", "elemento in tabnum= " + (tabNum - 1) + " non nullo");
                             DeviceTabList.getInstance().addDevice(p2pDevice);
                         }
                     } else {
@@ -734,7 +734,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                 Log.d("handleMessage", "handleMessage, MESSAGE_READ , il tabNum globale activity ore e': " + tabNum);
 
-                if(p2pDevice!=null) {
+                if (p2pDevice != null) {
                     //se ho il p2pdevice diverso da null, vuol dire che lo ho settato e quindi e' la fase di scambio dei macaddress
                     //quindi devo assicurarmi di inviare il messaggio sulla chat giusta, ma per farlo devo avere l'indice
                     //corretto tabNum. Se per puro caso, ho usato il device prima per fare altro ed e' rimasto tabNum settato e ora
@@ -742,11 +742,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     //cerco l'indice cosi'
 
                     tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
-                    Log.d("p2pDevice!=null","tabNum = " + tabNum);
+                    Log.d("p2pDevice!=null", "tabNum = " + tabNum);
 
                 }
 
 
+                if (tabNum < 0) {
+                    Log.d("handleMessage", "errore tabnum<0,cioe' = " + tabNum);
+                }
 
                 //SU STA RIGA NEL TELEFONO DI AFFO MI HA LANCIATO ECCEZIONE
                 tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
