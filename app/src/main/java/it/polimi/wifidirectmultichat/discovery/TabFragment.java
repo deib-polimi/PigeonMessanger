@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import it.polimi.wifidirectmultichat.R;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiDirectServicesList;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragment;
 import lombok.Getter;
 
 
@@ -38,7 +38,7 @@ public class TabFragment extends Fragment {
      */
     @Getter ViewPager mViewPager;
 
-    @Getter private static WiFiDirectServicesList wiFiDirectServicesList;
+    @Getter private static WiFiP2pServicesListFragment wiFiP2pServicesListFragment;
     @Getter private static List<WiFiChatFragment> wiFiChatFragmentList;
 
 
@@ -73,7 +73,7 @@ public class TabFragment extends Fragment {
         frag.setTabNumber(new Integer(5));
         wiFiChatFragmentList.add(frag);
 
-        wiFiDirectServicesList = WiFiDirectServicesList.newInstance();
+        wiFiP2pServicesListFragment = WiFiP2pServicesListFragment.newInstance();
 
         return fragment;
     }
@@ -159,7 +159,7 @@ public class TabFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if(position==0) {
-                return wiFiDirectServicesList;
+                return wiFiP2pServicesListFragment;
             } else {
                 return wiFiChatFragmentList.get(position-1);
             }
@@ -176,18 +176,9 @@ public class TabFragment extends Fragment {
             switch (position) {
                 case 0:
                     return (new String("Services")).toUpperCase(l);
-                case 1:
-                    return (new String("Chat1")).toUpperCase(l);
-                case 2:
-                    return (new String("Chat2")).toUpperCase(l);
-                case 3:
-                    return (new String("Chat3")).toUpperCase(l);
-                case 4:
-                    return (new String("Chat4")).toUpperCase(l);
-                case 5:
-                    return (new String("Chat5")).toUpperCase(l);
+                default :
+                    return (new String("Chat") + position).toUpperCase(l);
             }
-            return null;
         }
 
 

@@ -1,8 +1,6 @@
 
 package it.polimi.wifidirectmultichat.discovery.services;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,8 +21,8 @@ import lombok.Getter;
  * A simple ListFragment that shows the available services as published by the
  * peers
  */
-public class WiFiDirectServicesList extends Fragment implements
-        WiFiServicesAdapter.ItemClickListener, TabChoosedDialog.MyDialogCallbackInterface {
+public class WiFiP2pServicesListFragment extends Fragment implements
+        WiFiServicesAdapter.ItemClickListener {
 
     private static final String TAG = "RecyclerViewFragment";
 
@@ -40,12 +38,12 @@ public class WiFiDirectServicesList extends Fragment implements
         public void setWifiP2pDevice(WiFiP2pService service1);
     }
 
-    public static WiFiDirectServicesList newInstance() {
-        WiFiDirectServicesList fragment = new WiFiDirectServicesList();
+    public static WiFiP2pServicesListFragment newInstance() {
+        WiFiP2pServicesListFragment fragment = new WiFiP2pServicesListFragment();
         return fragment;
     }
 
-    public WiFiDirectServicesList() {}
+    public WiFiP2pServicesListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,28 +75,33 @@ public class WiFiDirectServicesList extends Fragment implements
     public void itemClicked(final View view) {
         Log.d("onArticleSelected", "catturato clic");
 
-        TabChoosedDialog tabChoosedDialog = (TabChoosedDialog) getFragmentManager().findFragmentByTag("tabchooserdialog");
+//        TabChoosedDialog tabChoosedDialog = (TabChoosedDialog) getFragmentManager().findFragmentByTag("tabchooserdialog");
+//
+//        if (tabChoosedDialog == null) {
+//            tabChoosedDialog = TabChoosedDialog.newInstance(mRecyclerView.getChildPosition(view));
 
-        if (tabChoosedDialog == null) {
-            tabChoosedDialog = TabChoosedDialog.newInstance(mRecyclerView.getChildPosition(view));
+//            tabChoosedDialog.setTargetFragment(this, TABCHOOSER);
 
-            tabChoosedDialog.setTargetFragment(this, TABCHOOSER);
-
-            tabChoosedDialog.show(getFragmentManager(), "tabchooserdialog");
-            getFragmentManager().executePendingTransactions();
-        }
-
-    }
-
-    @Override
-    public void startConnection(int tabnum, int position) {
+//            tabChoosedDialog.show(getFragmentManager(), "tabchooserdialog");
+//            getFragmentManager().executePendingTransactions();
+//        }
         // After Ok code.
-        Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
+//        Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
 
-        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
+        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(mRecyclerView.getChildPosition(view));
         ((DeviceClickListener) getActivity()).setWifiP2pDevice(service);
-        ((DeviceClickListener) getActivity()).connectP2p(service, tabnum);
+        ((DeviceClickListener) getActivity()).connectP2p(service, 1);
     }
+
+//    @Override
+//    public void startConnection(int tabnum, int position) {
+//        // After Ok code.
+//        Log.d("Tabchooseddialog", "tabnum: " + tabnum + ", position: " + position);
+//
+//        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
+//        ((DeviceClickListener) getActivity()).setWifiP2pDevice(service);
+//        ((DeviceClickListener) getActivity()).connectP2p(service, tabnum);
+//    }
 }
 
 

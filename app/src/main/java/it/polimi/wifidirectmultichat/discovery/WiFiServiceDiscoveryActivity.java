@@ -34,8 +34,8 @@ import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment.MessageTarget;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
 import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiDirectServicesList;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiDirectServicesList.DeviceClickListener;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragment;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragment.DeviceClickListener;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -244,7 +244,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     startRegistrationAndDiscovery();
                 }
 
-                WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+                WiFiP2pServicesListFragment fragment = tabFragment.getWiFiP2pServicesListFragment();
                 if (fragment != null) {
                     WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
                     adapter.notifyDataSetChanged();
@@ -341,7 +341,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         discoveryStatus = true;
         startRegistrationAndDiscovery();
 
-        WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+        WiFiP2pServicesListFragment fragment = tabFragment.getWiFiP2pServicesListFragment();
         if (fragment != null) {
             WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
             if (adapter != null) {
@@ -479,7 +479,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     startRegistrationAndDiscovery();
 
-                    WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+                    WiFiP2pServicesListFragment fragment = tabFragment.getWiFiP2pServicesListFragment();
                     if (fragment != null) {
                         WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
                         if (adapter != null) {
@@ -542,7 +542,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                             // update the UI and add the item the discovered
                             // device.
-                            WiFiDirectServicesList fragment = tabFragment.getWiFiDirectServicesList();
+                            WiFiP2pServicesListFragment fragment = tabFragment.getWiFiP2pServicesListFragment();
                             if (fragment != null) {
                                 WiFiServicesAdapter adapter = ((WiFiServicesAdapter) fragment.getMAdapter());
                                 WiFiP2pService service = new WiFiP2pService();
