@@ -31,15 +31,19 @@ import lombok.Getter;
  */
 public class TabFragment extends Fragment {
 
-    @Getter private SectionsPagerAdapter mSectionsPagerAdapter;
+    @Getter
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
-    @Getter ViewPager mViewPager;
+    @Getter
+    ViewPager mViewPager;
 
-    @Getter private static WiFiP2pServicesListFragment wiFiP2pServicesListFragment;
-    @Getter private static List<WiFiChatFragment> wiFiChatFragmentList;
+    @Getter
+    private static WiFiP2pServicesListFragment wiFiP2pServicesListFragment;
+    @Getter
+    private static List<WiFiChatFragment> wiFiChatFragmentList;
 
 
     /**
@@ -58,11 +62,18 @@ public class TabFragment extends Fragment {
         return fragment;
     }
 
+
+    public void removeTab() {
+        wiFiChatFragmentList.remove(wiFiChatFragmentList.size() - 1);
+        this.mSectionsPagerAdapter.notifyDataSetChanged();
+    }
+
+
     public void addNewTabChatFragmentIfNecessary() {
         WiFiChatFragment frag = WiFiChatFragment.newInstance();
+        frag.setTabNumber(new Integer(wiFiChatFragmentList.size() + 1));
         //lo aggiungo settando come numero la size+1 della lista perche' cosi' il valore e'
         //corretto visto che la lista devo ancora cambiarla, size sara' l'ultimo elemento.
-        frag.setTabNumber(new Integer(wiFiChatFragmentList.size() + 1));
         wiFiChatFragmentList.add(frag);
         this.mSectionsPagerAdapter.notifyDataSetChanged();
     }
@@ -147,10 +158,10 @@ public class TabFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            if(position==0) {
+            if (position == 0) {
                 return wiFiP2pServicesListFragment;
             } else {
-                return wiFiChatFragmentList.get(position-1);
+                return wiFiChatFragmentList.get(position - 1);
             }
         }
 
@@ -165,7 +176,7 @@ public class TabFragment extends Fragment {
             switch (position) {
                 case 0:
                     return (new String("Services")).toUpperCase(l);
-                default :
+                default:
                     return (new String("Chat") + position).toUpperCase(l);
             }
         }

@@ -19,7 +19,7 @@
     <item
         android:id="@+id/cancelConnection"
         android:icon="@drawable/ic_action_remove"
-        android:title="Refresh"
+        android:title="Cancel connection"
         app:showAsAction="always|withText" />
 
 </menu>

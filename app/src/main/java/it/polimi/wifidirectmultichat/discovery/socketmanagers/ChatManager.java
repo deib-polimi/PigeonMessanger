@@ -74,6 +74,7 @@ public class ChatManager implements Runnable {
 
     public void write(byte[] buffer) {
         try {
+            Log.d("catmanager-write" , "length buffer" + buffer.length);
             oStream.write(buffer);
         } catch (IOException e) {
             Log.e(TAG, "Exception during write", e);

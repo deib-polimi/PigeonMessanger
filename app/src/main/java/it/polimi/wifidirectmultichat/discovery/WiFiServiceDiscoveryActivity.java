@@ -690,7 +690,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         WiFiChatFragment frag = tabFragment.getChatFragmentByTab(tabNum);
         Log.d("sendAddress", "chatmanager is " + frag.getChatManager());
         if (frag.getChatManager() != null) {
-            frag.getChatManager().write(("ADDRESS" + "___" + deviceMacAddress + "___" + name).getBytes());
+            //uso i "+" come spaziatura iniziale per essere sicuro che il messaggio non sia perso
+            //cioe' non devo perndere nessuna lettera di ADDRESS, o l'if in ricezione fallira' e non potro' settare
+            //il device nella lista, creando nullpointeresxception.
+            frag.getChatManager().write(("+++++++ADDRESS" + "___" + deviceMacAddress + "___" + name).getBytes());
         }
     }
 
@@ -704,11 +707,18 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         switch (msg.what) {
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
+
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
+
+                if(readMessage.length()<=1) {
+                    Log.d("handleMessage" ,"filtro messaggio perche' troppo corto: " + readMessage);
+                    return true;
+                }
+
                 Log.d(TAG, readMessage);
                 if (readMessage.contains("ADDRESS") && readMessage.split("___").length == 3) {
-                    Log.d("ADDRESS", "ADDRESS_____ : " + readMessage);
+                    Log.d("ADDRESS", "+++ADDRESS_____ : " + readMessage);
                     p2pDevice = new WifiP2pDevice();
                     p2pDevice.deviceAddress = readMessage.split("___")[1];
                     p2pDevice.deviceName = readMessage.split("___")[2];
@@ -717,6 +727,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
                     if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
                         Log.d("handleMessage", "elemento non presente! OK");
+
+                        //aggiungo il nuovo tab
+//                        Log.d("handleMessage", "MESSAGE_READ - aggiungo tab");
+//                        tabFragment.addNewTabChatFragmentIfNecessary();
+
                         if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
                             Log.d("handleMessage", "elemento in tabnum= " + (tabNum - 1) + " nullo");
                             DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
@@ -730,21 +745,31 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     } else {
                         Log.d("handleMessage", "elemento presente! OK");
                     }
+
+                    if (p2pDevice != null) {
+                        Log.d("p2pDevice!=null", "tabNum = " + tabNum);
+                        //se ho il p2pdevice diverso da null, vuol dire che lo ho settato e quindi e' la fase di scambio dei macaddress
+                        //quindi devo assicurarmi di inviare il messaggio sulla chat giusta, ma per farlo devo avere l'indice
+                        //corretto tabNum. Se per puro caso, ho usato il device prima per fare altro ed e' rimasto tabNum settato e ora
+                        //questo valore risulta scorretto, rischio di inserire messaggi nel tab sbagliato, allora
+                        //cerco l'indice cosi'
+
+                        tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
+                        if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
+                            tabFragment.addNewTabChatFragmentIfNecessary();
+                            Log.d("handleMessage", "handleMessage, MESSAGE_READ tab added with tabnum: " + tabNum);
+                        }
+
+
+                    }
                 }
 
                 Log.d("handleMessage", "handleMessage, MESSAGE_READ , il tabNum globale activity ore e': " + tabNum);
 
-                if (p2pDevice != null) {
-                    //se ho il p2pdevice diverso da null, vuol dire che lo ho settato e quindi e' la fase di scambio dei macaddress
-                    //quindi devo assicurarmi di inviare il messaggio sulla chat giusta, ma per farlo devo avere l'indice
-                    //corretto tabNum. Se per puro caso, ho usato il device prima per fare altro ed e' rimasto tabNum settato e ora
-                    //questo valore risulta scorretto, rischio di inserire messaggi nel tab sbagliato, allora
-                    //cerco l'indice cosi'
-
-                    tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
-                    Log.d("p2pDevice!=null", "tabNum = " + tabNum);
-
-                }
+//                if (p2pDevice == null) {
+//                    Log.d("handleMessage", "rimuovo ultimo tab");
+//                    tabFragment.removeTab();
+//                }
 
 
                 //a volte lanciava eccezione qui perche' tabnum era 0, cioe' in tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
@@ -768,13 +793,18 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 final Object obj = msg.obj;
                 Log.d("handleMessage", "MY_HANDLE");
 
+                //aggiungo un nuovo tab
+                Log.d("handleMessage", "MY_HANDLE - aggiungo tab");
+                if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
+                    tabFragment.addNewTabChatFragmentIfNecessary();
+                    Log.d("handleMessage", "handleMessage, MY_HANDLE tab added with tabnum: " + tabNum);
+                }
+
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
                     public void onGroupInfoAvailable(WifiP2pGroup group) {
                         //il group owner comunica il suo indirizzo al client
                         if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
-
-                            tabFragment.addNewTabChatFragmentIfNecessary();
 
                             tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
 
@@ -786,8 +816,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                         tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
 
                         //mi posiziono sul tab attivato e gli cambio colore
-                        colorActiveTabs(); //cambia colore al tab con chatmanager!=null, cioe' a quello attivo
-                        tabFragment.getMViewPager().setCurrentItem(tabNum);
+//                        colorActiveTabs(); //cambia colore al tab con chatmanager!=null, cioe' a quello attivo
+//                        tabFragment.getMViewPager().setCurrentItem(tabNum);
                     }
                 });
         }
