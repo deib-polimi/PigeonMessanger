@@ -747,17 +747,19 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
 
 
-                if (tabNum < 0) {
-                    Log.d("handleMessage", "errore tabnum<0,cioe' = " + tabNum);
-                }
-
                 //SU STA RIGA NEL TELEFONO DI AFFO MI HA LANCIATO ECCEZIONE
-                tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
+                //quindi metto l'if :)
+                if(tabNum>=1) {
+                    tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
 
-                if (!WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNum).isEmpty()) {
-                    Log.d(TAG, "MESSAGE_READ-svuoto la coda " + tabNum);
-                    tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
+                    if (!WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNum).isEmpty()) {
+                        Log.d(TAG, "MESSAGE_READ-svuoto la coda " + tabNum);
+                        tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
+                    }
+                } else {
+                    Log.d("handleMessage", "errore tabnum<=0,cioe' = " + tabNum);
                 }
+
                 break;
 
             case MY_HANDLE:

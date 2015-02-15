@@ -5,10 +5,12 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -66,7 +68,7 @@ public class WiFiChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("WifiChatFragment_oncreateview","tabNumber" + tabNumber);
-        view = inflater.inflate(R.layout.services_list, container, false);
+        view = inflater.inflate(R.layout.chatmessage_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewChat);
 
@@ -78,8 +80,50 @@ public class WiFiChatFragment extends Fragment {
 
         adapter = new WiFiChatMessageAdapter(this);
         mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
+
+        view.findViewById(R.id.txtChatLine).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        Log.d("ontouch","down");
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        Log.d("ontouch","up");
+//                        break;
+//                    case MotionEvent.ACTION_HOVER_ENTER :
+//                        Log.d("ontouch","hoverenter");
+//                        break;
+//                    case MotionEvent.ACTION_HOVER_MOVE :
+//                        Log.d("ontouch","hovermove");
+//                        break;
+//                    case MotionEvent.ACTION_HOVER_EXIT :
+//                        Log.d("ontouch","hoverexit");
+//                        break;
+//                    default:
+//                        Log.d("ontouch","default");
+//                        break;
+//                }
+
+                return false;
+            }
+        });
+
+//        view.findViewById(R.id.txtChatLine).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                Log.d("onfocuschange" , "focus: " + hasFocus);
+//                if(hasFocus) {
+//                    mRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+//                } else {
+//                    mRecyclerView.scrollToPosition(0);
+//                }
+//            }
+//        });
 
         view.findViewById(R.id.button1).setOnClickListener(
                 new View.OnClickListener() {

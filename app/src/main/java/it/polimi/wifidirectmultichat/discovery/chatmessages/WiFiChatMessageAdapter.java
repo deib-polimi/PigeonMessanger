@@ -26,13 +26,18 @@ public class WiFiChatMessageAdapter extends RecyclerView.Adapter<WiFiChatMessage
      * Classe statica viewHolder
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final View view;
+        private final ViewGroup viewGroup;
         private ImageView image;
         private TextView message;
 
         private WiFiChatFragment chatFragment;
 
-        public ViewHolder(View view, WiFiChatFragment chatFragment) {
+        public ViewHolder(View view, WiFiChatFragment chatFragment, ViewGroup viewGroup) {
             super(view);
+
+            this.view = view;
+            this.viewGroup = viewGroup;
 
             this.chatFragment = chatFragment;
 
@@ -48,7 +53,7 @@ public class WiFiChatMessageAdapter extends RecyclerView.Adapter<WiFiChatMessage
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.chatmessage_row, viewGroup, false);
 
-        return new ViewHolder(v, chatFragment);
+        return new ViewHolder(v, chatFragment, viewGroup);
     }
 
 
