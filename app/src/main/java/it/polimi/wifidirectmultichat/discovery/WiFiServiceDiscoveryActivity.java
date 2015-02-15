@@ -624,7 +624,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
     }
 
-    public void changeColorAllChats() {
+    public void colorActiveTabs() {
         if (tabFragment != null) {
             for (WiFiChatFragment chatFragment : tabFragment.getWiFiChatFragmentList()) {
                 if (chatFragment != null) {
@@ -747,8 +747,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
 
 
-                //SU STA RIGA NEL TELEFONO DI AFFO MI HA LANCIATO ECCEZIONE
-                //quindi metto l'if :)
+                //a volte lanciava eccezione qui perche' tabnum era 0, cioe' in tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
+                //veniva messo a -1 ma poi sommando 1 diventava 0, e in questa riga sotto dava errore.
+                //il problema non e' risolto, cosi' semplicemente non pusha a schermo il messaggio ricevuto con il macaddress
+                //nel caso in cui sia la prima connessione.
                 if(tabNum>=1) {
                     tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
 
@@ -763,24 +765,31 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 break;
 
             case MY_HANDLE:
-                Object obj = msg.obj;
+                final Object obj = msg.obj;
                 Log.d("handleMessage", "MY_HANDLE");
-                tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
                     public void onGroupInfoAvailable(WifiP2pGroup group) {
                         //il group owner comunica il suo indirizzo al client
                         if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
+
+                            tabFragment.addNewTabChatFragmentIfNecessary();
+
+                            tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
+
                             Log.d("requestGroupInfo", "isGO= " + group.isGroupOwner() + ". Sending address: " + LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
                             sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress, LocalP2PDevice.getInstance().getLocalDevice().deviceName);
                         }
 
+                        Log.d(TAG, "MY_HANDLE-svuoto la coda " + tabNum);
+                        tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
+
+                        //mi posiziono sul tab attivato e gli cambio colore
+                        colorActiveTabs(); //cambia colore al tab con chatmanager!=null, cioe' a quello attivo
+                        tabFragment.getMViewPager().setCurrentItem(tabNum);
                     }
                 });
-
-                Log.d(TAG, "MY_HANDLE-svuoto la coda " + tabNum);
-                tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
         }
         return true;
     }

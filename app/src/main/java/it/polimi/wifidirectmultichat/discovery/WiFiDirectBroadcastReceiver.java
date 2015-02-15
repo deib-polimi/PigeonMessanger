@@ -75,7 +75,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 Log.d(WiFiServiceDiscoveryActivity.TAG,
                         "Connected to p2p network. Requesting network details");
                 manager.requestConnectionInfo(channel,(ConnectionInfoListener) activity);
-                ((WiFiServiceDiscoveryActivity)activity).changeColorAllChats();
+                ((WiFiServiceDiscoveryActivity)activity).colorActiveTabs();
                 ((WiFiServiceDiscoveryActivity)activity).setTabFragmentToPage(((WiFiServiceDiscoveryActivity)activity).getTabNum());
 
             } else {

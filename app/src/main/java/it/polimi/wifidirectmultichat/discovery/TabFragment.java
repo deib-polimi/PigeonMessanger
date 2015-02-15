@@ -53,29 +53,18 @@ public class TabFragment extends Fragment {
         TabFragment fragment = new TabFragment();
         wiFiChatFragmentList = new ArrayList<>();
 
-        WiFiChatFragment frag = WiFiChatFragment.newInstance();
-        frag.setTabNumber(new Integer(1));
-        wiFiChatFragmentList.add(frag);
-
-        frag = WiFiChatFragment.newInstance();
-        frag.setTabNumber(new Integer(2));
-        wiFiChatFragmentList.add(frag);
-
-        frag = WiFiChatFragment.newInstance();
-        frag.setTabNumber(new Integer(3));
-        wiFiChatFragmentList.add(frag);
-
-        frag = WiFiChatFragment.newInstance();
-        frag.setTabNumber(new Integer(4));
-        wiFiChatFragmentList.add(frag);
-
-        frag = WiFiChatFragment.newInstance();
-        frag.setTabNumber(new Integer(5));
-        wiFiChatFragmentList.add(frag);
-
         wiFiP2pServicesListFragment = WiFiP2pServicesListFragment.newInstance();
 
         return fragment;
+    }
+
+    public void addNewTabChatFragmentIfNecessary() {
+        WiFiChatFragment frag = WiFiChatFragment.newInstance();
+        //lo aggiungo settando come numero la size+1 della lista perche' cosi' il valore e'
+        //corretto visto che la lista devo ancora cambiarla, size sara' l'ultimo elemento.
+        frag.setTabNumber(new Integer(wiFiChatFragmentList.size() + 1));
+        wiFiChatFragmentList.add(frag);
+        this.mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
     public TabFragment() {
