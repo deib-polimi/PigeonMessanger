@@ -11,7 +11,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 
-import it.polimi.wifidirectmultichat.discovery.chatmessages.PendingItemAnimator;
 
 public class GarageDoorItemAnimator extends PendingItemAnimator {
 

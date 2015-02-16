@@ -1,8 +1,10 @@
 
 package it.polimi.wifidirectmultichat.discovery.services;
 
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
+
 import it.polimi.wifidirectmultichat.discovery.LocalP2PDevice;
 
 import it.polimi.wifidirectmultichat.R;
+import it.polimi.wifidirectmultichat.discovery.WiFiServiceDiscoveryActivity;
+import it.polimi.wifidirectmultichat.discovery.services.localdevicedialog.LocalDeviceDialogFragment;
 import lombok.Getter;
 
 /**
@@ -22,11 +28,12 @@ import lombok.Getter;
  * peers
  */
 public class WiFiP2pServicesListFragment extends Fragment implements
-        WiFiServicesAdapter.ItemClickListener {
+        WiFiServicesAdapter.ItemClickListener, LocalDeviceDialogFragment.DialogCallbackInterface {
 
     private static final String TAG = "RecyclerViewFragment";
 
     private RecyclerView mRecyclerView;
+    private CardView cardviewLocalDevice;
     private TextView localDeviceNameText, localDeviceAddressText;
     @Getter private WiFiServicesAdapter mAdapter;
 
@@ -67,7 +74,17 @@ public class WiFiP2pServicesListFragment extends Fragment implements
         localDeviceNameText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceName);
         localDeviceAddressText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
 
+        cardviewLocalDevice = (CardView) rootView.findViewById(R.id.cardviewLocalDevice);
+        cardviewLocalDevice.setOnClickListener(new OnClickListenerLocalDevice(this));
+
         return rootView;
+    }
+
+    @Override
+    public void changeLocalDeviceName(String deviceName) {
+        localDeviceNameText.setText(deviceName);
+        ((WiFiServiceDiscoveryActivity)getActivity()).setDeviceNameWithReflection(deviceName);
+
     }
 
     @Override
@@ -77,6 +94,30 @@ public class WiFiP2pServicesListFragment extends Fragment implements
         WiFiP2pService service = ServiceList.getInstance().getServiceList().get(mRecyclerView.getChildPosition(view));
         ((DeviceClickListener) getActivity()).setWifiP2pDevice(service);
         ((DeviceClickListener) getActivity()).connectP2p(service, 1);
+    }
+
+
+
+    class OnClickListenerLocalDevice implements View.OnClickListener {
+
+        public Fragment fragment;
+
+        public OnClickListenerLocalDevice(Fragment fragment1) {
+            fragment = fragment1;
+        }
+
+        @Override
+        public void onClick(View v) {
+            LocalDeviceDialogFragment localDeviceDialogFragment = (LocalDeviceDialogFragment) getFragmentManager().findFragmentByTag("localDeviceDialogFragment");
+
+            if (localDeviceDialogFragment == null) {
+                localDeviceDialogFragment = LocalDeviceDialogFragment.newInstance();
+                localDeviceDialogFragment.setTargetFragment(fragment, 0);
+
+                localDeviceDialogFragment.show(getFragmentManager(), "localDeviceDialogFragment");
+                getFragmentManager().executePendingTransactions();
+            }
+        }
     }
 }
 

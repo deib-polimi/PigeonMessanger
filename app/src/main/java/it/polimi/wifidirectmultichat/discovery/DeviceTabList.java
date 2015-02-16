@@ -26,7 +26,7 @@ public class DeviceTabList {
     }
 
     private DeviceTabList() {
-        deviceList = new ArrayList<>(20);
+        deviceList = new ArrayList<>();
     }
 
     public WifiP2pDevice getDevice(int pos) {

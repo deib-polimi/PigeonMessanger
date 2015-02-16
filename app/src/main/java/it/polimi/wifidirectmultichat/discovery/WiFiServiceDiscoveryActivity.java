@@ -38,6 +38,7 @@ import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragm
 import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragment.DeviceClickListener;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -762,6 +763,16 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     }
                 }
 
+                if(tabNum<=0) {
+                    //piuttosto che avere il tabnum sbagliato lo assegno ottenendo il tab visualizzato in quel momento, tanto
+                    //e' probabile che l'utente stia nella chat giusta mentre il messagigo viene inviato.
+                    Log.e("handleMessage", "errore tabnum=" + tabNum + "<=0, aggiorno tabnum");
+                    tabNum = tabFragment.getMViewPager().getCurrentItem();
+                    Log.e("handleMessage", "ora tabnum = " + tabNum);
+
+                }
+
+
                 Log.d("handleMessage", "handleMessage, MESSAGE_READ , il tabNum globale activity ore e': " + tabNum);
 
                 //a volte lanciava eccezione qui perche' tabnum era 0, cioe' in tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
@@ -826,6 +837,37 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
+    }
+
+    /**
+     * Metodo che setta il nome del dispositivo tramite refplection.
+     * @param deviceName
+     */
+    public void setDeviceNameWithReflection(String deviceName) {
+        try {
+            Method m = manager.getClass().getMethod (
+                    "setDeviceName",
+                    new Class[] { WifiP2pManager.Channel.class, String.class,
+                            WifiP2pManager.ActionListener.class });
+
+            m.invoke(manager,channel, deviceName, new WifiP2pManager.ActionListener() {
+                public void onSuccess() {
+                    //Code for Success in changing name
+                    Log.d("reflection","device OK");
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Device name changed", Toast.LENGTH_SHORT).show();
+                }
+
+                public void onFailure(int reason) {
+                    //Code to be done while name change Fails
+                    Log.d("reflection","device FAILURE");
+                    Toast.makeText(WiFiServiceDiscoveryActivity.this, "Error, device name not changed", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 
     @Override
