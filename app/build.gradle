@@ -28,11 +28,18 @@ task wrapper(type: Wrapper) {
     gradleVersion = "2.2.1"
 }
 
+repositories {
+    maven { url 'https://mint.splunk.com/gradle/' }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided 'org.projectlombok:lombok:1.14.8'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
+
+    compile 'com.splunk.mint:mint:4.0.7'
+
     //recylcer e cardview non li sto usando davvero in sto progetto, ma potrebbero essere utili per fare un'app in stile material design
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'

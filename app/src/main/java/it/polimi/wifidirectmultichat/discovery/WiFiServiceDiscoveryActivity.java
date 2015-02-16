@@ -30,6 +30,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.splunk.mint.Mint;
+
 import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment.MessageTarget;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
@@ -133,6 +135,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        Mint.initAndStartSession(WiFiServiceDiscoveryActivity.this, "2b171946");
+
         setContentView(R.layout.main);
 
         this.setupToolBar();
@@ -301,6 +306,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         Log.d("stopDiscoveryForced", "stopDiscoveryForced");
         ServiceList.getInstance().getServiceList().clear();
 
+        toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_stopped));
+
         if (discoveryStatus) {
             discoveryStatus = false;
 
@@ -437,6 +444,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     Log.d(TAG, "Discovery status: " + discoveryStatus);
 
                     ServiceList.getInstance().getServiceList().clear();
+                    toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_stopped));
 
                     if (discoveryStatus) {
                         discoveryStatus = false;
@@ -501,6 +509,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
      * Registers a local service and then initiates a service discovery
      */
     public void startRegistrationAndDiscovery() {
+
         Map<String, String> record = new HashMap<String, String>();
         record.put(TXTRECORD_PROP_AVAILABLE, "visible");
 
@@ -528,6 +537,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
     private void discoverService() {
 
         ServiceList.getInstance().getServiceList().clear();
+
+        toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_searching));
+
+
         /*
          * Register listeners for DNS-SD services. These are callbacks invoked
          * by the system when a service is actually discovered.
@@ -842,6 +855,13 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         unregisterReceiver(receiver);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+//        Mint.closeSession(WiFiServiceDiscoveryActivity.this);
+    }
+
     /**
      * Metodo che setta il nome del dispositivo tramite refplection.
      * @param deviceName
@@ -896,6 +916,11 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             try {
                 socketHandler = new GroupOwnerSocketHandler(((MessageTarget) this).getHandler());
                 socketHandler.start();
+
+                //se e' group owner METTO il logo GO nella cardview del serviceslistfragment.
+                tabFragment.getWiFiP2pServicesListFragment().showLocalDeviceGoIcon();
+
+
             } catch (IOException e) {
                 Log.d(TAG, "Failed to create a server thread - " + e.getMessage());
                 return;
@@ -904,6 +929,9 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             Log.d(TAG, "Connected as peer");
             socketHandler = new ClientSocketHandler(((MessageTarget) this).getHandler(), p2pInfo.groupOwnerAddress);
             socketHandler.start();
+
+            //se non e' group owner TOLGO il logo GO nella cardview del serviceslistfragment, nel casso fosse stato settato in precedenza
+            tabFragment.getWiFiP2pServicesListFragment().hideLocalDeviceGoIcon();
         }
 
 

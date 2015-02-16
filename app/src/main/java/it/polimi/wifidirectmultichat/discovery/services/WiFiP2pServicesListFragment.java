@@ -1,6 +1,7 @@
 
 package it.polimi.wifidirectmultichat.discovery.services;
 
+import android.graphics.drawable.Drawable;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
@@ -51,6 +53,21 @@ public class WiFiP2pServicesListFragment extends Fragment implements
     }
 
     public WiFiP2pServicesListFragment() {}
+
+    public void showLocalDeviceGoIcon(){
+        if(getView() !=null && getView().findViewById(R.id.go_logo)!=null && getView().findViewById(R.id.iamago_textview)!=null) {
+            ((ImageView) getView().findViewById(R.id.go_logo)).setImageDrawable(getResources().getDrawable(R.drawable.go_logo));
+            ((ImageView) getView().findViewById(R.id.go_logo)).setVisibility(View.VISIBLE);
+            ((TextView) getView().findViewById(R.id.iamago_textview)).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideLocalDeviceGoIcon() {
+        if(getView()!=null && getView().findViewById(R.id.go_logo)!=null && getView().findViewById(R.id.iamago_textview)!=null) {
+            ((ImageView) getView().findViewById(R.id.go_logo)).setVisibility(View.INVISIBLE);
+            ((TextView) getView().findViewById(R.id.iamago_textview)).setVisibility(View.INVISIBLE);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
