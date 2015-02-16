@@ -5,7 +5,6 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.polimi.wifidirectmultichat.R;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.customanimation.GarageDoorItemAnimator;
 import it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager;
 import it.polimi.wifidirectmultichat.discovery.DeviceTabList;
 import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
@@ -80,7 +80,7 @@ public class WiFiChatFragment extends Fragment {
 
         adapter = new WiFiChatMessageAdapter(this);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new GarageDoorItemAnimator());
 
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
 
@@ -198,7 +198,7 @@ public class WiFiChatFragment extends Fragment {
     public void pushMessage(String readMessage) {
         Log.d("WifiChatFragment push","tabNumber" + tabNumber);
         items.add(readMessage);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemInserted(items.size() - 1);
     }
 
     public void updateAfterColorChange() {

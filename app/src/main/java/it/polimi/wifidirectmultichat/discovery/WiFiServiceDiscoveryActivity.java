@@ -552,7 +552,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
 
                                 ServiceList.getInstance().addService(service);
-                                adapter.notifyDataSetChanged();
+                                adapter.notifyItemInserted(ServiceList.getInstance().getServiceList().size()-1);
                                 Log.d(TAG, "onBonjourServiceAvailable " + instanceName);
                             }
                         }
@@ -728,10 +728,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                     if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
                         Log.d("handleMessage", "elemento non presente! OK");
 
-                        //aggiungo il nuovo tab
-//                        Log.d("handleMessage", "MESSAGE_READ - aggiungo tab");
-//                        tabFragment.addNewTabChatFragmentIfNecessary();
-
                         if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
                             Log.d("handleMessage", "elemento in tabnum= " + (tabNum - 1) + " nullo");
                             DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
@@ -758,6 +754,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                         if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
                             tabFragment.addNewTabChatFragmentIfNecessary();
                             Log.d("handleMessage", "handleMessage, MESSAGE_READ tab added with tabnum: " + tabNum);
+                            tabFragment.getMViewPager().setCurrentItem(tabNum);
+                            colorActiveTabs();
                         }
 
 
@@ -765,12 +763,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 }
 
                 Log.d("handleMessage", "handleMessage, MESSAGE_READ , il tabNum globale activity ore e': " + tabNum);
-
-//                if (p2pDevice == null) {
-//                    Log.d("handleMessage", "rimuovo ultimo tab");
-//                    tabFragment.removeTab();
-//                }
-
 
                 //a volte lanciava eccezione qui perche' tabnum era 0, cioe' in tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
                 //veniva messo a -1 ma poi sommando 1 diventava 0, e in questa riga sotto dava errore.
@@ -798,6 +790,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
                     tabFragment.addNewTabChatFragmentIfNecessary();
                     Log.d("handleMessage", "handleMessage, MY_HANDLE tab added with tabnum: " + tabNum);
+                    tabFragment.getMViewPager().setCurrentItem(tabNum);
+                    colorActiveTabs();
                 }
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
@@ -815,9 +809,6 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                         Log.d(TAG, "MY_HANDLE-svuoto la coda " + tabNum);
                         tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
 
-                        //mi posiziono sul tab attivato e gli cambio colore
-//                        colorActiveTabs(); //cambia colore al tab con chatmanager!=null, cioe' a quello attivo
-//                        tabFragment.getMViewPager().setCurrentItem(tabNum);
                     }
                 });
         }
