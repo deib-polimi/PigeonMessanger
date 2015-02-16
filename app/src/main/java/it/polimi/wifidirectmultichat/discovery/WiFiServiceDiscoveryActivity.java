@@ -57,6 +57,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
     public static final String TAG = "polimip2p";
 
+    @Setter private boolean connected = false;
+
     @Getter
     private int tabNum = 1;
 
@@ -869,6 +871,16 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
             e.printStackTrace();
         }
+    }
+
+    public void tryToConnectToAService(int position) {
+        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
+
+        if(connected) {
+            this.manualItemMenuDisconnectAndStartDiscovery();
+        }
+        this.setWifiP2pDevice(service);
+        this.connectP2p(service, 1);
     }
 
     @Override

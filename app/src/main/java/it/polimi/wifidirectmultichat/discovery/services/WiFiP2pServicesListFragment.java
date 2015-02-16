@@ -41,6 +41,8 @@ public class WiFiP2pServicesListFragment extends Fragment implements
         public void connectP2p(WiFiP2pService wifiP2pService, int tabNum);
 
         public void setWifiP2pDevice(WiFiP2pService service1);
+
+        public void tryToConnectToAService(int position);
     }
 
     public static WiFiP2pServicesListFragment newInstance() {
@@ -87,17 +89,24 @@ public class WiFiP2pServicesListFragment extends Fragment implements
 
     }
 
+    /**
+     * chiamato quando clicco su un elemento odella recyclerview.
+     * @param view
+     */
     @Override
     public void itemClicked(final View view) {
         Log.d("onArticleSelected", "catturato clic");
 
-        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(mRecyclerView.getChildPosition(view));
-        ((DeviceClickListener) getActivity()).setWifiP2pDevice(service);
-        ((DeviceClickListener) getActivity()).connectP2p(service, 1);
+        ((DeviceClickListener) getActivity()).tryToConnectToAService(mRecyclerView.getChildPosition(view));
+//        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(mRecyclerView.getChildPosition(view));
+//        ((DeviceClickListener) getActivity()).setWifiP2pDevice(service);
+//        ((DeviceClickListener) getActivity()).connectP2p(service, 1);
     }
 
 
-
+    /**
+     * Listener per la cardview con il LocalDevice
+     */
     class OnClickListenerLocalDevice implements View.OnClickListener {
 
         public Fragment fragment;
