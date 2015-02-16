@@ -1,6 +1,5 @@
 package it.polimi.wifidirectmultichat.discovery.services;
 
-import android.app.Activity;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

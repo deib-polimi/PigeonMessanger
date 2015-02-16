@@ -3,11 +3,7 @@ package it.polimi.wifidirectmultichat.discovery.services.localdevicedialog;
 import android.support.v4.app.DialogFragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +39,7 @@ public class LocalDeviceDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog, container, false);
 
-        this.getDialog().setTitle("Quale tab?");
+        this.getDialog().setTitle("Choose your device name");
         deviceNameEditText = (EditText) v.findViewById(R.id.deviceNameEditText);
         confirmButton = (Button) v.findViewById(R.id.confirmButton);
 

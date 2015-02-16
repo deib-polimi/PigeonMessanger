@@ -52,7 +52,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
-        DeviceClickListener, WiFiChatFragment.CallbackActivity, Handler.Callback, MessageTarget,
+        WiFiP2pServicesListFragment.DeviceClickListener, WiFiChatFragment.CallbackActivity, Handler.Callback, MessageTarget,
         ConnectionInfoListener {
 
     public static final String TAG = "polimip2p";
@@ -109,21 +109,21 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         }
     }
 
-    @Override
-    public int getFragmentPositionInTabList(WiFiChatFragment fragment) {
-        if (tabFragment != null) {
-            for (int i = 0; i < tabFragment.getMSectionsPagerAdapter().getCount(); i++) {
-                if (tabFragment.getMSectionsPagerAdapter().getItem(i) instanceof WiFiChatFragment) {
-                    WiFiChatFragment frag = (WiFiChatFragment) tabFragment.getMSectionsPagerAdapter().getItem(i);
-                    Log.d("fragment_printed", "List: " + frag.getTabNumber() + " ," + fragment.getTabNumber());
-                }
-            }
-
-            return tabFragment.getItemTabNumber(fragment);
-        } else {
-            return -1;
-        }
-    }
+//    @Override
+//    public int getFragmentPositionInTabList(WiFiChatFragment fragment) {
+//        if (tabFragment != null) {
+//            for (int i = 0; i < tabFragment.getMSectionsPagerAdapter().getCount(); i++) {
+//                if (tabFragment.getMSectionsPagerAdapter().getItem(i) instanceof WiFiChatFragment) {
+//                    WiFiChatFragment frag = (WiFiChatFragment) tabFragment.getMSectionsPagerAdapter().getItem(i);
+//                    Log.d("fragment_printed", "List: " + frag.getTabNumber() + " ," + fragment.getTabNumber());
+//                }
+//            }
+//
+//            return tabFragment.getItemTabNumber(fragment);
+//        } else {
+//            return -1;
+//        }
+//    }
 
     /**
      * Called when the activity is first created.
@@ -329,12 +329,12 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
             manager.clearLocalServices(channel, new ActionListener() {
                 @Override
                 public void onSuccess() {
-                    Log.d("TAG", "clearLocalServices success");
+                    Log.d(TAG, "clearLocalServices success");
                 }
 
                 @Override
                 public void onFailure(int reason) {
-                    Log.d("TAG", "clearLocalServices failure " + reason);
+                    Log.d(TAG, "clearLocalServices failure " + reason);
                 }
             });
         }
@@ -755,7 +755,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                         if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
                             tabFragment.addNewTabChatFragmentIfNecessary();
                             Log.d("handleMessage", "handleMessage, MESSAGE_READ tab added with tabnum: " + tabNum);
-                            tabFragment.getMViewPager().setCurrentItem(tabNum);
+                            this.setTabFragmentToPage(tabNum);
                             colorActiveTabs();
                         }
 
@@ -801,6 +801,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
                     tabFragment.addNewTabChatFragmentIfNecessary();
                     Log.d("handleMessage", "handleMessage, MY_HANDLE tab added with tabnum: " + tabNum);
+                    Log.d("handleMessage", "handleMessage, MY_HANDLE settoviepager a pagina: " + tabNum);
                     tabFragment.getMViewPager().setCurrentItem(tabNum);
                     colorActiveTabs();
                 }
@@ -895,7 +896,8 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
 
         final TabFragment tabfrag = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
-        tabfrag.getMViewPager().setCurrentItem(tabNum);
+        Log.d("onConnectionInfoAvailable", "onConnectionInfoAvailable tabNum = " + tabNum);
+        this.setTabFragmentToPage(tabNum);
     }
 
 

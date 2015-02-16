@@ -89,17 +89,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <!--<ListView-->
-        <!--android:id="@android:id/list"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="451dp"></ListView>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/statu
-        s_text"-->
-        <!--android:text="dsfasfasf"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom"></TextView>-->
-
 </LinearLayout>

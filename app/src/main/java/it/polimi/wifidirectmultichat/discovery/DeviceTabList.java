@@ -70,7 +70,6 @@ public class DeviceTabList {
     public boolean containsElement(WifiP2pDevice device) {
         for (WifiP2pDevice element : deviceList) {
             if (element != null && element.deviceAddress.equals(device.deviceAddress)) {
-//                    && element.deviceName.equals(device.deviceName)) {
                 return true;
             }
         }
