@@ -73,13 +73,13 @@
                 android:id="@+id/go_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/iamago_textview"
-                android:layout_alignEnd="@+id/iamago_textview"
-                android:layout_alignStart="@+id/iamago_textview"
+                android:layout_above="@+id/i_am_a_go_textview"
+                android:layout_alignEnd="@+id/i_am_a_go_textview"
+                android:layout_alignStart="@+id/i_am_a_go_textview"
                 android:layout_alignTop="@+id/localDeviceName" />
 
             <TextView
-                android:id="@+id/iamago_textview"
+                android:id="@+id/i_am_a_go_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/localDeviceAddress"

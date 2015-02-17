@@ -87,7 +87,6 @@ public class WiFiChatFragment extends Fragment {
                                 List<String> lista = WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber);
 
                                 //tento la riconnessione
-                                List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
                                 WifiP2pDevice device = DeviceTabList.getInstance().getDevice(tabNumber - 1);
                                 if(device!=null) {
                                     WiFiP2pService service = ServiceList.getInstance().getServiceByDevice(device);

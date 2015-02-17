@@ -58,7 +58,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        Log.d(WiFiServiceDiscoveryActivity.TAG, action);
+        Log.d(MainActivity.TAG, action);
         if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             if (manager == null) {
@@ -72,35 +72,35 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-                Log.d(WiFiServiceDiscoveryActivity.TAG,
+                Log.d(MainActivity.TAG,
                         "Connected to p2p network. Requesting network details");
                 manager.requestConnectionInfo(channel,(ConnectionInfoListener) activity);
-                ((WiFiServiceDiscoveryActivity)activity).setConnected(true);
-                ((WiFiServiceDiscoveryActivity)activity).colorActiveTabs();
-                ((WiFiServiceDiscoveryActivity)activity).setTabFragmentToPage(((WiFiServiceDiscoveryActivity)activity).getTabNum());
+                ((MainActivity)activity).setConnected(true);
+                ((MainActivity)activity).colorActiveTabs();
+                ((MainActivity)activity).setTabFragmentToPage(((MainActivity)activity).getTabNum());
 
             } else {
                 // It's a disconnect
                 //quindi devo riavviare la discovery
 
                 Log.d("WiFiDirectBroadcastReceiver", "disconnect rilevata, startRegistrationAndDiscovery in avvio");
-                ((WiFiServiceDiscoveryActivity)activity).changeColorToGrayAllChats();
-                if(!((WiFiServiceDiscoveryActivity)activity).isBlockForcesDiscoveryInBroadcastReceiver()) {
-                    ((WiFiServiceDiscoveryActivity) activity).stopDiscoveryForced();
+                ((MainActivity)activity).changeColorToGrayAllChats();
+                if(!((MainActivity)activity).isBlockForcesDiscoveryInBroadcastReceiver()) {
+                    ((MainActivity) activity).stopDiscoveryForced();
                 }
-                ((WiFiServiceDiscoveryActivity)activity).setDisableAllChatManagers();
+                ((MainActivity)activity).setDisableAllChatManagers();
 
                 //reimposta il viewpager al tab 0 con la servicelist
-                ((WiFiServiceDiscoveryActivity)activity).setTabFragmentToPage(0);
+                ((MainActivity)activity).setTabFragmentToPage(0);
 
-                ((WiFiServiceDiscoveryActivity)activity).setConnected(false);
+                ((MainActivity)activity).setConnected(false);
 
-                ((WiFiServiceDiscoveryActivity)activity).getTabFragment().getWiFiP2pServicesListFragment().hideLocalDeviceGoIcon();
+                ((MainActivity)activity).getTabFragment().getWiFiP2pServicesFragment().hideLocalDeviceGoIcon();
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             LocalP2PDevice.getInstance().setLocalDevice(device);
-            Log.d(WiFiServiceDiscoveryActivity.TAG, "Local Device status -" + device.status);
+            Log.d(MainActivity.TAG, "Local Device status -" + device.status);
 
         }
     }

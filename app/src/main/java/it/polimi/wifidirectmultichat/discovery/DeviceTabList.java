@@ -17,14 +17,16 @@ public class DeviceTabList {
     private static DeviceTabList instance = new DeviceTabList();
 
     /**
-     * Metodo che permette di ottenere l'istanza della classe.
-     *
-     * @return istanza della classe.
+     * Method to get the instance of this class.
+     * @return instance of this class.
      */
     public static DeviceTabList getInstance() {
         return instance;
     }
 
+    /**
+     * Private constructor, because is a singleton class.
+     */
     private DeviceTabList() {
         deviceList = new ArrayList<>();
     }

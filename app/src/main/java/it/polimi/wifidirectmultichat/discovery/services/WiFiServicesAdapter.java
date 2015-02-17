@@ -11,6 +11,8 @@ import android.widget.TextView;
 import it.polimi.wifidirectmultichat.R;
 
 /**
+ * Class WiFiServicesAdapter with the new RecyclerView (Lollipop) and ViewHolder for performance reasons.
+ * This class is the Adapter to represents data inside the WifiP2pServicesFragment
  * Created by Stefano Cappa on 10/02/15.
  */
 public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapter.ViewHolder> {
@@ -22,9 +24,16 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
         setHasStableIds(true);
     }
 
+    /**
+     * WiFiP2pServicesFragment implements this interface
+     */
+    public interface ItemClickListener {
+        void itemClicked(final View view);
+    }
+
 
     /**
-     * Classe statica viewHolder
+     * The ViewHolder of this Adapter, useful to store e recycle element for performance reasons.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final View parent;
@@ -49,22 +58,18 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
     }
 
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view.
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.service_row, viewGroup, false);
-
+        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+        View v = layoutInflater.inflate(R.layout.service_row, viewGroup, false);
         return new ViewHolder(v);
     }
 
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        WiFiP2pService service = ServiceList.getInstance().getServiceList().get(position);
+        WiFiP2pService service = ServiceList.getInstance().getElementByPosition(position);
         if (service != null) {
             viewHolder.nameText.setText(service.getDevice().deviceName + " - " + service.getInstanceName());
             viewHolder.macAddressText.setText(service.getDevice().deviceAddress);
@@ -82,14 +87,15 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
 
     @Override
     public int getItemCount() {
-        return ServiceList.getInstance().getServiceList().size();
+        return ServiceList.getInstance().getSize();
     }
 
-    public interface ItemClickListener {
-        void itemClicked(final View view);
-    }
-
-    public static String getDeviceStatus(int statusCode) {
+    /**
+     * Private method used by this adapter to obtain the status, from the status code.
+     * @param statusCode int that represents the status code.
+     * @return A String that represent the status associated to the statusCode.
+     */
+    private static String getDeviceStatus(int statusCode) {
         switch (statusCode) {
             case WifiP2pDevice.CONNECTED:
                 return "Connected";

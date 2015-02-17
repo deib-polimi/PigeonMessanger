@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import it.polimi.wifidirectmultichat.R;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragment;
+import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment;
 import lombok.Getter;
 
 
@@ -41,7 +41,7 @@ public class TabFragment extends Fragment {
     ViewPager mViewPager;
 
     @Getter
-    private static WiFiP2pServicesListFragment wiFiP2pServicesListFragment;
+    private static WiFiP2pServicesFragment wiFiP2pServicesFragment;
     @Getter
     private static List<WiFiChatFragment> wiFiChatFragmentList;
 
@@ -57,7 +57,7 @@ public class TabFragment extends Fragment {
         TabFragment fragment = new TabFragment();
         wiFiChatFragmentList = new ArrayList<>();
 
-        wiFiP2pServicesListFragment = WiFiP2pServicesListFragment.newInstance();
+        wiFiP2pServicesFragment = WiFiP2pServicesFragment.newInstance();
 
         return fragment;
     }
@@ -160,7 +160,7 @@ public class TabFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return wiFiP2pServicesListFragment;
+                return wiFiP2pServicesFragment;
             } else {
                 return wiFiChatFragmentList.get(position - 1);
             }
