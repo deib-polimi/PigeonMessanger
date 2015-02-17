@@ -16,7 +16,8 @@ import lombok.Setter;
 /**
  * Class to manage reading and writing of messages with a socket. It's use a Handler
  * to send messages to the GUI, i.e. the Android's UI Thread.
- * This class is used by ClientSocketHandler and GroupOwnerSocketHandler.
+ * This class is used by {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ClientSocketHandler}
+ * and {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.GroupOwnerSocketHandler}.
  *
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
  *
@@ -29,8 +30,8 @@ public class ChatManager implements Runnable {
 
     /**
      * Constructor of the class
-     * @param socket Represents the Socket required in order to communicate
-     * @param handler Represents the handler required in order to communicate
+     * @param socket Represents the {@link java.net.Socket} required in order to communicate
+     * @param handler Represents the {@link android.os.Handler} required in order to communicate
      * @param disable Represents the boolean's attribute to enable/disable the internal while cycle.
      *                By default, disable is false.
      */
@@ -45,7 +46,7 @@ public class ChatManager implements Runnable {
     private static final String TAG = "ChatHandler";
 
     /**
-     * Method to execute the ChatManager's Thread
+     * Method to execute the {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}'s Thread
      * To stop the execution, please use ".setDisable(true);".
      */
     @Override

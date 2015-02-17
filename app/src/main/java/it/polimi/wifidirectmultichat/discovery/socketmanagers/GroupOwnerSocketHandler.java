@@ -27,9 +27,8 @@ public class GroupOwnerSocketHandler extends Thread {
 
     /**
      * Class constructor.
-     * Parameters like THREAD_COUNT=20 and SERVERPORT=4545 are constants.
-     * @param handler Represents the handler required in order to communicate
-     * @throws IOException Exception throwed by ServerSocket(SERVERPORT).
+     * @param handler Represents the {@link android.os.Handler} required in order to communicate
+     * @throws IOException Exception throwed by {@link ServerSocket} (SERVERPORT).
      */
     public GroupOwnerSocketHandler(@NonNull Handler handler) throws IOException {
         try {

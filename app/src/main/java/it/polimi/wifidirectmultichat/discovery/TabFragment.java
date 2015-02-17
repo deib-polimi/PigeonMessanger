@@ -23,98 +23,68 @@ import lombok.Getter;
 
 
 /**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the interface
- * to handle interaction events.
- * Use the {@link TabFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Class that represents a Fragment with other Fragments as Tabs.
+ * Created by Stefano Cappa on 05/02/15.
  */
 public class TabFragment extends Fragment {
 
-    @Getter
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link android.support.v4.view.ViewPager} that will host the section contents.
-     */
-    @Getter
-    ViewPager mViewPager;
-
-    @Getter
-    private static WiFiP2pServicesFragment wiFiP2pServicesFragment;
-    @Getter
-    private static List<WiFiChatFragment> wiFiChatFragmentList;
+    @Getter private SectionsPagerAdapter mSectionsPagerAdapter;
+    @Getter private ViewPager mViewPager;
+    @Getter private static WiFiP2pServicesFragment wiFiP2pServicesFragment;
+    @Getter private static List<WiFiChatFragment> wiFiChatFragmentList;
 
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment DownloadNavigationFragment.
+     * Method to obtain a new Fragment's instance.
+     * @return This Fragment instance.
      */
-    // TODO: Rename and change types and number of parameters
     public static TabFragment newInstance() {
         TabFragment fragment = new TabFragment();
-        wiFiChatFragmentList = new ArrayList<>();
-
         wiFiP2pServicesFragment = WiFiP2pServicesFragment.newInstance();
-
+        wiFiChatFragmentList = new ArrayList<>();
         return fragment;
     }
 
+    /**
+     * Default Fragment constructor.
+     */
+    public TabFragment() {}
 
-    public void removeTab() {
-        wiFiChatFragmentList.remove(wiFiChatFragmentList.size() - 1);
-        this.mSectionsPagerAdapter.notifyDataSetChanged();
-    }
 
-
-    public void addNewTabChatFragmentIfNecessary() {
+    /**
+     * Method to add a new Tab
+     */
+    public void addNewTabChatFragment() {
         WiFiChatFragment frag = WiFiChatFragment.newInstance();
+        //adds a new fragment, sets the tabNumber with listsize+1, because i want to add an element to this list and get
+        //this position, but at the moment the list is not updated. When i use listsize+1
+        // i'm considering "+1" as the new element that i want to add.
         frag.setTabNumber(new Integer(wiFiChatFragmentList.size() + 1));
-        //lo aggiungo settando come numero la size+1 della lista perche' cosi' il valore e'
-        //corretto visto che la lista devo ancora cambiarla, size sara' l'ultimo elemento.
+
+        //now i add the fragment to the list, and obviously tabNumber is correct, because now the list is updated.
         wiFiChatFragmentList.add(frag);
+
+        //i need this because i need to refresh the GUI
         this.mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
-    public TabFragment() {
-    }
-
-    public int getItemTabNumber(WiFiChatFragment fragment) {
-        return this.mSectionsPagerAdapter.getItemPosition(fragment);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    /**
+     * Method to get the Fragment, specifying the position/tabnumber.
+     * @param tabNumber int that represents the position of this fragment inside the list of tabs.
+     * @return The {@link WiFiChatFragment } at position tabNumber in the list {@link wiFiChatFragmentList}.
+     */
+    public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
+        return wiFiChatFragmentList.get(tabNumber - 1);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_tab, container, false);
 
-
-        // Set up the action bar.
-//        final ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
-//
-//        // Set up the ViewPager with the sections adapter.
+
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-//
 
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
@@ -122,12 +92,10 @@ public class TabFragment extends Fragment {
 
 
         // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
+        // tab.
         tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                Log.d("log", "swishato il tab in posizione: " + position);
                 mSectionsPagerAdapter.notifyDataSetChanged();
             }
         });
@@ -137,38 +105,26 @@ public class TabFragment extends Fragment {
 
 
     /**
-     * A FragmentPagerAdapter that returns a fragment corresponding to
+     * Class that represents the FragmentPagerAdapter of this Fragment, that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
-        //
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-        }
-
-        //
-        @Override
-        public void startUpdate(ViewGroup container) {
-            super.startUpdate(container);
-        }
-
-        @Override
-        public void finishUpdate(ViewGroup container) {
-            super.finishUpdate(container);
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return wiFiP2pServicesFragment;
+                return wiFiP2pServicesFragment; //the first fragment reserved to the serviceListFragment
             } else {
-                return wiFiChatFragmentList.get(position - 1);
+                return wiFiChatFragmentList.get(position - 1); //chatFragments associated to this position
             }
         }
 
         @Override
         public int getCount() {
-            return wiFiChatFragmentList.size() + 1; //perche' il primo fragment (non nella lista) e' quello con la lista dei servizi
+            return wiFiChatFragmentList.size() + 1; //because the first fragment (not inside into the list) is a WiFiP2pServicesFragment
         }
 
         @Override
@@ -178,18 +134,12 @@ public class TabFragment extends Fragment {
                 case 0:
                     return (new String("Services")).toUpperCase(l);
                 default:
+                    //if possibile use the devicename like tabname.
                     if(DeviceTabList.getInstance().getDevice(position)!=null) {
                         return DeviceTabList.getInstance().getDevice(position).deviceName.toUpperCase(l);
                     }
                     return (new String("Chat") + position).toUpperCase(l);
             }
         }
-
-
-    }
-
-
-    public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
-        return wiFiChatFragmentList.get(tabNumber - 1);
     }
 }

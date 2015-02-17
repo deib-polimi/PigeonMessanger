@@ -23,7 +23,7 @@ public class LocalDeviceDialogFragment extends DialogFragment {
     private EditText deviceNameEditText;
 
     /**
-     * WiFiP2pServicesFragment implements this interface.
+     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} implements this interface.
      * But the method to change the device name in
      */
     public interface DialogConfirmListener {

@@ -23,7 +23,8 @@ import lombok.Getter;
 /**
  * Fragment that contains the recyclerview with the WiFiP2pService list and the Cardview with LocalDevice informations.
  * If you click on a item device, the connection to this device starts, using ItemClickListener.
- * If you click on the local device cardview, a dialogfragment appears. Here you can change the local device name, and
+ * If you click on the local device cardview, a {@link it.polimi.wifidirectmultichat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
+ * appears. Here you can change the local device name, and
  * with the DialogCallbackInterface obtain the data inserted in the dialogfragment.
  *
  * Created by Stefano Cappa on 04/02/15.
@@ -45,7 +46,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
     private TextView localDeviceNameText, localDeviceAddressText;
 
     /**
-     * Callback interface to call methods tryToConnectToAService in MainActivity.
+     * Callback interface to call methods tryToConnectToAService in {@link it.polimi.wifidirectmultichat.discovery.MainActivity}.
      * MainActivity implements this interface.
      */
     public interface DeviceClickListener {
@@ -83,7 +84,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
     /**
      * Method called by WiFiServicesAdapter with the ItemClickListener interface, when the user
      * click on an element of the recyclerview.
-     * @param view View clicked.
+     * @param view {@link android.view.View} clicked.
      */
     @Override
     public void itemClicked(View view) {
@@ -157,7 +158,8 @@ public class WiFiP2pServicesFragment extends Fragment implements
 
     /**
      * Inner class that implements the Onclicklistener for the local device cardview.
-     * It's useful to open the LocalDeviceDialogFragment after a click's event.
+     * It's useful to open the {@link it.polimi.wifidirectmultichat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
+     * after a click's event.
      */
     class OnClickListenerLocalDevice implements View.OnClickListener {
 

@@ -11,8 +11,10 @@ import android.widget.TextView;
 import it.polimi.wifidirectmultichat.R;
 
 /**
- * Class WiFiServicesAdapter with the new RecyclerView (Lollipop) and ViewHolder for performance reasons.
- * This class is the Adapter to represents data inside the WifiP2pServicesFragment
+ * Class WiFiServicesAdapter with the new RecyclerView (Lollipop) and
+ * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter.ViewHolder}
+ * for performance reasons.
+ * This class is the Adapter to represents data inside the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}
  * Created by Stefano Cappa on 10/02/15.
  */
 public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapter.ViewHolder> {
@@ -25,7 +27,7 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
     }
 
     /**
-     * WiFiP2pServicesFragment implements this interface
+     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} implements this interface
      */
     public interface ItemClickListener {
         void itemClicked(final View view);

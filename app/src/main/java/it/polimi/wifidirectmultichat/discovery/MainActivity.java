@@ -765,7 +765,7 @@ public class MainActivity extends ActionBarActivity implements
 
                         tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
                         if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
-                            tabFragment.addNewTabChatFragmentIfNecessary();
+                            tabFragment.addNewTabChatFragment();
                             Log.d("handleMessage", "handleMessage, MESSAGE_READ tab added with tabnum: " + tabNum);
                             this.setTabFragmentToPage(tabNum);
                             colorActiveTabs();
@@ -817,7 +817,7 @@ public class MainActivity extends ActionBarActivity implements
                 //aggiungo un nuovo tab
                 Log.d("handleMessage", "MY_HANDLE - aggiungo tab");
                 if(tabNum<=0 || tabFragment.getWiFiChatFragmentList().size() -1 < tabNum || tabFragment.getChatFragmentByTab(tabNum)==null) {
-                    tabFragment.addNewTabChatFragmentIfNecessary();
+                    tabFragment.addNewTabChatFragment();
                     Log.d("handleMessage", "handleMessage, MY_HANDLE tab added with tabnum: " + tabNum);
                     Log.d("handleMessage", "handleMessage, MY_HANDLE settoviepager a pagina: " + tabNum);
                     tabFragment.getMViewPager().setCurrentItem(tabNum);

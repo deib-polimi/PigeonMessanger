@@ -38,7 +38,7 @@ public class ClientSocketHandler extends Thread {
     }
 
     /**
-     * Method to start the ChatManager
+     * Method to start the {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}
      */
     @Override
     public void run() {
