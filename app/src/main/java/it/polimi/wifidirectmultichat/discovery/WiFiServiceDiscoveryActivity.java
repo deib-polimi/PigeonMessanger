@@ -1,6 +1,7 @@
 
 package it.polimi.wifidirectmultichat.discovery;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -42,6 +43,7 @@ import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesListFragm
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import it.polimi.wifidirectmultichat.R;
@@ -827,6 +829,12 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                         //il group owner comunica il suo indirizzo al client
                         if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
 
+                            if(tabNum<1) {
+                                Log.e("ERROR","tabnum=" + tabNum);
+                                List<WiFiChatFragment> fraglist = tabFragment.getWiFiChatFragmentList();
+                                List<WiFiP2pService> listserv = ServiceList.getInstance().getServiceList();
+                                List<WifiP2pDevice> devicetablist = DeviceTabList.getInstance().getDeviceList();
+                            }
                             tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
 
                             Log.d("requestGroupInfo", "isGO= " + group.isGroupOwner() + ". Sending address: " + LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);

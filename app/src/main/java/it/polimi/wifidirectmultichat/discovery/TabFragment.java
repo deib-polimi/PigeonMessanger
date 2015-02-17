@@ -128,6 +128,7 @@ public class TabFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 Log.d("log", "swishato il tab in posizione: " + position);
+                mSectionsPagerAdapter.notifyDataSetChanged();
             }
         });
 

@@ -27,7 +27,9 @@ public class WaitingToSendQueue {
     public List<String> waitingToSendItemsList (int number) {
 
         if (number - 1 >= 0 && number - 1 <= waitingToSend.size() - 1) {
-            waitingToSend.set(number - 1, new WaitingToSendListElement());
+            if(waitingToSend.get(number-1) == null) {
+                waitingToSend.set(number - 1, new WaitingToSendListElement());
+            }
         } else {
             waitingToSend.add(number - 1, new WaitingToSendListElement());
         }

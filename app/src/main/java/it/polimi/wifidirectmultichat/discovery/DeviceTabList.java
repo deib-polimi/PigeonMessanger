@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 public class DeviceTabList {
 
-    private List<WifiP2pDevice> deviceList;
+    @Getter private List<WifiP2pDevice> deviceList;
 
     private static DeviceTabList instance = new DeviceTabList();
 

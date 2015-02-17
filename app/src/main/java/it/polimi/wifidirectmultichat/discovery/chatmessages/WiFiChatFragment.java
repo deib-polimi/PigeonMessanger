@@ -19,6 +19,7 @@ import java.util.List;
 
 import it.polimi.wifidirectmultichat.R;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.customanimation.GarageDoorItemAnimator;
+import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendListElement;
 import it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager;
 import it.polimi.wifidirectmultichat.discovery.DeviceTabList;
 import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
@@ -90,6 +91,8 @@ public class WiFiChatFragment extends Fragment {
                                 Log.d("pippo", "chatmanager disabiltiato, ma ho tentato di inviare un messaggio con tabNum= " + tabNumber);
                                 WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber).add(chatLine.getText().toString());
 
+                                List<String> lista = WaitingToSendQueue.getInstance().waitingToSendItemsList(tabNumber);
+
                                 //tento la riconnessione
                                 List<WiFiP2pService> list = ServiceList.getInstance().getServiceList();
                                 WifiP2pDevice device = DeviceTabList.getInstance().getDevice(tabNumber - 1);
@@ -122,6 +125,8 @@ public class WiFiChatFragment extends Fragment {
         }
         combineMessages = combineMessages + "\n";
 
+        Log.d("sendForcedWaitingToSendQueue", "Messaggio in coda: " + combineMessages);
+
         if (chatManager != null) {
             if (!chatManager.isDisable()) {
                 chatManager.write((combineMessages).getBytes());
@@ -145,7 +150,8 @@ public class WiFiChatFragment extends Fragment {
     public void pushMessage(String readMessage) {
         Log.d("WifiChatFragment push","tabNumber" + tabNumber);
         items.add(readMessage);
-        adapter.notifyItemInserted(items.size() - 1);
+//        adapter.notifyItemInserted(items.size() - 1);
+        adapter.notifyDataSetChanged();
     }
 
     public void updateAfterColorChange() {
