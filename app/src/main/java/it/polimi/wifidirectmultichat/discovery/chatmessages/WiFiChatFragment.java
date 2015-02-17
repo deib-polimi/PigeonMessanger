@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,10 +41,11 @@ public class WiFiChatFragment extends Fragment {
     private View view;
     @Getter private ChatManager chatManager;
     private TextView chatLine;
-    @Getter WiFiChatMessageAdapter adapter = null;
+    @Getter WiFiChatMessageListAdapter adapter = null;
     @Getter private List<String> items = new ArrayList<>();
+    private ListView listView;
 
-    private RecyclerView mRecyclerView;
+//    private RecyclerView mRecyclerView;
 
     public static WiFiChatFragment newInstance() {
         Log.d("WifiChatFragment", "NEW _ INSTANCE CALLED!!!!!!");
@@ -64,19 +66,10 @@ public class WiFiChatFragment extends Fragment {
         Log.d("WifiChatFragment_oncreateview","tabNumber" + tabNumber);
         view = inflater.inflate(R.layout.chatmessage_list, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewChat);
-
-        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mLayoutManager.scrollToPosition(0);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setHasFixedSize(true);// allows for optimizations if all item views are of the same size:
-
-        adapter = new WiFiChatMessageAdapter(this);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setItemAnimator(new GarageDoorItemAnimator());
-
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
+        listView = (ListView) view.findViewById(R.id.list);
+        adapter = new WiFiChatMessageListAdapter(getActivity(),R.id.txtChatLine, this);
+        listView.setAdapter(adapter);
 
         view.findViewById(R.id.button1).setOnClickListener(
                 new View.OnClickListener() {

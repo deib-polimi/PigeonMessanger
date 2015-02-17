@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,6 +56,9 @@ public class WiFiP2pServicesListFragment extends Fragment implements
     public WiFiP2pServicesListFragment() {}
 
     public void showLocalDeviceGoIcon(){
+        Log.d("showLocalDeviceGoIcon","getView() " + (getView()!=null));
+        Log.d("showLocalDeviceGoIcon","getView().findViewById(R.id.go_logo) " + (getView().findViewById(R.id.go_logo)!=null));
+        Log.d("showLocalDeviceGoIcon","getView() " + (getView().findViewById(R.id.iamago_textview)!=null));
         if(getView() !=null && getView().findViewById(R.id.go_logo)!=null && getView().findViewById(R.id.iamago_textview)!=null) {
             ((ImageView) getView().findViewById(R.id.go_logo)).setImageDrawable(getResources().getDrawable(R.drawable.go_logo));
             ((ImageView) getView().findViewById(R.id.go_logo)).setVisibility(View.VISIBLE);
@@ -95,6 +99,15 @@ public class WiFiP2pServicesListFragment extends Fragment implements
 
         cardviewLocalDevice = (CardView) rootView.findViewById(R.id.cardviewLocalDevice);
         cardviewLocalDevice.setOnClickListener(new OnClickListenerLocalDevice(this));
+
+        final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.services_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ((WiFiServiceDiscoveryActivity)getActivity()).manualItemMenuDisconnectAndStartDiscovery();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return rootView;
     }

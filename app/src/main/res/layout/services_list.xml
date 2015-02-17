@@ -9,18 +9,17 @@
 
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="6dp"
         android:text="This device"
-        android:textColor="@color/primary"
-        android:id="@+id/textView" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/primary" />
 
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cardviewLocalDevice"
         android:layout_width="fill_parent"
@@ -40,74 +39,81 @@
 
             <TextView
                 android:id="@+id/localDeviceName"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:textColor="@color/black"
                 android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/imageView" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@+id/imageView"
+                android:text="New Text"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/localDeviceAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/localDeviceName"
+                android:layout_below="@+id/localDeviceName"
                 android:layout_marginBottom="8dp"
                 android:text="New Text"
-                android:textColor="@color/black"
-                android:layout_below="@+id/localDeviceName"
-                android:layout_alignStart="@+id/localDeviceName" />
+                android:textColor="@color/black" />
 
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/imageView"
-                android:src="@drawable/android_logo_device"
-                android:layout_alignTop="@+id/localDeviceName"
+                android:layout_alignBottom="@+id/localDeviceAddress"
                 android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/localDeviceName"
+                android:layout_marginLeft="20dp"
                 android:layout_marginStart="18dp"
-                android:layout_alignBottom="@+id/localDeviceAddress" />
+                android:src="@drawable/android_logo_device" />
 
             <ImageView
+                android:id="@+id/go_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/go_logo"
-                android:layout_alignTop="@+id/localDeviceName"
-                android:layout_alignStart="@+id/iamago_textview"
                 android:layout_above="@+id/iamago_textview"
-                android:layout_alignEnd="@+id/iamago_textview" />
+                android:layout_alignEnd="@+id/iamago_textview"
+                android:layout_alignStart="@+id/iamago_textview"
+                android:layout_alignTop="@+id/localDeviceName" />
 
             <TextView
+                android:id="@+id/iamago_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="I&apos;m a GO"
-                android:id="@+id/iamago_textview"
-                android:layout_marginEnd="20dp"
-                android:textSize="8sp"
                 android:layout_alignBottom="@+id/localDeviceAddress"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:text="I&apos;m a GO"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="8sp"
                 android:visibility="invisible" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
     <TextView
+        android:id="@+id/LocalDeviceHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="6dp"
         android:text="Other devices"
-        android:textColor="@color/primary"
-        android:id="@+id/LocalDeviceHeader" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/primary" />
 
-    <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/services_swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

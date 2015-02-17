@@ -178,6 +178,9 @@ public class TabFragment extends Fragment {
                 case 0:
                     return (new String("Services")).toUpperCase(l);
                 default:
+                    if(DeviceTabList.getInstance().getDevice(position)!=null) {
+                        return DeviceTabList.getInstance().getDevice(position).deviceName.toUpperCase(l);
+                    }
                     return (new String("Chat") + position).toUpperCase(l);
             }
         }

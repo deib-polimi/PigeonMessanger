@@ -783,8 +783,14 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                 if(tabNum<=0) {
                     //piuttosto che avere il tabnum sbagliato lo assegno ottenendo il tab visualizzato in quel momento, tanto
                     //e' probabile che l'utente stia nella chat giusta mentre il messagigo viene inviato.
+                    //per evitare pero' che sia messo a 0 e poi faccia crashare "public void onGroupInfoAvailable(WifiP2pGroup group) {"
+                    // mi assicuro che se e' ==0 venga messo a 1, altrimenti prendo l'indice del tab visualizzato in quel momento
                     Log.e("handleMessage", "errore tabnum=" + tabNum + "<=0, aggiorno tabnum");
-                    tabNum = tabFragment.getMViewPager().getCurrentItem();
+                    if(tabFragment.getMViewPager().getCurrentItem()==0) {
+                        tabNum = 1;
+                    } else {
+                        tabNum = tabFragment.getMViewPager().getCurrentItem();
+                    }
                     Log.e("handleMessage", "ora tabnum = " + tabNum);
 
                 }
@@ -834,6 +840,10 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
                                 List<WiFiChatFragment> fraglist = tabFragment.getWiFiChatFragmentList();
                                 List<WiFiP2pService> listserv = ServiceList.getInstance().getServiceList();
                                 List<WifiP2pDevice> devicetablist = DeviceTabList.getInstance().getDeviceList();
+                                //non e' di certo la soluzione migliore, ma se per qualche motivo tabNum fosse =0 o <0
+                                //e' meglio provare ad usare un valore che non fa crashare i metodi, che uno che di certo lancia
+                                //una java.lang.ArrayIndexOutOfBoundsException che fa crashare tutto.
+                                tabNum = tabFragment.getMViewPager().getCurrentItem();
                             }
                             tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
 
@@ -922,6 +932,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
             try {
+                Log.d(TAG,"socketHandler!=null" + (socketHandler!=null));
                 socketHandler = new GroupOwnerSocketHandler(((MessageTarget) this).getHandler());
                 socketHandler.start();
 
@@ -930,7 +941,7 @@ public class WiFiServiceDiscoveryActivity extends ActionBarActivity implements
 
 
             } catch (IOException e) {
-                Log.d(TAG, "Failed to create a server thread - " + e.getMessage());
+                Log.e(TAG, "Failed to create a server thread - " + e.getMessage());
                 return;
             }
         } else {
