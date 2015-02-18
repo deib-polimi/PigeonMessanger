@@ -14,7 +14,7 @@ public class LocalP2PDevice {
     //This is the localdevice!!!
     @Getter @Setter private WifiP2pDevice localDevice;
 
-    private static LocalP2PDevice instance = new LocalP2PDevice();
+    private static final LocalP2PDevice instance = new LocalP2PDevice();
 
     /**
      * Method to get the instance of this class.

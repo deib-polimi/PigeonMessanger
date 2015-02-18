@@ -1,5 +1,21 @@
 package it.polimi.wifidirectmultichat.discovery.socketmanagers;
 
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -9,7 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import it.polimi.wifidirectmultichat.discovery.MainActivity;
+import it.polimi.wifidirectmultichat.discovery.Configuration;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,26 +40,23 @@ import lombok.Setter;
  */
 public class ChatManager implements Runnable {
 
+    private static final String TAG = "ChatHandler";
+
     private Socket socket = null;
-    private Handler handler;
-    @Getter @Setter private boolean disable = false; //attributo per interrompere/abilitare il chatmanager
+    private final Handler handler;
+    @Getter @Setter private boolean disable = false; //attribute to stop or start chatmanager
+    private InputStream iStream;
+    private OutputStream oStream;
 
     /**
      * Constructor of the class
      * @param socket Represents the {@link java.net.Socket} required in order to communicate
      * @param handler Represents the {@link android.os.Handler} required in order to communicate
-     * @param disable Represents the boolean's attribute to enable/disable the internal while cycle.
-     *                By default, disable is false.
      */
-    public ChatManager(@NonNull Socket socket, @NonNull Handler handler, boolean disable) {
+    public ChatManager(@NonNull Socket socket, @NonNull Handler handler) {
         this.socket = socket;
         this.handler = handler;
-        this.disable = disable;
     }
-
-    private InputStream iStream;
-    private OutputStream oStream;
-    private static final String TAG = "ChatHandler";
 
     /**
      * Method to execute the {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}'s Thread
@@ -51,25 +64,25 @@ public class ChatManager implements Runnable {
      */
     @Override
     public void run() {
-        Log.i(TAG,"ChatManager started");
+        Log.d(TAG,"ChatManager started");
         try {
             iStream = socket.getInputStream();
             oStream = socket.getOutputStream();
             byte[] buffer = new byte[1024];
             int bytes;
-            handler.obtainMessage(MainActivity.MY_HANDLE, this).sendToTarget();
+            handler.obtainMessage(Configuration.MY_HANDLE, this).sendToTarget();
 
             while (!disable) { //...if enabled
                 try {
                     // Read from the InputStream
-                    if(iStream!=null && buffer!=null) {
+                    if(iStream!=null) {
                         bytes = iStream.read(buffer);
                         if (bytes == -1) {
                             break;
                         }
 
                         // Send the obtained bytes to the MainActivity
-                        handler.obtainMessage(MainActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                        handler.obtainMessage(Configuration.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

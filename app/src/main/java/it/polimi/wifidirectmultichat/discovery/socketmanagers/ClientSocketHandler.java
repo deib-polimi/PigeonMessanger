@@ -1,6 +1,22 @@
 
 package it.polimi.wifidirectmultichat.discovery.socketmanagers;
 
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -11,7 +27,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import it.polimi.wifidirectmultichat.discovery.Configuration;
-import it.polimi.wifidirectmultichat.discovery.MainActivity;
 
 /**
  * Class the implements the ClientSocket Handler. It's used only by the clients/peers.
@@ -22,9 +37,8 @@ public class ClientSocketHandler extends Thread {
 
     private static final String TAG = "ClientSocketHandler";
 
-    private Handler handler;
-    private ChatManager chat;
-    private InetAddress mAddress; //this is the ip address, NOT THE MACADDRESS!!!
+    private final Handler handler;
+    private final InetAddress mAddress; //this is the ip address, NOT THE MACADDRESS!!!
     private Socket socket;
 
     /**
@@ -42,13 +56,14 @@ public class ClientSocketHandler extends Thread {
      */
     @Override
     public void run() {
+        ChatManager chat;
         socket = new Socket();
         try {
             socket.bind(null);
             socket.connect(new InetSocketAddress(mAddress.getHostAddress(),
                     Configuration.GROUPOWNER_PORT), Configuration.CLIENT_PORT);
             Log.d(TAG, "Launching the I/O handler");
-            chat = new ChatManager(socket, handler,false); //disable=false per poter avviare chatmanager
+            chat = new ChatManager(socket, handler);
             new Thread(chat).start();
         } catch (IOException e) {
             Log.e(TAG,"IOException throwed by socket", e);
@@ -57,7 +72,6 @@ public class ClientSocketHandler extends Thread {
             } catch (IOException e1) {
                 Log.e(TAG,"IOException during close Socket" , e1);
             }
-            return;
         }
     }
 

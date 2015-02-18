@@ -15,6 +15,7 @@ import it.polimi.wifidirectmultichat.R;
 /**
  * Class that represents the DialogFragment to change the local device name, not only in the GUI
  * but also to be discoverable with this new name, by other devices.
+ *
  * Created by Stefano Cappa on 16/02/15.
  */
 public class LocalDeviceDialogFragment extends DialogFragment {
@@ -66,7 +67,7 @@ public class LocalDeviceDialogFragment extends DialogFragment {
         return v;
     }
 
-    public void setListener() {
+    private void setListener() {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {

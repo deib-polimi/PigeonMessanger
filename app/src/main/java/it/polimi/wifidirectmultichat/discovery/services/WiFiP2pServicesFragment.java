@@ -40,10 +40,9 @@ public class WiFiP2pServicesFragment extends Fragment implements
     private static final String TAG = "WiFiP2pServicesFragment";
 
     private RecyclerView mRecyclerView;
-    private CardView cardviewLocalDevice;
     @Getter private WiFiServicesAdapter mAdapter;
 
-    private TextView localDeviceNameText, localDeviceAddressText;
+    private TextView localDeviceNameText;
 
     /**
      * Callback interface to call methods tryToConnectToAService in {@link it.polimi.wifidirectmultichat.discovery.MainActivity}.
@@ -144,12 +143,12 @@ public class WiFiP2pServicesFragment extends Fragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         localDeviceNameText = (TextView) rootView.findViewById(R.id.localDeviceName);
-        localDeviceAddressText = (TextView) rootView.findViewById(R.id.localDeviceAddress);
-
         localDeviceNameText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceName);
+
+        TextView localDeviceAddressText = (TextView) rootView.findViewById(R.id.localDeviceAddress);
         localDeviceAddressText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
 
-        cardviewLocalDevice = (CardView) rootView.findViewById(R.id.cardviewLocalDevice);
+        CardView cardviewLocalDevice = (CardView) rootView.findViewById(R.id.cardviewLocalDevice);
         cardviewLocalDevice.setOnClickListener(new OnClickListenerLocalDevice(this));
 
         return rootView;
@@ -163,7 +162,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
      */
     class OnClickListenerLocalDevice implements View.OnClickListener {
 
-        private Fragment fragment;
+        private final Fragment fragment;
 
         public OnClickListenerLocalDevice(Fragment fragment1) {
             fragment = fragment1;

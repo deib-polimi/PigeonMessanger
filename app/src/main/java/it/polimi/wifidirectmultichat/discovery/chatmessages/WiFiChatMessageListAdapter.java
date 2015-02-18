@@ -1,25 +1,29 @@
 package it.polimi.wifidirectmultichat.discovery.chatmessages;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
 
 import it.polimi.wifidirectmultichat.R;
 
 /**
+ * This class is the ArrayAdapter to represents data inside the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
+ * No visibility modifier, this implies that you can access to this class only in this package.
  * Created by Stefano Cappa on 10/02/15.
  */
-public class WiFiChatMessageListAdapter extends ArrayAdapter<String> {
+class WiFiChatMessageListAdapter extends ArrayAdapter<String> {
 
-    private WiFiChatFragment chatFragment;
+    private final WiFiChatFragment chatFragment;
 
+    /**
+     * Constructor of the adapter.
+     * @param context Context object.
+     * @param textViewResourceId TextView id
+     * @param chatFragment ChatFragment used to call some methods inside the getView();
+     */
     public WiFiChatMessageListAdapter(Context context, int textViewResourceId,
                                       WiFiChatFragment chatFragment) {
         super(context,textViewResourceId,chatFragment.getItems());
@@ -56,44 +60,4 @@ public class WiFiChatMessageListAdapter extends ArrayAdapter<String> {
         }
         return v;
     }
-
-//    // Create new views (invoked by the layout manager)
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-//        // Create a new view.
-//        View v = LayoutInflater.from(viewGroup.getContext())
-//                .inflate(R.layout.chatmessage_row, viewGroup, false);
-//
-//        return new ViewHolder(v, chatFragment, viewGroup);
-//    }
-//
-//
-//    // Replace the contents of a view (invoked by the layout manager)
-//    @Override
-//    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-//
-//        String message = chatFragment.getItems().get(position);
-//        viewHolder.message.setText(message);
-//
-//        if (message != null && !message.isEmpty()) {
-//            viewHolder.message.setTextAppearance(chatFragment.getActivity(), R.style.normalText);
-//            if (chatFragment.isGrayScale()) {
-//                viewHolder.message.setTextColor(chatFragment.getResources().getColor(R.color.gray));
-//            } else {
-//                if (message.startsWith("Me: ")) {
-//                    viewHolder.message.setTextAppearance(chatFragment.getActivity(),
-//                            R.style.normalText);
-//                } else {
-//                    viewHolder.message.setTextAppearance(chatFragment.getActivity(),
-//                            R.style.boldText);
-//                }
-//            }
-//        }
-//    }
-//
-//
-//    @Override
-//    public int getItemCount() {
-//        return chatFragment.getItems().size();
-//    }
 }

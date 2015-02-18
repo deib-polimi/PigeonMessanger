@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: "sonar-runner"
 
 android {
     compileSdkVersion 21
@@ -22,6 +23,18 @@ android {
     }
     productFlavors {
     }
+}
+
+sonarRunner {
+    sonarProperties {
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar"
+        property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
+        property "sonar.jdbc.username", "root"
+        property "sonar.jdbc.password", ""
+    }
+
+    toolVersion = '2.3' // default
 }
 
 task wrapper(type: Wrapper) {

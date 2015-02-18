@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,7 @@ public class TabFragment extends Fragment {
         //adds a new fragment, sets the tabNumber with listsize+1, because i want to add an element to this list and get
         //this position, but at the moment the list is not updated. When i use listsize+1
         // i'm considering "+1" as the new element that i want to add.
-        frag.setTabNumber(new Integer(wiFiChatFragmentList.size() + 1));
+        frag.setTabNumber(wiFiChatFragmentList.size() + 1);
 
         //now i add the fragment to the list, and obviously tabNumber is correct, because now the list is updated.
         wiFiChatFragmentList.add(frag);
@@ -71,7 +70,8 @@ public class TabFragment extends Fragment {
     /**
      * Method to get the Fragment, specifying the position/tabnumber.
      * @param tabNumber int that represents the position of this fragment inside the list of tabs.
-     * @return The {@link WiFiChatFragment } at position tabNumber in the list {@link wiFiChatFragmentList}.
+     * @return The {@link WiFiChatFragment } at position tabNumber in the list of
+     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
      */
     public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
         return wiFiChatFragmentList.get(tabNumber - 1);
@@ -132,13 +132,13 @@ public class TabFragment extends Fragment {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return (new String("Services")).toUpperCase(l);
+                    return ("Services").toUpperCase(l);
                 default:
                     //if possibile use the devicename like tabname.
                     if(DeviceTabList.getInstance().getDevice(position)!=null) {
                         return DeviceTabList.getInstance().getDevice(position).deviceName.toUpperCase(l);
                     }
-                    return (new String("Chat") + position).toUpperCase(l);
+                    return ("Chat" + position).toUpperCase(l);
             }
         }
     }

@@ -30,77 +30,95 @@ import android.util.Log;
 
 /**
  * A BroadcastReceiver that notifies of important wifi p2p events.
+ * This class works without callback interface, because is necessary to call a huge
+ * amount of method inside the {@link it.polimi.wifidirectmultichat.discovery.MainActivity}
+ *
+ * Created by Stefano Cappa on 04/02/15, based on google code samples.
  */
-public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
 
-    private WifiP2pManager manager;
-    private Channel channel;
-    private Activity activity;
+    private static final String TAG = "P2pBroadcastReceiver";
+
+    private final WifiP2pManager manager;
+    private final Channel channel;
+    private final Activity activity;
 
     /**
+     * Constructor to set some parameters.
      * @param manager WifiP2pManager system service
      * @param channel Wifi p2p channel
-     * @param activity activity associated with the receiver
+     * @param activity Activity associated with the receiver
      */
-    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-            Activity activity) {
+    public WiFiP2pBroadcastReceiver(WifiP2pManager manager, Channel channel, Activity activity) {
         super();
         this.manager = manager;
         this.channel = channel;
         this.activity = activity;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
-     * android.content.Intent)
-     */
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        Log.d(MainActivity.TAG, action);
+
+        Log.d(TAG, action);
+
         if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             if (manager == null) {
                 return;
             }
 
-            NetworkInfo networkInfo = (NetworkInfo) intent
-                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
             if (networkInfo.isConnected()) {
 
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-                Log.d(MainActivity.TAG,
-                        "Connected to p2p network. Requesting network details");
+                Log.d(TAG,"Connected to p2p network. Requesting network details");
+
                 manager.requestConnectionInfo(channel,(ConnectionInfoListener) activity);
+
                 ((MainActivity)activity).setConnected(true);
+
+                //now color the active tabs
                 ((MainActivity)activity).colorActiveTabs();
+
+                //and change the visible tab
                 ((MainActivity)activity).setTabFragmentToPage(((MainActivity)activity).getTabNum());
 
             } else {
-                // It's a disconnect
-                //quindi devo riavviare la discovery
+                // It's a disconnect, i need to restart the discovery phase
 
-                Log.d("WiFiDirectBroadcastReceiver", "disconnect rilevata, startRegistrationAndDiscovery in avvio");
+                Log.d(TAG, "Disconnect. Restarting discovery");
+
+                //remove color on all tabs
                 ((MainActivity)activity).changeColorToGrayAllChats();
-                if(!((MainActivity)activity).isBlockForcesDiscoveryInBroadcastReceiver()) {
+
+                //if manualItemMenuDisconnectAndStartDiscovery() is not activated by the user
+                if(!((MainActivity)activity).isBlockForcedDiscoveryInBroadcastReceiver()) {
+
+                    //force stop discovery process
                     ((MainActivity) activity).stopDiscoveryForced();
                 }
+
+                //disable all chatmanagers
                 ((MainActivity)activity).setDisableAllChatManagers();
 
-                //reimposta il viewpager al tab 0 con la servicelist
+                //change the visible tab to the first one, because i want to see the available services to reconnect, in necessary
                 ((MainActivity)activity).setTabFragmentToPage(0);
 
                 ((MainActivity)activity).setConnected(false);
 
-                ((MainActivity)activity).getTabFragment().getWiFiP2pServicesFragment().hideLocalDeviceGoIcon();
+                //to be sure that the GO icon inside the local device cardview is removed, i call the method to hide this icon
+                TabFragment.getWiFiP2pServicesFragment().hideLocalDeviceGoIcon();
             }
+
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+
+            //if is not a disconnect, neither a connect, set the local device
+            WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             LocalP2PDevice.getInstance().setLocalDevice(device);
-            Log.d(MainActivity.TAG, "Local Device status -" + device.status);
+            Log.d(TAG, "Local Device status -" + device.status);
 
         }
     }

@@ -1,12 +1,11 @@
 package it.polimi.wifidirectmultichat.discovery.services;
 
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
+import it.polimi.wifidirectmultichat.discovery.utilities.UseOnlyPrivateHere;
 
 /**
  * Class that represents a list of {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService }.
@@ -18,9 +17,10 @@ import lombok.Getter;
 public class ServiceList {
 
     //ATTENTION DO NOT EXPOSE THIS ATTRIBUTE, BUT CREATE A SECURE METHOD TO MANAGE THIS LISTS!!!
-    private List<WiFiP2pService> serviceList;
+    //SEE THE ANNOTATION, USE ONLY PRIVATE HERE WITHOUT GETTERS OR SETTERS!!!
+    @UseOnlyPrivateHere private final List<WiFiP2pService> serviceList;
 
-    private static ServiceList instance = new ServiceList();
+    private static final ServiceList instance = new ServiceList();
 
     /**
      * Method to get the instance of this class.

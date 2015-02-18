@@ -19,8 +19,12 @@ import it.polimi.wifidirectmultichat.R;
  */
 public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapter.ViewHolder> {
 
-    private ItemClickListener itemClickListener;
+    private final ItemClickListener itemClickListener;
 
+    /**
+     * Constructor of the adapter.
+     * @param itemClickListener ClickListener to obtain click actions over the recyclerview's elements.
+     */
     public WiFiServicesAdapter(@NonNull ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
         setHasStableIds(true);
@@ -39,9 +43,9 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final View parent;
-        private TextView nameText;
-        private TextView statusText;
-        private TextView macAddressText;
+        private final TextView nameText;
+        private final TextView statusText;
+        private final TextView macAddressText;
 
         public ViewHolder(View view) {
             super(view);
