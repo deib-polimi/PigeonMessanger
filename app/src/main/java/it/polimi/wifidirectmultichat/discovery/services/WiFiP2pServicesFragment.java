@@ -81,8 +81,9 @@ public class WiFiP2pServicesFragment extends Fragment implements
     }
 
     /**
-     * Method called by WiFiServicesAdapter with the ItemClickListener interface, when the user
-     * click on an element of the recyclerview.
+     * Method called by {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter}
+     * with the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter.ItemClickListener}
+     * interface, when the user click on an element of the {@link android.support.v7.widget.RecyclerView}.
      * @param view {@link android.view.View} clicked.
      */
     @Override

@@ -98,7 +98,8 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
                 if(!((MainActivity)activity).isBlockForcedDiscoveryInBroadcastReceiver()) {
 
                     //force stop discovery process
-                    ((MainActivity) activity).stopDiscoveryForced();
+                    ((MainActivity) activity).forceDiscoveryStop();
+                    ((MainActivity) activity).restartDiscovery();
                 }
 
                 //disable all chatmanagers

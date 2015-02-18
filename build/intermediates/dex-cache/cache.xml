@@ -16,18 +16,18 @@
         <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-30a1ea7a9a0a3bee5ae73a1a3aafda7c3f79fac2.jar" />
     </item>
     <item
-        jar="/Users/Ks89/.gradle/caches/modules-2/files-2.1/com.splunk.mint/mint/4.0.7/c11d84e7bd447629c89adf2f325f3662aecf5a32/mint-4.0.7.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c11d84e7bd447629c89adf2f325f3662aecf5a32">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/mint-4.0.7-9f03479fadb2125b1af9e1452112d454e46a2750.jar" />
-    </item>
-    <item
         jar="/Users/Ks89/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
         <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-0454a0f2c9c5a734bb942fb74f0e1cb2ea0a7508.jar" />
+    </item>
+    <item
+        jar="/Users/Ks89/.gradle/caches/modules-2/files-2.1/com.splunk.mint/mint/4.0.7/c11d84e7bd447629c89adf2f325f3662aecf5a32/mint-4.0.7.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c11d84e7bd447629c89adf2f325f3662aecf5a32">
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/mint-4.0.7-9f03479fadb2125b1af9e1452112d454e46a2750.jar" />
     </item>
     <item
         jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"

@@ -42,10 +42,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import it.polimi.wifidirectmultichat.discovery.actionlisteners.CustomizableActionListener;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
 import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
 import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
@@ -120,32 +120,36 @@ public class MainActivity extends ActionBarActivity implements
             //tabnum lo setto a caso, tanto il programma capisce da solo qual'e' quello corretto
             Log.d(TAG, "reconnectToService called");
             this.setWifiP2pDevice(wifiP2pService);
-            this.connectP2p(wifiP2pService, 1);
+            this.connectP2p(wifiP2pService);
         }
     }
 
 
     /**
-     * Method to cancel a pending connection.
+     * Method to cancel a pending connection, used by the MenuItem icon.
      */
     private void forcedCancelConnect() {
         manager.cancelConnect(channel, new ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "cancel connect success");
+                Log.d(TAG, "forcedCancelConnect success");
                 Toast.makeText(MainActivity.this, "Cancel connect success", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.d(TAG, "cancel connect failed, reason: " + reason);
+                Log.d(TAG, "forcedCancelConnect failed, reason: " + reason);
                 Toast.makeText(MainActivity.this, "Cancel connect failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void stopDiscoveryForced() {
-        Log.d("stopDiscoveryForced", "stopDiscoveryForced");
+    /**
+     * Method that force to stop the discovery phase of the wifi direct protocol, clear
+     * the {@link it.polimi.wifidirectmultichat.discovery.services.ServiceList}, update the
+     * discovery's menu item and remove all the registered Services.
+     */
+    public void forceDiscoveryStop() {
         ServiceList.getInstance().clear();
 
         toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_stopped));
@@ -153,235 +157,76 @@ public class MainActivity extends ActionBarActivity implements
         if (discoveryStatus) {
             discoveryStatus = false;
 
-            manager.stopPeerDiscovery(channel, new ActionListener() {
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "Discovery stopped");
-                    Toast.makeText(MainActivity.this, "Discovery stopped", Toast.LENGTH_SHORT).show();
-                }
+            manager.stopPeerDiscovery(channel,
+                    new CustomizableActionListener(
+                            MainActivity.this,
+                            "forceDiscoveryStop",
+                            "Discovery stopped",
+                            "Discovery stopped",
+                            "Discovery stop failed",
+                            "Discovery stop failed"));
 
-                @Override
-                public void onFailure(int reason) {
-                    Log.d(TAG, "Discovery stop failed. Reason :" + reason);
-                    Toast.makeText(MainActivity.this, "Discovery stop failed", Toast.LENGTH_SHORT).show();
-                }
-            });
-            manager.clearServiceRequests(channel, new ActionListener() {
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "clearServiceRequests success");
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    Log.d(TAG, "clearServiceRequests failed: " + reason);
-                }
-            });
-            manager.clearLocalServices(channel, new ActionListener() {
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "clearLocalServices success");
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    Log.d(TAG, "clearLocalServices failure " + reason);
-                }
-            });
-        }
-
-        discoveryStatus = true;
-        startRegistrationAndDiscovery();
-
-        WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
-        if (fragment != null) {
-            WiFiServicesAdapter adapter = fragment.getMAdapter();
-            if (adapter != null) {
-                adapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-    private void disconnectBecauseActivityOnStop() {
-
-        if (socketHandler instanceof GroupOwnerSocketHandler) {
-            ((GroupOwnerSocketHandler) socketHandler).closeSocketAndKillThisThread();
-        } else if (socketHandler instanceof ClientSocketHandler) {
-            ((ClientSocketHandler) socketHandler).closeSocketAndKillThisThread();
-        }
-
-        this.setDisableAllChatManagers();
-
-        this.changeColorToGrayAllChats();
-
-        if (manager != null && channel != null) {
-            manager.removeGroup(channel, new ActionListener() {
-
-                @Override
-                public void onFailure(int reasonCode) {
-                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
-                    Toast.makeText(MainActivity.this, "Disconnect failed", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "Disconnected");
-                    Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
-                }
-
-            });
-        } else {
-            Log.d(TAG, "Disconnect impossible");
-        }
-    }
-
-    private void manualItemMenuDisconnectAndStartDiscovery() {
-        //serve per far si che il broadcast receiver ricevera' la notifica di disconnect, ma essendo che l'ho richiesta io
-        //dopo i metodi disconnect e discovery sono eseguiti 2 volte. Quindi per evitarlo, faccio si che se richiesto questo metodo,
-        //quello chiamato automaticamente dal broadcast receiver non possa essere chiamato
-        this.blockForcedDiscoveryInBroadcastReceiver = true;
+            manager.clearServiceRequests(channel,
+                    new CustomizableActionListener(
+                            MainActivity.this,
+                            "forceDiscoveryStop",
+                            "ClearServiceRequests success",
+                            null,
+                            "Discovery stop failed",
+                            null));
 
 
-        Log.d(TAG, "manualItemMenuDisconnectAndStartDiscovery");
-        if (socketHandler instanceof GroupOwnerSocketHandler) {
-            ((GroupOwnerSocketHandler) socketHandler).closeSocketAndKillThisThread();
-        } else if (socketHandler instanceof ClientSocketHandler) {
-            ((ClientSocketHandler) socketHandler).closeSocketAndKillThisThread();
-        }
 
-        this.setDisableAllChatManagers();
-
-        if (manager != null && channel != null) {
-            manager.removeGroup(channel, new ActionListener() {
-
-                @Override
-                public void onFailure(int reasonCode) {
-                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
-                    Toast.makeText(MainActivity.this, "Disconnect failed", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "Disconnected");
-                    Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
-
-                    Log.d(TAG, "Discovery status: " + discoveryStatus);
-
-                    ServiceList.getInstance().clear();
-                    toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_stopped));
-
-                    if (discoveryStatus) {
-                        discoveryStatus = false;
-
-                        manager.stopPeerDiscovery(channel, new ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d(TAG, "Discovery stopped");
-                                Toast.makeText(MainActivity.this, "Discovery stopped", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.d(TAG, "Discovery stop failed. Reason :" + reason);
-                                Toast.makeText(MainActivity.this, "Discovery stop failed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        manager.clearServiceRequests(channel, new ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d(TAG, "clearServiceRequests success");
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.d(TAG, "clearServiceRequests failed: " + reason);
-                            }
-                        });
-                        manager.clearLocalServices(channel, new ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d("TAG", "removeLocalService success");
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.d("TAG", "removeLocalService failure " + reason);
-                            }
-                        });
-                    } else {
-                        discoveryStatus = true;
-                    }
-
-                    startRegistrationAndDiscovery();
-
-                    WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
-                    if (fragment != null) {
-                        WiFiServicesAdapter adapter = fragment.getMAdapter();
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-            });
-        } else {
-            Log.d(TAG, "Disconnect impossible");
+            manager.clearLocalServices(channel,
+                    new CustomizableActionListener(
+                            MainActivity.this,
+                            "forceDiscoveryStop",
+                            "ClearLocalServices success",
+                            null,
+                            "clearLocalServices failure",
+                            null));
         }
     }
 
     /**
-     * Registers a local service and then initiates a service discovery
+     * Method to restarts the discovery phase and to update the UI.
      */
-    private void startRegistrationAndDiscovery() {
+    public void restartDiscovery() {
+        discoveryStatus = true;
 
-        Map<String, String> record = new HashMap<>();
-        record.put(Configuration.TXTRECORD_PROP_AVAILABLE, "visible");
-
-        WifiP2pDnsSdServiceInfo service = WifiP2pDnsSdServiceInfo.newInstance(
-                Configuration.SERVICE_INSTANCE, Configuration.SERVICE_REG_TYPE, record);
-        manager.addLocalService(channel, service, new ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                Toast.makeText(MainActivity.this, "Added Local Service", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Added Local Service");
-            }
-
-            @Override
-            public void onFailure(int error) {
-                Toast.makeText(MainActivity.this, "Failed to add a service", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Failed to add a service");
-            }
-        });
-
-        discoverService();
-
+        //starts a new registration, restarts discovery and updates the gui
+        this.startRegistration();
+        this.discoverService();
+        this.updateServiceAdapter();
     }
 
+    /**
+     * Method to discover services and put the results
+     * in {@link it.polimi.wifidirectmultichat.discovery.services.ServiceList}.
+     * This method updates also the discovery menu item.
+     */
     private void discoverService() {
 
         ServiceList.getInstance().clear();
 
         toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_searching));
 
-
         /*
          * Register listeners for DNS-SD services. These are callbacks invoked
          * by the system when a service is actually discovered.
          */
-
         manager.setDnsSdResponseListeners(channel,
                 new DnsSdServiceResponseListener() {
 
                     @Override
                     public void onDnsSdServiceAvailable(String instanceName,
-                                                        String registrationType, WifiP2pDevice srcDevice) {
+                                                        String registrationType,
+                                                        WifiP2pDevice srcDevice) {
 
                         // A service has been discovered. Is this our app?
                         if (instanceName.equalsIgnoreCase(Configuration.SERVICE_INSTANCE)) {
 
-                            // update the UI and add the item the discovered
-                            // device.
+                            // update the UI and add the item the discovered device.
                             WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
                             if (fragment != null) {
                                 WiFiServicesAdapter adapter = fragment.getMAdapter();
@@ -411,7 +256,8 @@ public class MainActivity extends ActionBarActivity implements
                     public void onDnsSdTxtRecordAvailable(
                             String fullDomainName, Map<String, String> record,
                             WifiP2pDevice device) {
-                        Log.d("onDnsSdTxtRecordAvail", device.deviceName + " is " + record.get(Configuration.TXTRECORD_PROP_AVAILABLE));
+                        Log.d(TAG, "onDnsSdTxtRecordAvail: " + device.deviceName + " is " +
+                                record.get(Configuration.TXTRECORD_PROP_AVAILABLE));
                     }
                 });
 
@@ -419,96 +265,218 @@ public class MainActivity extends ActionBarActivity implements
         // discovery.
         serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
 
+        //inititiates discovery
         manager.addServiceRequest(channel, serviceRequest,
-                new ActionListener() {
+                new CustomizableActionListener(
+                        MainActivity.this,
+                        "discoverService",
+                        "Added service discovery request",
+                        "Added service discovery request",
+                        "Failed adding service discovery request",
+                        "Failed adding service discovery request"));
 
-                    @Override
-                    public void onSuccess() {
-
-                        Toast.makeText(MainActivity.this, "Added service discovery request", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(int arg0) {
-                        Toast.makeText(MainActivity.this, "Failed adding service discovery request", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        //starts services disovery
         manager.discoverServices(channel, new ActionListener() {
 
             @Override
             public void onSuccess() {
-
+                Log.d(TAG, "Service discovery initiated");
                 Toast.makeText(MainActivity.this, "Service discovery initiated", Toast.LENGTH_SHORT).show();
                 blockForcedDiscoveryInBroadcastReceiver = false;
             }
 
             @Override
-            public void onFailure(int arg0) {
-                Toast.makeText(MainActivity.this, "Service discovery failed", Toast.LENGTH_SHORT).show();
+            public void onFailure(int reason) {
+                Log.d(TAG, "Service discovery failed");
+                Toast.makeText(MainActivity.this, "Service discovery failed, " + reason, Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
-    private void connectP2p(WiFiP2pService service, final int tabNum) {
-        Log.d(TAG, "connectP2p " + tabNum);
-        this.tabNum = tabNum;
 
-        Log.d("connectP2p-1", DeviceTabList.getInstance().getDevice(tabNum - 1) + "");
+    /**
+     * Method to notifyDataSetChanged to the adapter of the
+     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}.
+     */
+    private void updateServiceAdapter() {
+        WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
+        if (fragment != null) {
+            WiFiServicesAdapter adapter = fragment.getMAdapter();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /**
+     * Method to disconnect this device when this Activity calls onStop().
+     */
+    private void disconnectBecauseOnStop() {
+
+        this.closeAndKillSocketHandler();
+
+        this.setDisableAllChatManagers();
+
+        this.changeColorToGrayAllChats();
+
+        if (manager != null && channel != null) {
+
+            manager.removeGroup(channel,
+                    new CustomizableActionListener(
+                            MainActivity.this,
+                            "disconnectBecauseOnStop",
+                            "Disconnected",
+                            "Disconnected",
+                            "Disconnect failed",
+                            "Disconnect failed"));
+        } else {
+            Log.d("disconnectBecauseOnStop", "Impossible to disconnect");
+        }
+    }
+
+    /**
+     * Method to close and kill socketHandler, GO or Client.
+     */
+    private void closeAndKillSocketHandler() {
+        if (socketHandler instanceof GroupOwnerSocketHandler) {
+            ((GroupOwnerSocketHandler) socketHandler).closeSocketAndKillThisThread();
+        } else if (socketHandler instanceof ClientSocketHandler) {
+            ((ClientSocketHandler) socketHandler).closeSocketAndKillThisThread();
+        }
+    }
+
+
+    /**
+     * Method to disconnect and restart discovery, used by the MenuItem icon.
+     * This method tries to remove the WifiP2pGroup.
+     * If onSuccess, its clear the {@link it.polimi.wifidirectmultichat.discovery.services.ServiceList},
+     * completely stops the discovery phase and, at the end, restarts registration and discovery.
+     * Finally this method updates the adapter
+     */
+    private void forceDisconnectAndStartDiscovery() {
+        //When BroadcastReceiver gets the disconnect's notification, this method will be executed two times.
+        //For this reason, i use a boolean called blockForcedDiscoveryInBroadcastReceiver to check if i
+        //need to call this method from BroadcastReceiver or not.
+        this.blockForcedDiscoveryInBroadcastReceiver = true;
+
+        this.closeAndKillSocketHandler();
+
+        this.setDisableAllChatManagers();
+
+        if (manager != null && channel != null) {
+
+            manager.removeGroup(channel, new ActionListener() {
+                @Override
+                public void onFailure(int reasonCode) {
+                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
+                    Toast.makeText(MainActivity.this, "Disconnect failed", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "Disconnected");
+                    Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+
+                    Log.d(TAG, "Discovery status: " + discoveryStatus);
+
+                    forceDiscoveryStop();
+                    restartDiscovery();
+                }
+
+            });
+        } else {
+            Log.d(TAG, "Disconnect impossible");
+        }
+    }
+
+    /**
+     * Registers a local service.
+     */
+    private void startRegistration() {
+        Map<String, String> record = new HashMap<>();
+        record.put(Configuration.TXTRECORD_PROP_AVAILABLE, "visible");
+
+        WifiP2pDnsSdServiceInfo service = WifiP2pDnsSdServiceInfo.newInstance(
+                Configuration.SERVICE_INSTANCE, Configuration.SERVICE_REG_TYPE, record);
+        manager.addLocalService(channel, service,
+                new CustomizableActionListener(
+                        MainActivity.this,
+                        "startRegistration",
+                        "Added Local Service",
+                        "Added Local Service",
+                        "Failed to add a service",
+                        "Failed to add a service"));
+    }
+
+
+    /**
+     * Method that connects to the specified service.
+     * @param service The {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService}
+     *                to which you want to connect.
+     */
+    private void connectP2p(WiFiP2pService service) {
+        Log.d(TAG, "connectP2p, tabNum before = " + tabNum);
+
+        this.tabNum = 1; //TODO in every experiment i used this, i don't know if is really necessary, probably not.
 
         if (DeviceTabList.getInstance().containsElement(service.getDevice())) {
-            Log.d("connectP2p-2", "containselement: " + service.getDevice());
             this.tabNum = DeviceTabList.getInstance().indexOfElement(service.getDevice()) + 1;
         }
 
         if (this.tabNum == -1) {
-            Log.d("ERROR", "ERROR TABNUM=-1");
+            Log.d("ERROR", "ERROR TABNUM=-1"); //only for testing purposes.
         }
 
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.getDevice().deviceAddress;
         config.wps.setup = WpsInfo.PBC;
-        config.groupOwnerIntent = 0; //per farlo collegare come client
-        if (serviceRequest != null)
+        config.groupOwnerIntent = 0; //because i want that this device is the client. Attention, sometimes can be a GO, also if i used 0 here.
+
+        if (serviceRequest != null) {
             manager.removeServiceRequest(channel, serviceRequest,
-                    new ActionListener() {
+                    new CustomizableActionListener(
+                            MainActivity.this,
+                            "connectP2p",
+                            null,
+                            "RemoveServiceRequest success",
+                            null,
+                            "removeServiceRequest failed"));
+        }
 
-                        @Override
-                        public void onSuccess() {
-                            Toast.makeText(MainActivity.this, "removeServiceRequest success", Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        @Override
-                        public void onFailure(int arg0) {
-                            Toast.makeText(MainActivity.this, "removeServiceRequest failed", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-
-        manager.connect(channel, config, new ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                Toast.makeText(MainActivity.this, "Connecting to service", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(int errorCode) {
-                Toast.makeText(MainActivity.this, "Failed connecting to service. Reason: " + errorCode, Toast.LENGTH_SHORT).show();
-            }
-        });
+        manager.connect(channel, config,
+                new CustomizableActionListener(
+                        MainActivity.this,
+                        "connectP2p",
+                        null,
+                        "Connecting to service",
+                        null,
+                        "Failed connecting to service"));
     }
 
+
+    /**
+     * Method called by {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}
+     * with the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener}
+     * interface, when the user click on an element of the recyclerview.
+     * To be precise, the call comes from {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter} to the
+     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} using
+     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener} to
+     * check if the clickedPosition is correct and finally calls this method.
+     * @param position
+     */
     public void tryToConnectToAService(int position) {
         WiFiP2pService service = ServiceList.getInstance().getElementByPosition(position);
 
+        //if connected, force disconnect and restart discovery phase.
         if (connected) {
-            this.manualItemMenuDisconnectAndStartDiscovery();
+            this.forceDisconnectAndStartDiscovery();
         }
+
         this.setWifiP2pDevice(service);
-        this.connectP2p(service, 1);
+        this.connectP2p(service);
     }
+
 
     private void sendAddress(String deviceMacAddress, String name) {
         WiFiChatFragment frag = tabFragment.getChatFragmentByTab(tabNum);
@@ -521,6 +489,12 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
+    /**
+     * Method to disable all {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}'s.
+     * This method iterates over all ChatManagers inside
+     * the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}'s list
+     * (in {@link it.polimi.wifidirectmultichat.discovery.TabFragment} ) and calls "setDisable(true);".
+     */
     public void setDisableAllChatManagers() {
         for (WiFiChatFragment chatFragment : TabFragment.getWiFiChatFragmentList()) {
             if (chatFragment != null && chatFragment.getChatManager() != null) {
@@ -529,9 +503,14 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
+    /**
+     * Method to set the current item of the {@link android.support.v4.view.ViewPager} used
+     * in {@link it.polimi.wifidirectmultichat.discovery.TabFragment}.
+     * @param numPage int that represents the index of the tab to show.
+     */
     public void setTabFragmentToPage(int numPage) {
         TabFragment tabfrag1 = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
-        if (tabfrag1 != null) {
+        if (tabfrag1 != null && tabfrag1.getMViewPager()!=null) {
             tabfrag1.getMViewPager().setCurrentItem(numPage);
         }
     }
@@ -799,7 +778,8 @@ public class MainActivity extends ActionBarActivity implements
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
-        startRegistrationAndDiscovery();
+        startRegistration();
+        discoverService();
 
         tabFragment = TabFragment.newInstance();
 
@@ -880,14 +860,11 @@ public class MainActivity extends ActionBarActivity implements
                     item.setIcon(R.drawable.ic_action_search_searching);
                     ServiceList.getInstance().clear();
                     discoveryStatus = true;
-                    startRegistrationAndDiscovery();
+                    startRegistration();
+                    discoverService();
                 }
 
-                WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
-                if (fragment != null) {
-                    WiFiServicesAdapter adapter = fragment.getMAdapter();
-                    adapter.notifyDataSetChanged();
-                }
+                updateServiceAdapter();
 
                 this.setTabFragmentToPage(0);
 
@@ -896,7 +873,7 @@ public class MainActivity extends ActionBarActivity implements
 
                 this.setTabFragmentToPage(0);
 
-                this.manualItemMenuDisconnectAndStartDiscovery();
+                this.forceDisconnectAndStartDiscovery();
                 return true;
             case R.id.cancelConnection:
 
@@ -926,19 +903,17 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        Mint.closeSession(WiFiServiceDiscoveryActivity.this);
     }
 
     @Override
     protected void onStop() {
-        this.disconnectBecauseActivityOnStop();
+        this.disconnectBecauseOnStop();
         super.onStop();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_items, menu);
+        getMenuInflater().inflate(R.menu.action_items, menu);
         return true;
     }
 
