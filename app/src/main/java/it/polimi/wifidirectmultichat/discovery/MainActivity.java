@@ -68,7 +68,7 @@ import lombok.Setter;
 /**
  * Main Activity.
  * <p/>
- * Created by Stefano Cappa on 04/02/15, based on google code samples.
+ * Created by Stefano Cappa on 04/02/15.
  */
 public class MainActivity extends ActionBarActivity implements
         WiFiP2pServicesFragment.DeviceClickListener,
