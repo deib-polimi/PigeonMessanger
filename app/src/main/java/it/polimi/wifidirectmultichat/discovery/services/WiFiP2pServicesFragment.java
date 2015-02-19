@@ -97,7 +97,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
 
     /**
      * Method to show a GO Icon inside the local device card view.
-     * This is usefull to identify which device is a GO.
+     * This is useful to identify which device is a GO.
      */
     public void showLocalDeviceGoIcon(){
         if(getView() !=null && getView().findViewById(R.id.go_logo)!=null && getView().findViewById(R.id.i_am_a_go_textview)!=null) {

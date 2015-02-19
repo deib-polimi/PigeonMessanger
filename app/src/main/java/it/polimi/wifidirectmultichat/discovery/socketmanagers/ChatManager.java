@@ -70,6 +70,8 @@ public class ChatManager implements Runnable {
             oStream = socket.getOutputStream();
             byte[] buffer = new byte[1024];
             int bytes;
+
+            //this method's call is used to call handleMessage's case Configuration.MY_HANDLE in the MainActivity.
             handler.obtainMessage(Configuration.MY_HANDLE, this).sendToTarget();
 
             while (!disable) { //...if enabled
@@ -81,7 +83,7 @@ public class ChatManager implements Runnable {
                             break;
                         }
 
-                        // Send the obtained bytes to the MainActivity
+                        //this method's call is used to call handleMessage's case Configuration.MESSAGE_READ in the MainActivity.
                         handler.obtainMessage(Configuration.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                     }
                 } catch (IOException e) {

@@ -3,7 +3,6 @@ package it.polimi.wifidirectmultichat.discovery.chatmessages;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,14 +82,14 @@ public class WiFiChatFragment extends Fragment {
         }
         combineMessages = combineMessages + "\n";
 
-        Log.d(TAG, "Queued messange to send: " + combineMessages);
+        Log.d(TAG, "Queued message to send: " + combineMessages);
 
         if (chatManager != null) {
             if (!chatManager.isDisable()) {
                 chatManager.write((combineMessages).getBytes());
                 WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNumber).clear();
             } else {
-                Log.d(TAG, "Chatmanager disabled, impossibile to send the queued combined message");
+                Log.d(TAG, "Chatmanager disabled, impossible to send the queued combined message");
             }
 
         }
@@ -157,7 +156,7 @@ public class WiFiChatFragment extends Fragment {
                             if (!chatManager.isDisable()) {
                                 Log.d(TAG, "chatmanager state: enable");
 
-                                //send messange to the ChatManager's outputStream.
+                                //send message to the ChatManager's outputStream.
                                 chatManager.write(chatLine.getText().toString().getBytes());
                             } else {
                                 Log.d(TAG, "chatmanager disabled, trying to send a message with tabNum= " + tabNumber);

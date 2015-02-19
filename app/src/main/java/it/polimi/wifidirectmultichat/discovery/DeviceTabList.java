@@ -77,7 +77,7 @@ public class DeviceTabList {
      * If you pass a device==null, in the list you will get a null element. Be careful!
      * @param device {@link android.net.wifi.p2p.WifiP2pDevice} element the you want add to the deviceList.
      */
-    public void addDevice(@NonNull WifiP2pDevice device) {
+    public void addDeviceIfRequired(@NonNull WifiP2pDevice device) {
         boolean add = true;
         for (WifiP2pDevice element : deviceList) {
             if (element != null && element.equals(device)) {

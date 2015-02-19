@@ -15,8 +15,8 @@ import android.widget.Toast;
  */
 public class CustomizableActionListener implements WifiP2pManager.ActionListener {
 
-    private Context context;
-    private String successLog, successToast, failLog, failToast, tag;
+    private final Context context;
+    private final String successLog, successToast, failLog, failToast, tag;
 
 
     /**

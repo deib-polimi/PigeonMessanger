@@ -81,7 +81,7 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
                 ((MainActivity)activity).setConnected(true);
 
                 //now color the active tabs
-                ((MainActivity)activity).colorActiveTabs();
+                ((MainActivity)activity).addColorActiveTabs(false);
 
                 //and change the visible tab
                 ((MainActivity)activity).setTabFragmentToPage(((MainActivity)activity).getTabNum());
@@ -92,7 +92,7 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Disconnect. Restarting discovery");
 
                 //remove color on all tabs
-                ((MainActivity)activity).changeColorToGrayAllChats();
+                ((MainActivity)activity).addColorActiveTabs(true);
 
                 //if manualItemMenuDisconnectAndStartDiscovery() is not activated by the user
                 if(!((MainActivity)activity).isBlockForcedDiscoveryInBroadcastReceiver()) {

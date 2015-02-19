@@ -101,7 +101,7 @@ public class MainActivity extends ActionBarActivity implements
      * Method to get the {@link android.os.Handler}.
      * @return The handler.
      */
-    public Handler getHandler() {
+    Handler getHandler() {
         return handler;
     }
 
@@ -111,16 +111,19 @@ public class MainActivity extends ActionBarActivity implements
      * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment.CallbackActivity}
      * interface, implemented here, by this class.
      * If the wifiP2pService is null, this method return directly, without doing anything.
-     * @param wifiP2pService A {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService}
+     * @param service A {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService}
      *                       object that represents the device in which you want to connect.
      */
     @Override
-    public void reconnectToService(WiFiP2pService wifiP2pService) {
-        if (wifiP2pService != null) {
-            //tabnum lo setto a caso, tanto il programma capisce da solo qual'e' quello corretto
+    public void reconnectToService(WiFiP2pService service) {
+        if (service != null) {
             Log.d(TAG, "reconnectToService called");
-            this.setWifiP2pDevice(wifiP2pService);
-            this.connectP2p(wifiP2pService);
+
+            //Finally, add device to the DeviceTabList, only if required.
+            //Go to addDeviceIfRequired()'s javadoc for more informations.
+            DeviceTabList.getInstance().addDeviceIfRequired(service.getDevice());
+
+            this.connectP2p(service);
         }
     }
 
@@ -150,42 +153,45 @@ public class MainActivity extends ActionBarActivity implements
      * discovery's menu item and remove all the registered Services.
      */
     public void forceDiscoveryStop() {
-        ServiceList.getInstance().clear();
-
-        toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_stopped));
-
         if (discoveryStatus) {
             discoveryStatus = false;
 
-            manager.stopPeerDiscovery(channel,
-                    new CustomizableActionListener(
-                            MainActivity.this,
-                            "forceDiscoveryStop",
-                            "Discovery stopped",
-                            "Discovery stopped",
-                            "Discovery stop failed",
-                            "Discovery stop failed"));
+            ServiceList.getInstance().clear();
+            toolbar.getMenu().findItem(R.id.discovery).setIcon(getResources().getDrawable(R.drawable.ic_action_search_stopped));
 
-            manager.clearServiceRequests(channel,
-                    new CustomizableActionListener(
-                            MainActivity.this,
-                            "forceDiscoveryStop",
-                            "ClearServiceRequests success",
-                            null,
-                            "Discovery stop failed",
-                            null));
-
-
-
-            manager.clearLocalServices(channel,
-                    new CustomizableActionListener(
-                            MainActivity.this,
-                            "forceDiscoveryStop",
-                            "ClearLocalServices success",
-                            null,
-                            "clearLocalServices failure",
-                            null));
+            this.internalStopDiscovery();
         }
+    }
+
+    /**
+     * Method that asks to the manager to stop discovery phase.
+     * Attention, Never call this method directly, but you should use for example {@link #forceDiscoveryStop()}
+     */
+    private void internalStopDiscovery() {
+        manager.stopPeerDiscovery(channel,
+                new CustomizableActionListener(
+                        MainActivity.this,
+                        "forceDiscoveryStop",
+                        "Discovery stopped",
+                        "Discovery stopped",
+                        "Discovery stop failed",
+                        "Discovery stop failed"));
+        manager.clearServiceRequests(channel,
+                new CustomizableActionListener(
+                        MainActivity.this,
+                        "forceDiscoveryStop",
+                        "ClearServiceRequests success",
+                        null,
+                        "Discovery stop failed",
+                        null));
+        manager.clearLocalServices(channel,
+                new CustomizableActionListener(
+                        MainActivity.this,
+                        "forceDiscoveryStop",
+                        "ClearLocalServices success",
+                        null,
+                        "clearLocalServices failure",
+                        null));
     }
 
     /**
@@ -318,7 +324,7 @@ public class MainActivity extends ActionBarActivity implements
 
         this.setDisableAllChatManagers();
 
-        this.changeColorToGrayAllChats();
+        this.addColorActiveTabs(true);
 
         if (manager != null && channel != null) {
 
@@ -463,7 +469,8 @@ public class MainActivity extends ActionBarActivity implements
      * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} using
      * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener} to
      * check if the clickedPosition is correct and finally calls this method.
-     * @param position
+     * @param position int that represents the lists's clicked position inside
+     *                 the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}
      */
     public void tryToConnectToAService(int position) {
         WiFiP2pService service = ServiceList.getInstance().getElementByPosition(position);
@@ -473,19 +480,25 @@ public class MainActivity extends ActionBarActivity implements
             this.forceDisconnectAndStartDiscovery();
         }
 
-        this.setWifiP2pDevice(service);
+        //Finally, add device to the DeviceTabList, only if required.
+        //Go to addDeviceIfRequired()'s javadoc for more informations.
+        DeviceTabList.getInstance().addDeviceIfRequired(service.getDevice());
+
         this.connectP2p(service);
     }
 
-
+    /**
+     * Method to send the {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MAGICADDRESSKEYWORD with the macaddress
+     * of this device to the other device.
+     * @param deviceMacAddress String that represents the macaddress of the destination device.
+     * @param name String that represents the name of the destination device.
+     */
     private void sendAddress(String deviceMacAddress, String name) {
         WiFiChatFragment frag = tabFragment.getChatFragmentByTab(tabNum);
-        Log.d("sendAddress", "chatmanager is " + frag.getChatManager());
         if (frag.getChatManager() != null) {
-            //uso i "+" come spaziatura iniziale per essere sicuro che il messaggio non sia perso
-            //cioe' non devo perndere nessuna lettera di ADDRESS, o l'if in ricezione fallira' e non potro' settare
-            //il device nella lista, creando nullpointeresxception.
-            frag.getChatManager().write(("+++++++ADDRESS" + "___" + deviceMacAddress + "___" + name).getBytes());
+            //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i will have always
+            //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
+            frag.getChatManager().write(("+++++++" + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
         }
     }
 
@@ -515,33 +528,32 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    private void setWifiP2pDevice(WiFiP2pService service1) {
-        Log.d("setWifiP2pDevice", "setWifiP2pDevice device= " + service1.getDevice());
-        DeviceTabList.getInstance().addDevice(service1.getDevice());
-
-        Log.d("setWifiP2pDevice", "setWifiP2pDevice added in tab= " + (DeviceTabList.getInstance().indexOfElement(service1.getDevice()) + 1));
-
-    }
-
-    public void changeColorToGrayAllChats() {
-        for (WiFiChatFragment frag : TabFragment.getWiFiChatFragmentList()) {
-            frag.setGrayScale(true);
-            frag.updateChatMessageListAdapter();
-        }
-    }
-
-    public void colorActiveTabs() {
+    /**
+     * This Method changes the color of all messages in
+     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
+     * Attention, you can't specify which tabs or which message must be updated.
+     *
+     * @param grayScale a boolean that if is true removes all colors inside
+     *                  {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment},
+     *                  if false activates all colors only in the active
+     *                  {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment},
+     *                  based on the value of tabNum to select the correct tab in
+     *                  {@link it.polimi.wifidirectmultichat.discovery.TabFragment}.
+     */
+    public void addColorActiveTabs(boolean grayScale) {
         for (WiFiChatFragment chatFragment : TabFragment.getWiFiChatFragmentList()) {
             if (chatFragment != null) {
-                chatFragment.setGrayScale(false);
+                chatFragment.setGrayScale(grayScale);
                 chatFragment.updateChatMessageListAdapter();
             }
         }
     }
 
     /**
-     * Metodo che setta il nome del dispositivo tramite refplection.
-     *
+     * This method sets the name of this {@link it.polimi.wifidirectmultichat.discovery.LocalP2PDevice}
+     * in the UI and inside the device. In this way, all other devices can see this updated name during the discovery phase.
+     * Attention, WifiP2pManager uses ad annotation called @hide to hide the method called setDeviceName, in Android SDK.
+     * This method uses Java reflection to call this hidden method.
      * @param deviceName String that represents the visible device name of a device, during discovery.
      */
     public void setDeviceNameWithReflection(String deviceName) {
@@ -551,40 +563,38 @@ public class MainActivity extends ActionBarActivity implements
                     new Class[]{WifiP2pManager.Channel.class, String.class,
                             WifiP2pManager.ActionListener.class});
 
-            m.invoke(manager, channel, deviceName, new WifiP2pManager.ActionListener() {
-                public void onSuccess() {
-                    //Code for Success in changing name
-                    Log.d("reflection", "device OK");
-                    Toast.makeText(MainActivity.this, "Device name changed", Toast.LENGTH_SHORT).show();
-                }
-
-                public void onFailure(int reason) {
-                    //Code to be done while name change Fails
-                    Log.d("reflection", "device FAILURE");
-                    Toast.makeText(MainActivity.this, "Error, device name not changed", Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            m.invoke(manager, channel, deviceName,
+                    new CustomizableActionListener(
+                            MainActivity.this,
+                            "setDeviceNameWithReflection",
+                            "Device name changed",
+                            "Device name changed",
+                            "Error, device name not changed",
+                            "Error, device name not changed"));
         } catch (Exception e) {
-
-            e.printStackTrace();
+            Log.e(TAG, "Exception during setDeviceNameWithReflection" , e);
+            Toast.makeText(MainActivity.this, "Impossible to change the device name", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Method to setup the {@link android.support.v7.widget.Toolbar}
+     * as supportActionBar in this {@link android.support.v7.app.ActionBarActivity}.
+     */
     private void setupToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         if (toolbar != null) {
             toolbar.setTitle("WiFiDirect Chat");
             toolbar.setTitleTextColor(Color.WHITE);
-
             toolbar.inflateMenu(R.menu.action_items);
-
             this.setSupportActionBar(toolbar);
         }
     }
 
 
+    /**
+     * Method called automatically by Android.
+     */
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
 
@@ -596,16 +606,16 @@ public class MainActivity extends ActionBarActivity implements
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
             try {
-                Log.d(TAG, "socketHandler!=null" + (socketHandler != null));
+                Log.d(TAG, "socketHandler!=null? = " + (socketHandler != null));
                 socketHandler = new GroupOwnerSocketHandler(this.getHandler());
                 socketHandler.start();
 
-                //se e' group owner METTO il logo GO nella cardview del serviceslistfragment.
+                //if this device is the Group Owner, i sets the GO's
+                //ImageView of the cardview inside the WiFiP2pServicesFragment.
                 TabFragment.getWiFiP2pServicesFragment().showLocalDeviceGoIcon();
 
-
             } catch (IOException e) {
-                Log.e(TAG, "Failed to create a server thread - " + e.getMessage());
+                Log.e(TAG, "Failed to create a server thread - " + e);
                 return;
             }
         } else {
@@ -613,21 +623,26 @@ public class MainActivity extends ActionBarActivity implements
             socketHandler = new ClientSocketHandler(this.getHandler(), p2pInfo.groupOwnerAddress);
             socketHandler.start();
 
-            //se non e' group owner TOLGO il logo GO nella cardview del serviceslistfragment, nel casso fosse stato settato in precedenza
+            //if this device is the Group Owner, i set the GO's ImageView
+            //of the cardview inside the WiFiP2pServicesFragment.
             TabFragment.getWiFiP2pServicesFragment().hideLocalDeviceGoIcon();
         }
 
+        Log.d(TAG, "onConnectionInfoAvailable setTabFragmentToPage with tabNum == " + tabNum);
 
-        Log.d(TAG, "onConnectionInfoAvailable tabNum = " + tabNum);
         this.setTabFragmentToPage(tabNum);
     }
 
+
+    /**
+     * Method called automatically by Android when
+     * {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}
+     * calls handler.obtainMessage(***).sendToTarget().
+     */
     @Override
     public boolean handleMessage(Message msg) {
 
-        WifiP2pDevice p2pDevice;
-
-        Log.d("handleMessage", "handleMessage, il tabNum globale activity e': " + tabNum);
+        Log.d(TAG, "handleMessage, tabNum in this activity is: " + tabNum);
 
         switch (msg.what) {
             case Configuration.MESSAGE_READ:
@@ -636,122 +651,74 @@ public class MainActivity extends ActionBarActivity implements
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
 
+                Log.d(TAG, "Message: " + readMessage);
+
                 if (readMessage.length() <= 1) {
-                    Log.d("handleMessage", "filtro messaggio perche' troppo corto: " + readMessage);
+                    Log.d(TAG, "handleMessage, filter activated because the message is too short" + readMessage);
                     return true;
                 }
 
-                Log.d(TAG, readMessage);
-                if (readMessage.contains("ADDRESS") && readMessage.split("___").length == 3) {
-                    Log.d("ADDRESS", "+++ADDRESS_____ : " + readMessage);
-                    p2pDevice = new WifiP2pDevice();
-                    p2pDevice.deviceAddress = readMessage.split("___")[1];
-                    p2pDevice.deviceName = readMessage.split("___")[2];
 
-                    Log.d("handlemessage", "p2pDevice ottenuto: " + p2pDevice.deviceName + ", " + p2pDevice.deviceAddress);
-
-                    if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
-                        Log.d("handleMessage", "elemento non presente! OK");
-
-                        if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
-                            Log.d("handleMessage", "elemento in tabnum= " + (tabNum - 1) + " nullo");
-                            DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
-
-                            Log.d("handleMessage", "device settato il precendeza = " + DeviceTabList.getInstance().getDevice(tabNum - 1));
-
-                        } else {
-                            Log.d("handleMessage", "elemento in tabnum= " + (tabNum - 1) + " non nullo");
-                            DeviceTabList.getInstance().addDevice(p2pDevice);
-                        }
-                    } else {
-                        Log.d("handleMessage", "elemento presente! OK");
-                    }
-
-                    Log.d("p2pDevice!=null", "tabNum = " + tabNum);
-                    //se ho il p2pdevice diverso da null, vuol dire che lo ho settato e quindi e' la fase di scambio dei macaddress
-                    //quindi devo assicurarmi di inviare il messaggio sulla chat giusta, ma per farlo devo avere l'indice
-                    //corretto tabNum. Se per puro caso, ho usato il device prima per fare altro ed e' rimasto tabNum settato e ora
-                    //questo valore risulta scorretto, rischio di inserire messaggi nel tab sbagliato, allora
-                    //cerco l'indice cosi'
-
-                    tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
-                    if (tabNum <= 0 || TabFragment.getWiFiChatFragmentList().size() - 1 < tabNum || tabFragment.getChatFragmentByTab(tabNum) == null) {
-                        tabFragment.addNewTabChatFragment();
-                        Log.d("handleMessage", "handleMessage, MESSAGE_READ tab added with tabnum: " + tabNum);
-                        this.setTabFragmentToPage(tabNum);
-                        colorActiveTabs();
-                    }
+                //if the message received contains Configuration.MAGICADDRESSKEYWORD is because now someone want to connect to this device
+                if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD) && readMessage.split("___").length == 3) {
+                    manageAddressMessageReceiption(readMessage);
                 }
 
+                //if this message is not an initialization's message with Configuration.MAGICADDRESSKEYWORD
+                // keyword, check if tabNum is correct
                 if (tabNum <= 0) {
-                    //piuttosto che avere il tabnum sbagliato lo assegno ottenendo il tab visualizzato in quel momento, tanto
-                    //e' probabile che l'utente stia nella chat giusta mentre il messagigo viene inviato.
-                    //per evitare pero' che sia messo a 0 e poi faccia crashare "public void onGroupInfoAvailable(WifiP2pGroup group) {"
-                    // mi assicuro che se e' ==0 venga messo a 1, altrimenti prendo l'indice del tab visualizzato in quel momento
-                    Log.e("handleMessage", "errore tabnum=" + tabNum + "<=0, aggiorno tabnum");
-                    if (tabFragment.getMViewPager().getCurrentItem() == 0) {
-                        tabNum = 1;
-                    } else {
-                        tabNum = tabFragment.getMViewPager().getCurrentItem();
-                    }
-                    Log.e("handleMessage", "ora tabnum = " + tabNum);
-
+                    tabNumFixForHandleMessages();
                 }
 
 
-                Log.d("handleMessage", "handleMessage, MESSAGE_READ , il tabNum globale activity ore e': " + tabNum);
-
-                //a volte lanciava eccezione qui perche' tabnum era 0, cioe' in tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
-                //veniva messo a -1 ma poi sommando 1 diventava 0, e in questa riga sotto dava errore.
-                //il problema non e' risolto, cosi' semplicemente non pusha a schermo il messaggio ricevuto con il macaddress
-                //nel caso in cui sia la prima connessione.
+                //i check if tabNum>=1 to be sure that no exception will raised
                 if (tabNum >= 1) {
                     tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
 
+                    //if the WaitingToSendQueue is not empty, send all his messages to target device.
                     if (!WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNum).isEmpty()) {
-                        Log.d(TAG, "MESSAGE_READ-svuoto la coda " + tabNum);
                         tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
                     }
                 } else {
-                    Log.d("handleMessage", "errore tabnum<=0,cioe' = " + tabNum);
+                    Log.e("handleMessage", "Error tabNum = " + tabNum + " because is <=0");
                 }
 
                 break;
 
+
             case Configuration.MY_HANDLE:
                 final Object obj = msg.obj;
-                Log.d("handleMessage", "MY_HANDLE");
+                Log.d(TAG, "handleMessage, MY_HANDLE case");
 
-                //aggiungo un nuovo tab
-                Log.d("handleMessage", "MY_HANDLE - aggiungo tab");
-                if (tabNum <= 0 || TabFragment.getWiFiChatFragmentList().size() - 1 < tabNum || tabFragment.getChatFragmentByTab(tabNum) == null) {
-                    tabFragment.addNewTabChatFragment();
-                    Log.d("handleMessage", "handleMessage, MY_HANDLE tab added with tabnum: " + tabNum);
-                    Log.d("handleMessage", "handleMessage, MY_HANDLE settoviepager a pagina: " + tabNum);
-                    tabFragment.getMViewPager().setCurrentItem(tabNum);
-                    colorActiveTabs();
-                }
+                //add a new tab, initilize and preprare the correct tab
+                initializeAndPrepareCorrectTabs("handleMessage, MY_HANDLE tab added with tabnum: ");
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
                     public void onGroupInfoAvailable(WifiP2pGroup group) {
-                        //il group owner comunica il suo indirizzo al client
+                        //the GO sends the address to the client
                         if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
 
-                            if (tabNum < 1) {
-                                Log.e("ERROR", "tabnum=" + tabNum);
-                                //non e' di certo la soluzione migliore, ma se per qualche motivo tabNum fosse =0 o <0
-                                //e' meglio provare ad usare un valore che non fa crashare i metodi, che uno che di certo lancia
-                                //una java.lang.ArrayIndexOutOfBoundsException che fa crashare tutto.
-                                tabNum = tabFragment.getMViewPager().getCurrentItem();
+                            //if this message is not an initialization's message with
+                            // Configuration.MAGICADDRESSKEYWORD, check if tabNum is correct
+                            if (tabNum <= 0) {
+                                tabNumFixForHandleMessages();
                             }
+
+                            //i set chatmanager, because if i am in Configuration.MY_HANDLE's case is
+                            //when two devices starting to connect each other for the first time
+                            //or after a disconnect event and GroupInfo is available.
                             tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
 
-                            Log.d("requestGroupInfo", "isGO= " + group.isGroupOwner() + ". Sending address: " + LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
+                            Log.d(TAG, "handleMessage, requestGroupInfo with isGO= " + group.isGroupOwner()
+                                    + ". Sending address: " + LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
+
+                            //send address from LocalDevice to the device associated to the
+                            //WiFiChatFragment selected with tabNum
                             sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress, LocalP2PDevice.getInstance().getLocalDevice().deviceName);
                         }
 
-                        Log.d(TAG, "MY_HANDLE-svuoto la coda " + tabNum);
+                        Log.d(TAG, "handleMessage, MY_HANDLE sendForcedWaitingToSendQueue with tabNum = " + tabNum);
                         tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
 
                     }
@@ -760,11 +727,93 @@ public class MainActivity extends ActionBarActivity implements
         return true;
     }
 
+    /**
+     * Method to select the correct tab {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}
+     * in {@link it.polimi.wifidirectmultichat.discovery.TabFragment}
+     * and to prepare and to initialize everything to make chatting possible.
+     * @param readMessage String that represent the message received
+     *                    form {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}.
+     */
+    private void manageAddressMessageReceiption(String readMessage) {
+        WifiP2pDevice p2pDevice = new WifiP2pDevice();
+        p2pDevice.deviceAddress = readMessage.split("___")[1];
+        p2pDevice.deviceName = readMessage.split("___")[2];
+
+        Log.d(TAG, "handleMessage, p2pDevice created with: " + p2pDevice.deviceName + ", " + p2pDevice.deviceAddress);
+
+        if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
+            Log.d(TAG, "handleMessage, p2pDevice IS NOT in the DeviceTabList -> OK! ;)");
+
+            if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
+
+                DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
+
+                Log.d(TAG, "handleMessage, p2pDevice in DeviceTabList at position tabnum= " + (tabNum - 1) + " is null");
+                Log.d(TAG, "handleMessage, p2pDevice setted = " + DeviceTabList.getInstance().getDevice(tabNum - 1));
+            } else {
+
+                DeviceTabList.getInstance().addDeviceIfRequired(p2pDevice);
+
+                Log.d(TAG, "handleMessage, p2pDevice in DeviceTabList at position tabnum= " + (tabNum - 1) + " isn't null");
+            }
+        } else {
+            Log.d(TAG, "handleMessage, p2pDevice IS already in the DeviceTabList -> OK! ;)");
+        }
+
+        //ok, now in this method i want to be sure to send this message to the other device with LocalDevice macaddress.
+        //Before, i need to select the correct tabNum index. It's possible that this tabNum index is not correct,
+        // and i need to choose a correct index to prevent Exception
+
+        //update tabNum to select the tab associated to p2pDevice
+        tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
+
+        Log.d(TAG, "handleMessage, updated tabNum = " + tabNum);
+
+        //if tabNum is not correct for some reasons is because there are no tabs associated to this p2pDevice.
+        //For this reason i need to create a new tab for p2pDevice.
+        this.initializeAndPrepareCorrectTabs("handleMessage, MESSAGE_READ tab added with tabnum: ");
+    }
+
+
+
+    /**
+     * Method to initialize/add the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment},
+     * to show him and finally to color the messages.
+     * @param logMessage String to use the correct message in Log.d, not really necessary for the logic of this method.
+     */
+    private void initializeAndPrepareCorrectTabs(String logMessage) {
+        if (tabNum <= 0 || TabFragment.getWiFiChatFragmentList().size() - 1 < tabNum || tabFragment.getChatFragmentByTab(tabNum) == null) {
+            tabFragment.addNewTabChatFragment();
+            //update current displayed tab and the color.
+            this.setTabFragmentToPage(tabNum);
+            addColorActiveTabs(false);
+
+            Log.d(TAG, logMessage + tabNum);
+        }
+    }
+
+    /**
+     * Method used as a quickfix to set tabNum variable when, for some unpredictable reasons, tabNum<=0
+     */
+    private void tabNumFixForHandleMessages() {
+        //if this tabNum is wrong (<=0), i check:
+        //if the current tab is 0 i.e. WifiP2pServicesFragment, i set tabNum=1, a generic value with a chat
+        //else i use the current item tab's index.
+        //this trick solves an exception inside "public void onGroupInfoAvailable(WifiP2pGroup group)". This exception
+        //raised because onGroupInfoAvailable, is called asynchronously by the android framework and sometime, is impossible to
+        //know if i have all the necessary informations.
+        Log.w(TAG, "handleMessage, Error tabnum=" + tabNum + "<=0");
+        if (tabFragment.getMViewPager().getCurrentItem() == 0) {
+            tabNum = 1;
+        } else {
+            tabNum = tabFragment.getMViewPager().getCurrentItem();
+        }
+        Log.e(TAG, "handleMessage, Updated tabNum = " + tabNum);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        Mint.initAndStartSession(WiFiServiceDiscoveryActivity.this, "2b171946");
 
         setContentView(R.layout.main);
 
@@ -777,9 +826,6 @@ public class MainActivity extends ActionBarActivity implements
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
-
-        startRegistration();
-        discoverService();
 
         tabFragment = TabFragment.newInstance();
 
@@ -808,58 +854,24 @@ public class MainActivity extends ActionBarActivity implements
         super.onRestart();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.discovery:
+                ServiceList.getInstance().clear();
+
                 if (discoveryStatus) {
                     discoveryStatus = false;
 
-                    ServiceList.getInstance().clear();
                     item.setIcon(R.drawable.ic_action_search_stopped);
-                    manager.stopPeerDiscovery(channel, new ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d(TAG, "Discovery stopped");
-                            Toast.makeText(MainActivity.this, "Discovery stopped", Toast.LENGTH_SHORT).show();
-                        }
 
-                        @Override
-                        public void onFailure(int reason) {
-                            Log.d(TAG, "Discovery stop failed. Reason :" + reason);
-                            Toast.makeText(MainActivity.this, "Discovery stop failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    manager.clearServiceRequests(channel, new ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d(TAG, "clearServiceRequests success");
-                        }
+                    internalStopDiscovery();
 
-                        @Override
-                        public void onFailure(int reason) {
-                            Log.d(TAG, "clearServiceRequests failed: " + reason);
-                        }
-                    });
-                    manager.clearLocalServices(channel, new ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d("TAG", "removeLocalService success");
-                        }
-
-                        @Override
-                        public void onFailure(int reason) {
-                            Log.d("TAG", "removeLocalService failure " + reason);
-                        }
-                    });
                 } else {
-                    item.setIcon(R.drawable.ic_action_search_searching);
-                    ServiceList.getInstance().clear();
                     discoveryStatus = true;
+
+                    item.setIcon(R.drawable.ic_action_search_searching);
+
                     startRegistration();
                     discoverService();
                 }
