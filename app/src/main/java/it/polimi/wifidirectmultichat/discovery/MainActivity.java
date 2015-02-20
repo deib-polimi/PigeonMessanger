@@ -171,7 +171,7 @@ public class MainActivity extends ActionBarActivity implements
         manager.stopPeerDiscovery(channel,
                 new CustomizableActionListener(
                         MainActivity.this,
-                        "forceDiscoveryStop",
+                        "internalStopDiscovery",
                         "Discovery stopped",
                         "Discovery stopped",
                         "Discovery stop failed",
@@ -179,7 +179,7 @@ public class MainActivity extends ActionBarActivity implements
         manager.clearServiceRequests(channel,
                 new CustomizableActionListener(
                         MainActivity.this,
-                        "forceDiscoveryStop",
+                        "internalStopDiscovery",
                         "ClearServiceRequests success",
                         null,
                         "Discovery stop failed",
@@ -187,7 +187,7 @@ public class MainActivity extends ActionBarActivity implements
         manager.clearLocalServices(channel,
                 new CustomizableActionListener(
                         MainActivity.this,
-                        "forceDiscoveryStop",
+                        "internalStopDiscovery",
                         "ClearLocalServices success",
                         null,
                         "clearLocalServices failure",
