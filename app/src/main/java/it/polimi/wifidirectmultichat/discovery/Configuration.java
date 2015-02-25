@@ -17,5 +17,8 @@ public class Configuration {
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
 
+    public static final String MESSAGE_READ_MSG = "MESSAGE_READ";
+    public static final String MY_HANDLE_MSG = "MY_HANDLE";
+
     public static final String MAGICADDRESSKEYWORD = "4<D<D<R<3<5<5";
 }

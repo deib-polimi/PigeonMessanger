@@ -654,7 +654,7 @@ public class MainActivity extends ActionBarActivity implements
                 Log.d(TAG, "Message: " + readMessage);
 
                 if (readMessage.length() <= 1) {
-                    Log.d(TAG, "handleMessage, filter activated because the message is too short" + readMessage);
+                    Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
                     return true;
                 }
 
@@ -688,10 +688,10 @@ public class MainActivity extends ActionBarActivity implements
 
             case Configuration.MY_HANDLE:
                 final Object obj = msg.obj;
-                Log.d(TAG, "handleMessage, MY_HANDLE case");
+                Log.d(TAG, "handleMessage, " + Configuration.MY_HANDLE_MSG + " case");
 
                 //add a new tab, initilize and preprare the correct tab
-                initializeAndPrepareCorrectTabs("handleMessage, MY_HANDLE tab added with tabnum: ");
+                initializeAndPrepareCorrectTabs("handleMessage, " + Configuration.MY_HANDLE_MSG + " tab added with tabnum: ");
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
@@ -718,7 +718,7 @@ public class MainActivity extends ActionBarActivity implements
                             sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress, LocalP2PDevice.getInstance().getLocalDevice().deviceName);
                         }
 
-                        Log.d(TAG, "handleMessage, MY_HANDLE sendForcedWaitingToSendQueue with tabNum = " + tabNum);
+                        Log.d(TAG, "handleMessage, " + Configuration.MY_HANDLE_MSG + " sendForcedWaitingToSendQueue with tabNum = " + tabNum);
                         tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
 
                     }
@@ -771,7 +771,7 @@ public class MainActivity extends ActionBarActivity implements
 
         //if tabNum is not correct for some reasons is because there are no tabs associated to this p2pDevice.
         //For this reason i need to create a new tab for p2pDevice.
-        this.initializeAndPrepareCorrectTabs("handleMessage, MESSAGE_READ tab added with tabnum: ");
+        this.initializeAndPrepareCorrectTabs("handleMessage, " + Configuration.MESSAGE_READ_MSG + " tab added with tabnum: ");
     }
 
 
@@ -783,7 +783,7 @@ public class MainActivity extends ActionBarActivity implements
      */
     private void initializeAndPrepareCorrectTabs(String logMessage) {
         if (tabNum <= 0 || TabFragment.getWiFiChatFragmentList().size() - 1 < tabNum || tabFragment.getChatFragmentByTab(tabNum) == null) {
-            tabFragment.addNewTabChatFragment();
+            tabFragment.addNewTabChatFragment(logMessage);
             //update current displayed tab and the color.
             this.setTabFragmentToPage(tabNum);
             addColorActiveTabs(false);

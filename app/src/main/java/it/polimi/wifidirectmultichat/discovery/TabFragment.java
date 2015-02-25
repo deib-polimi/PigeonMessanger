@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +58,15 @@ public class TabFragment extends Fragment {
 
 
     /**
-     * Method to add a new Tab
+     * Method to add a new tab if necessary.
+     * It use the callerMessage to determine which is the method or portion of code that called this method.
+     * Its can be very useful to understand when it's necessary to add a new tab.
+     * There are some different situations that can be necessary to add a new tab, but not always.
+     * I mean,
+     *
+     * @param logMessage
      */
-    public void addNewTabChatFragment() {
+    public void addNewTabChatFragment(String callerMessage) {
         WiFiChatFragment frag = WiFiChatFragment.newInstance();
         //adds a new fragment, sets the tabNumber with listsize+1, because i want to add an element to this list and get
         //this position, but at the moment the list is not updated. When i use listsize+1
@@ -67,10 +74,29 @@ public class TabFragment extends Fragment {
         frag.setTabNumber(wiFiChatFragmentList.size() + 1);
 
         //now i add the fragment to the list, and obviously tabNumber is correct, because now the list is updated.
-        wiFiChatFragmentList.add(frag);
+        Log.d("prova", "wiFiChatFragmentList.size : " + wiFiChatFragmentList.size());
+        Log.d("prova", "DeviceTablist.size : " + DeviceTabList.getInstance().getSize());
+        Log.d("prova", "mViewPager.getAdapter.size : " + mViewPager.getAdapter().getCount());
+        Log.d("prova", "mSectionsPagerAdapter.size : " + mSectionsPagerAdapter.getCount());
+
 
         //i need this because i need to refresh the GUI
+        if(callerMessage.contains(Configuration.MY_HANDLE_MSG)) {
+            Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG)");
+            if(wiFiChatFragmentList.size() <= DeviceTabList.getInstance().getSize()) {
+                wiFiChatFragmentList.add(frag);
+                Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG) - ADDED!!!");
+            }
+        } else if(callerMessage.contains(Configuration.MESSAGE_READ_MSG)) {
+            Log.d("prova", "logMessage.contains(Configuration.MESSAGE_READ_MSG) - NOT ADDED!!!");
+        }
+
         this.mSectionsPagerAdapter.notifyDataSetChanged();
+
+        Log.d("prova-3", "wiFiChatFragmentList.size : " + wiFiChatFragmentList.size());
+        Log.d("prova-3", "DeviceTablist.size : " + DeviceTabList.getInstance().getSize());
+        Log.d("prova-3", "mViewPager.getAdapter.size : " + mViewPager.getAdapter().getCount());
+        Log.d("prova-3", "mSectionsPagerAdapter.size : " + mSectionsPagerAdapter.getCount());
     }
 
     /**
@@ -142,10 +168,11 @@ public class TabFragment extends Fragment {
                     return ("Services").toUpperCase(l);
                 default:
                     //if possibile use the devicename like tabname.
-                    //Attention this isn't working,
+                    //Attention this isn't working. Please be careful.
 //                    if(DeviceTabList.getInstance().getDevice(position)!=null) {
 //                        return DeviceTabList.getInstance().getDevice(position).deviceName.toUpperCase(l);
 //                    }
+                    //use this to be sure
                     return ("Chat" + position).toUpperCase(l);
             }
         }

@@ -140,4 +140,12 @@ public class DeviceTabList {
         }
         return -1;
     }
+
+    /**
+     * Method to retrieve the size of {@link #deviceList}
+     * @return int that represents the number of elements in {@link #deviceList}
+     */
+    public int getSize() {
+        return deviceList.size();
+    }
 }
