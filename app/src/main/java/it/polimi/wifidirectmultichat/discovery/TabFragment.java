@@ -64,7 +64,9 @@ public class TabFragment extends Fragment {
      * There are some different situations that can be necessary to add a new tab, but not always.
      * I mean,
      *
-     * @param logMessage
+     * @param callerMessage A message that contains one of this strings:
+     *                      {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MY_HANDLE_MSG or
+     *                      {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MESSAGE_READ_MSG.
      */
     public void addNewTabChatFragment(String callerMessage) {
         WiFiChatFragment frag = WiFiChatFragment.newInstance();
@@ -73,6 +75,7 @@ public class TabFragment extends Fragment {
         // i'm considering "+1" as the new element that i want to add.
         frag.setTabNumber(wiFiChatFragmentList.size() + 1);
 
+
         //now i add the fragment to the list, and obviously tabNumber is correct, because now the list is updated.
         Log.d("prova", "wiFiChatFragmentList.size : " + wiFiChatFragmentList.size());
         Log.d("prova", "DeviceTablist.size : " + DeviceTabList.getInstance().getSize());
@@ -80,14 +83,24 @@ public class TabFragment extends Fragment {
         Log.d("prova", "mSectionsPagerAdapter.size : " + mSectionsPagerAdapter.getCount());
 
 
-        //i need this because i need to refresh the GUI
-        if(callerMessage.contains(Configuration.MY_HANDLE_MSG)) {
+        //i need this because i need to add a new tab, only if its necessary
+
+        //first check to know if is the first message exchanged between this device and our go/client.
+        if (callerMessage.contains(Configuration.MY_HANDLE_MSG)) {
             Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG)");
-            if(wiFiChatFragmentList.size() <= DeviceTabList.getInstance().getSize()) {
-                wiFiChatFragmentList.add(frag);
-                Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG) - ADDED!!!");
+            //probably this if is useless
+            if (wiFiChatFragmentList.size() <= DeviceTabList.getInstance().getSize()) {
+                Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG) - tabNum = " + ((MainActivity) getActivity()).getTabNum());
+                //really necessary if to be sure that tabNum is higher that the size of wiFiChatFragmentList.
+                //this represents a new chat and obviously a new tab to add
+                //Otherwise if this condition is false, i re-enabling a older chat, and obviously is not necessary to add a new tabb, because
+                //this app can reactivate previous conversations.
+                if (((MainActivity) getActivity()).getTabNum() - 1 > wiFiChatFragmentList.size() - 1) {
+                    wiFiChatFragmentList.add(frag);
+                    Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG) - ADDED!!!");
+                }
             }
-        } else if(callerMessage.contains(Configuration.MESSAGE_READ_MSG)) {
+        } else if (callerMessage.contains(Configuration.MESSAGE_READ_MSG)) {
             Log.d("prova", "logMessage.contains(Configuration.MESSAGE_READ_MSG) - NOT ADDED!!!");
         }
 
@@ -100,7 +113,7 @@ public class TabFragment extends Fragment {
     }
 
     /**
-     * Method to get the Fragment, specifying the position/tabnumber.
+     * Method to get the Fragment, specifying the position / tabnumber.
      *
      * @param tabNumber int that represents the position of this fragment inside the list of tabs.
      * @return The {@link WiFiChatFragment } at position tabNumber in the list of
