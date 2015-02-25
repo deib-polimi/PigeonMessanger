@@ -1,9 +1,0 @@
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/classes/debug
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-0454a0f2c9c5a734bb942fb74f0e1cb2ea0a7508.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-1b4638e9e0b3b1a75442b29adfdc1129d9e6d5d9.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-5662e2dd562e247cd5311d0514597562cab41d41.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/mint-4.0.7-9f03479fadb2125b1af9e1452112d454e46a2750.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-62d04f9a4ec2c7ee2d18e1ca2c6fafe3203bb3c6.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-0331b7980dba1a17af764d9042046df2eb665130.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-30a1ea7a9a0a3bee5ae73a1a3aafda7c3f79fac2.jar
-/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-d2b1f394039498261db63274de3d08c6045eb746.jar

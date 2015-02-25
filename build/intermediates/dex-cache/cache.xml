@@ -2,60 +2,53 @@
 <items version="2" >
 
     <item
-        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/classes-0018d869d60f87f2eb8533c6c646fcd2de2993a0.jar" />
+    </item>
+    <item
+        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-62d04f9a4ec2c7ee2d18e1ca2c6fafe3203bb3c6.jar" />
-    </item>
-    <item
-        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-30a1ea7a9a0a3bee5ae73a1a3aafda7c3f79fac2.jar" />
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-b2ae62c63df971246fb31b05a86ec08bddc7b964.jar" />
     </item>
     <item
         jar="/Users/Ks89/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-0454a0f2c9c5a734bb942fb74f0e1cb2ea0a7508.jar" />
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-0454a0f2c9c5a734bb942fb74f0e1cb2ea0a7508.jar" />
     </item>
     <item
-        jar="/Users/Ks89/.gradle/caches/modules-2/files-2.1/com.splunk.mint/mint/4.0.7/c11d84e7bd447629c89adf2f325f3662aecf5a32/mint-4.0.7.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c11d84e7bd447629c89adf2f325f3662aecf5a32">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/mint-4.0.7-9f03479fadb2125b1af9e1452112d454e46a2750.jar" />
-    </item>
-    <item
-        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-0331b7980dba1a17af764d9042046df2eb665130.jar" />
-    </item>
-    <item
-        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
+        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-1b4638e9e0b3b1a75442b29adfdc1129d9e6d5d9.jar" />
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/classes-78d78ade4444571de2fe5654052a8aee14ed0330.jar" />
     </item>
     <item
-        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.0.6/classes.jar"
+        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.0.6/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="15ebf37e2dc7047e993afdfb308610e171bcea1b">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-5662e2dd562e247cd5311d0514597562cab41d41.jar" />
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/classes-c25e5ec3d1c03ba0da1d391319809c428f830a7a.jar" />
     </item>
     <item
-        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectServiceDiscovery_sample_chat/app/build/intermediates/pre-dexed/debug/classes-d2b1f394039498261db63274de3d08c6045eb746.jar" />
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/classes-c245e48355a6feca3ab1a1ed9653d6a82d02a247.jar" />
+    </item>
+    <item
+        jar="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
+        <dex dex="/Users/Ks89/AndroidStudioProjects/WiFiDirectMultiChat/app/build/intermediates/pre-dexed/debug/classes-daacbbb016350482171f89f3d3fb0ef846851ecb.jar" />
     </item>
 
 </items>

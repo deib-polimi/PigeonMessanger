@@ -27,14 +27,19 @@ import lombok.Getter;
  */
 public class TabFragment extends Fragment {
 
-    @Getter private SectionsPagerAdapter mSectionsPagerAdapter;
-    @Getter private ViewPager mViewPager;
-    @Getter private static WiFiP2pServicesFragment wiFiP2pServicesFragment;
-    @Getter private static List<WiFiChatFragment> wiFiChatFragmentList;
+    @Getter
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    @Getter
+    private ViewPager mViewPager;
+    @Getter
+    private static WiFiP2pServicesFragment wiFiP2pServicesFragment;
+    @Getter
+    private static List<WiFiChatFragment> wiFiChatFragmentList;
 
 
     /**
      * Method to obtain a new Fragment's instance.
+     *
      * @return This Fragment instance.
      */
     public static TabFragment newInstance() {
@@ -47,7 +52,8 @@ public class TabFragment extends Fragment {
     /**
      * Default Fragment constructor.
      */
-    public TabFragment() {}
+    public TabFragment() {
+    }
 
 
     /**
@@ -69,6 +75,7 @@ public class TabFragment extends Fragment {
 
     /**
      * Method to get the Fragment, specifying the position/tabnumber.
+     *
      * @param tabNumber int that represents the position of this fragment inside the list of tabs.
      * @return The {@link WiFiChatFragment } at position tabNumber in the list of
      * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
@@ -135,9 +142,10 @@ public class TabFragment extends Fragment {
                     return ("Services").toUpperCase(l);
                 default:
                     //if possibile use the devicename like tabname.
-                    if(DeviceTabList.getInstance().getDevice(position)!=null) {
-                        return DeviceTabList.getInstance().getDevice(position).deviceName.toUpperCase(l);
-                    }
+                    //Attention this isn't working,
+//                    if(DeviceTabList.getInstance().getDevice(position)!=null) {
+//                        return DeviceTabList.getInstance().getDevice(position).deviceName.toUpperCase(l);
+//                    }
                     return ("Chat" + position).toUpperCase(l);
             }
         }
