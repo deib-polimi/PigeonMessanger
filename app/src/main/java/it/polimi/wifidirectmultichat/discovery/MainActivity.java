@@ -645,50 +645,7 @@ public class MainActivity extends ActionBarActivity implements
         Log.d(TAG, "handleMessage, tabNum in this activity is: " + tabNum);
 
         switch (msg.what) {
-            case Configuration.MESSAGE_READ:
-                byte[] readBuf = (byte[]) msg.obj;
-
-                // construct a string from the valid bytes in the buffer
-                String readMessage = new String(readBuf, 0, msg.arg1);
-
-                Log.d(TAG, "Message: " + readMessage);
-
-                if (readMessage.length() <= 1) {
-                    Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
-                    return true;
-                }
-
-
-                //if the message received contains Configuration.MAGICADDRESSKEYWORD is because now someone want to connect to this device
-                if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD) && readMessage.split("___").length == 3) {
-                    manageAddressMessageReceiption(readMessage);
-                }
-
-                //if this message is not an initialization's message with Configuration.MAGICADDRESSKEYWORD
-                // keyword, check if tabNum is correct
-                if (tabNum <= 0) {
-                    tabNumFixForHandleMessages();
-                }
-
-
-                //i check if tabNum>=1 to be sure that no exception will raised
-                if (tabNum >= 1) {
-                    if(readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
-                        readMessage = readMessage.replace("+","");
-                    }
-                    tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
-
-                    //if the WaitingToSendQueue is not empty, send all his messages to target device.
-                    if (!WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNum).isEmpty()) {
-                        tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
-                    }
-                } else {
-                    Log.e("handleMessage", "Error tabNum = " + tabNum + " because is <=0");
-                }
-
-                break;
-
-            //called by every device at the beginning of a connection
+            //called by every device at the beginning of every connection (new or previously removed and now recreated)
             case Configuration.FIRSTMESSAGEXCHANGE:
                 final Object obj = msg.obj;
                 Log.d(TAG, "handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " case");
@@ -725,6 +682,54 @@ public class MainActivity extends ActionBarActivity implements
 
                     }
                 });
+                break;
+
+            case Configuration.MESSAGE_READ:
+                byte[] readBuf = (byte[]) msg.obj;
+
+                // construct a string from the valid bytes in the buffer
+                String readMessage = new String(readBuf, 0, msg.arg1);
+
+                Log.d(TAG, "Message: " + readMessage);
+
+                if (readMessage.length() <= 1) {
+                    Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
+                    return true;
+                }
+
+
+                //if the message received contains Configuration.MAGICADDRESSKEYWORD is because now someone want to connect to this device
+                if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD) && readMessage.split("___").length == 3) {
+                    manageAddressMessageReceiption(readMessage);
+                }
+
+                //if this message is not an initialization's message with Configuration.MAGICADDRESSKEYWORD
+                // keyword, check if tabNum is correct
+                if (tabNum <= 0) {
+                    tabNumFixForHandleMessages();
+                }
+
+
+                //i check if tabNum>=1 to be sure that no exception will raised
+                if (tabNum >= 1) {
+
+                    //i use this if only to re-format the message (not really necessary because in the "commercial"
+                    //version, if a message contains MAGICADDRESSKEYWORD, this message should be removed and used
+                    // only by the logic without display anything.
+                    if(readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
+                        readMessage = readMessage.replace("+","");
+                        readMessage = readMessage.replace(Configuration.MAGICADDRESSKEYWORD , "Mac Address");
+                    }
+                    tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
+
+                    //if the WaitingToSendQueue is not empty, send all his messages to target device.
+                    if (!WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNum).isEmpty()) {
+                        tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
+                    }
+                } else {
+                    Log.e("handleMessage", "Error tabNum = " + tabNum + " because is <=0");
+                }
+                break;
         }
         return true;
     }
