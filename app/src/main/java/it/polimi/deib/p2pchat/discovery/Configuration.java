@@ -1,10 +1,14 @@
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.deib.p2pchat.discovery;
 
 /**
  * Class to configure some important attribute.
  * Created by Stefano Cappa on 17/02/15.
  */
 public class Configuration {
+
+    //attention, to remove debug's messages in wifichatfragment, set this to "false"!!!!
+    public static final boolean DEBUG_VERSION = true;
+
     public static final int GROUPOWNER_PORT = 4545;
     public static final int CLIENT_PORT = 5000;
     public static final int THREAD_COUNT = 30; //maximum number of clients that this GO can manage

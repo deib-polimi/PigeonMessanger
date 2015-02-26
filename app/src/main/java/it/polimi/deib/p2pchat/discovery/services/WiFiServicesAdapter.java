@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.services;
+package it.polimi.deib.p2pchat.discovery.services;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.support.annotation.NonNull;
@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import it.polimi.wifidirectmultichat.R;
+import it.polimi.deib.p2pchat.R;
 
 /**
  * Class WiFiServicesAdapter with the new RecyclerView (Lollipop) and
- * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter.ViewHolder}
+ * {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter.ViewHolder}
  * for performance reasons.
- * This class is the Adapter to represents data inside the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}
+ * This class is the Adapter to represents data inside the {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}
  * Created by Stefano Cappa on 10/02/15.
  */
 public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapter.ViewHolder> {
@@ -31,7 +31,7 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
     }
 
     /**
-     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} implements this interface
+     * {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment} implements this interface
      */
     public interface ItemClickListener {
         void itemClicked(final View view);

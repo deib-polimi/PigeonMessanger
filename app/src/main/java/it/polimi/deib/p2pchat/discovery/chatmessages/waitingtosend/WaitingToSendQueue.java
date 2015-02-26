@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend;
+package it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Class that represents an ArrayList of ArrayLists.
  * Contains the waitingToSend list (ArrayList of
- * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}'s ArrayLists) and
+ * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}'s ArrayLists) and
  * the logic to obtain elements.
  *
  * Created by Stefano Cappa on 04/02/15.
@@ -36,11 +36,11 @@ public class WaitingToSendQueue {
     /**
      * Method to get an element from the list using the tab number.
      * Contains the logic to retrieve the correct
-     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendListElement} ArrayList.
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement} ArrayList.
      * This method returns always an element, because if the element isn't in the list, this method adds
-     * a new {@link it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}
+     * a new {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}
      * at the specified tabNumber-1 position.
-     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}.
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}.
      * @param tabNumber int that represents the tabNumber used to retrieve the ArrayList.
      * @return List<String> element of the waitingToSend list.
      */

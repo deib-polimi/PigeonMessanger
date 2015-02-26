@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.actionlisteners;
+package it.polimi.deib.p2pchat.discovery.actionlisteners;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pManager;

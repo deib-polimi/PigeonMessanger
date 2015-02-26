@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.utilities;
+package it.polimi.deib.p2pchat.discovery.utilities;
 
 
 import java.lang.annotation.Retention;

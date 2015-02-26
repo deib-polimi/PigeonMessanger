@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend;
+package it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.services.localdeviceguielement;
+package it.polimi.deib.p2pchat.discovery.services.localdeviceguielement;
 
 import android.support.v4.app.DialogFragment;
 
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import it.polimi.wifidirectmultichat.R;
+import it.polimi.deib.p2pchat.R;
 
 /**
  * Class that represents the DialogFragment to change the local device name, not only in the GUI
@@ -24,7 +24,7 @@ public class LocalDeviceDialogFragment extends DialogFragment {
     private EditText deviceNameEditText;
 
     /**
-     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} implements this interface.
+     * {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment} implements this interface.
      * But the method to change the device name in
      */
     public interface DialogConfirmListener {

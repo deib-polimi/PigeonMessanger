@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery.chatmessages;
+package it.polimi.deib.p2pchat.discovery.chatmessages;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
@@ -14,12 +14,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.polimi.wifidirectmultichat.R;
-import it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager;
-import it.polimi.wifidirectmultichat.discovery.DeviceTabList;
-import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
-import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService;
+import it.polimi.deib.p2pchat.R;
+import it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager;
+import it.polimi.deib.p2pchat.discovery.DeviceTabList;
+import it.polimi.deib.p2pchat.discovery.services.ServiceList;
+import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
+import it.polimi.deib.p2pchat.discovery.services.WiFiP2pService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,7 +45,7 @@ public class WiFiChatFragment extends Fragment {
     private WiFiChatMessageListAdapter adapter = null;
 
     /**
-     * Callback interface to call methods reconnectToService in {@link it.polimi.wifidirectmultichat.discovery.MainActivity}.
+     * Callback interface to call methods reconnectToService in {@link it.polimi.deib.p2pchat.discovery.MainActivity}.
      * MainActivity implements this interface.
      */
     public interface CallbackActivity {
@@ -68,8 +68,8 @@ public class WiFiChatFragment extends Fragment {
 
     /**
      * Method that combines all the messages inside the
-     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue}
-     * in one String and pass this one to the {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue}
+     * in one String and pass this one to the {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}
      * to send the message to other devices.
      */
     public void sendForcedWaitingToSendQueue() {
@@ -101,7 +101,7 @@ public class WiFiChatFragment extends Fragment {
 
     /**
      * Method to add a message to the Fragment's listView and notifies this update to
-     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatMessageListAdapter}.
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatMessageListAdapter}.
      * @param readMessage String that represents the message to add.
      */
     public void pushMessage(String readMessage) {
@@ -110,7 +110,7 @@ public class WiFiChatFragment extends Fragment {
     }
 
     /**
-     * Method that updates the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatMessageListAdapter}.
+     * Method that updates the {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatMessageListAdapter}.
      */
     public void updateChatMessageListAdapter() {
         if(adapter!=null) {

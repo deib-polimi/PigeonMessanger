@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.chatmessages;
+package it.polimi.deib.p2pchat.discovery.chatmessages;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import it.polimi.wifidirectmultichat.R;
+import it.polimi.deib.p2pchat.R;
 
 /**
- * This class is the ArrayAdapter to represents data inside the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
+ * This class is the ArrayAdapter to represents data inside the {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}.
  * No visibility modifier, this implies that you can access to this class only in this package.
  * Created by Stefano Cappa on 10/02/15.
  */

@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.deib.p2pchat.discovery;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 

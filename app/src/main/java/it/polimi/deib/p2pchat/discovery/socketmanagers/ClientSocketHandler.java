@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery.socketmanagers;
+package it.polimi.deib.p2pchat.discovery.socketmanagers;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -26,7 +26,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import it.polimi.wifidirectmultichat.discovery.Configuration;
+import it.polimi.deib.p2pchat.discovery.Configuration;
 
 /**
  * Class the implements the ClientSocket Handler. It's used only by the clients/peers.
@@ -52,7 +52,7 @@ public class ClientSocketHandler extends Thread {
     }
 
     /**
-     * Method to start the {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}
+     * Method to start the {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}
      */
     @Override
     public void run() {

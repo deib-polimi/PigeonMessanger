@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery.socketmanagers;
+package it.polimi.deib.p2pchat.discovery.socketmanagers;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -25,15 +25,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import it.polimi.wifidirectmultichat.discovery.Configuration;
+import it.polimi.deib.p2pchat.discovery.Configuration;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * Class to manage reading and writing of messages with a socket. It's use a Handler
  * to send messages to the GUI, i.e. the Android's UI Thread.
- * This class is used by {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ClientSocketHandler}
- * and {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.GroupOwnerSocketHandler}.
+ * This class is used by {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ClientSocketHandler}
+ * and {@link it.polimi.deib.p2pchat.discovery.socketmanagers.GroupOwnerSocketHandler}.
  *
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
  *
@@ -59,7 +59,7 @@ public class ChatManager implements Runnable {
     }
 
     /**
-     * Method to execute the {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}'s Thread
+     * Method to execute the {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}'s Thread
      * To stop the execution, please use ".setDisable(true);".
      */
     @Override

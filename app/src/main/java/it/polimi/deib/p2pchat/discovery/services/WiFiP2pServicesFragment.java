@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery.services;
+package it.polimi.deib.p2pchat.discovery.services;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,17 +13,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import it.polimi.wifidirectmultichat.discovery.LocalP2PDevice;
+import it.polimi.deib.p2pchat.R;
+import it.polimi.deib.p2pchat.discovery.LocalP2PDevice;
 
-import it.polimi.wifidirectmultichat.R;
-import it.polimi.wifidirectmultichat.discovery.MainActivity;
-import it.polimi.wifidirectmultichat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment;
+import it.polimi.deib.p2pchat.discovery.MainActivity;
+import it.polimi.deib.p2pchat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment;
 import lombok.Getter;
 
 /**
  * Fragment that contains the recyclerview with the WiFiP2pService list and the Cardview with LocalDevice informations.
  * If you click on a item device, the connection to this device starts, using ItemClickListener.
- * If you click on the local device cardview, a {@link it.polimi.wifidirectmultichat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
+ * If you click on the local device cardview, a {@link it.polimi.deib.p2pchat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
  * appears. Here you can change the local device name, and
  * with the DialogCallbackInterface obtain the data inserted in the dialogfragment.
  *
@@ -45,7 +45,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
     private TextView localDeviceNameText;
 
     /**
-     * Callback interface to call methods tryToConnectToAService in {@link it.polimi.wifidirectmultichat.discovery.MainActivity}.
+     * Callback interface to call methods tryToConnectToAService in {@link it.polimi.deib.p2pchat.discovery.MainActivity}.
      * MainActivity implements this interface.
      */
     public interface DeviceClickListener {
@@ -81,8 +81,8 @@ public class WiFiP2pServicesFragment extends Fragment implements
     }
 
     /**
-     * Method called by {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter}
-     * with the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter.ItemClickListener}
+     * Method called by {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter}
+     * with the {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter.ItemClickListener}
      * interface, when the user click on an element of the {@link android.support.v7.widget.RecyclerView}.
      * @param view {@link android.view.View} clicked.
      */
@@ -158,7 +158,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
 
     /**
      * Inner class that implements the Onclicklistener for the local device cardview.
-     * It's useful to open the {@link it.polimi.wifidirectmultichat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
+     * It's useful to open the {@link it.polimi.deib.p2pchat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
      * after a click's event.
      */
     class OnClickListenerLocalDevice implements View.OnClickListener {

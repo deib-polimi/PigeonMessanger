@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.deib.p2pchat.discovery;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -45,23 +45,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import it.polimi.wifidirectmultichat.discovery.actionlisteners.CustomizableActionListener;
-import it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment;
-import it.polimi.wifidirectmultichat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
-import it.polimi.wifidirectmultichat.discovery.services.ServiceList;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment;
+import it.polimi.deib.p2pchat.R;
+import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomizableActionListener;
+import it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment;
+import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
+import it.polimi.deib.p2pchat.discovery.services.ServiceList;
+import it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.polimi.wifidirectmultichat.R;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService;
-import it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter;
-import it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager;
-import it.polimi.wifidirectmultichat.discovery.socketmanagers.ClientSocketHandler;
-import it.polimi.wifidirectmultichat.discovery.socketmanagers.GroupOwnerSocketHandler;
+import it.polimi.deib.p2pchat.discovery.services.WiFiP2pService;
+import it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter;
+import it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager;
+import it.polimi.deib.p2pchat.discovery.socketmanagers.ClientSocketHandler;
+import it.polimi.deib.p2pchat.discovery.socketmanagers.GroupOwnerSocketHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -78,13 +78,20 @@ public class MainActivity extends ActionBarActivity implements
 
     private static final String TAG = "MainActivity";
 
-    @Setter private boolean connected = false;
-    @Getter private int tabNum = 1;
-    @Getter @Setter private boolean blockForcedDiscoveryInBroadcastReceiver = false;
+    @Setter
+    private boolean connected = false;
+    @Getter
+    private int tabNum = 1;
+    @Getter
+    @Setter
+    private boolean blockForcedDiscoveryInBroadcastReceiver = false;
     private boolean discoveryStatus = true;
 
-    @Getter private TabFragment tabFragment;
-    @Getter @Setter private Toolbar toolbar;
+    @Getter
+    private TabFragment tabFragment;
+    @Getter
+    @Setter
+    private Toolbar toolbar;
 
     private WifiP2pManager manager;
     private WifiP2pDnsSdServiceRequest serviceRequest;
@@ -100,6 +107,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method to get the {@link android.os.Handler}.
+     *
      * @return The handler.
      */
     Handler getHandler() {
@@ -109,11 +117,12 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method called by WiFiChatFragment using the
-     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment.CallbackActivity}
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment.CallbackActivity}
      * interface, implemented here, by this class.
      * If the wifiP2pService is null, this method return directly, without doing anything.
-     * @param service A {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService}
-     *                       object that represents the device in which you want to connect.
+     *
+     * @param service A {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pService}
+     *                object that represents the device in which you want to connect.
      */
     @Override
     public void reconnectToService(WiFiP2pService service) {
@@ -150,7 +159,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method that force to stop the discovery phase of the wifi direct protocol, clear
-     * the {@link it.polimi.wifidirectmultichat.discovery.services.ServiceList}, update the
+     * the {@link it.polimi.deib.p2pchat.discovery.services.ServiceList}, update the
      * discovery's menu item and remove all the registered Services.
      */
     public void forceDiscoveryStop() {
@@ -209,7 +218,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method to discover services and put the results
-     * in {@link it.polimi.wifidirectmultichat.discovery.services.ServiceList}.
+     * in {@link it.polimi.deib.p2pchat.discovery.services.ServiceList}.
      * This method updates also the discovery menu item.
      */
     private void discoverService() {
@@ -304,7 +313,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method to notifyDataSetChanged to the adapter of the
-     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}.
+     * {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}.
      */
     private void updateServiceAdapter() {
         WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
@@ -357,7 +366,7 @@ public class MainActivity extends ActionBarActivity implements
     /**
      * Method to disconnect and restart discovery, used by the MenuItem icon.
      * This method tries to remove the WifiP2pGroup.
-     * If onSuccess, its clear the {@link it.polimi.wifidirectmultichat.discovery.services.ServiceList},
+     * If onSuccess, its clear the {@link it.polimi.deib.p2pchat.discovery.services.ServiceList},
      * completely stops the discovery phase and, at the end, restarts registration and discovery.
      * Finally this method updates the adapter
      */
@@ -419,7 +428,8 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method that connects to the specified service.
-     * @param service The {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService}
+     *
+     * @param service The {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pService}
      *                to which you want to connect.
      */
     private void connectP2p(WiFiP2pService service) {
@@ -463,15 +473,16 @@ public class MainActivity extends ActionBarActivity implements
 
 
     /**
-     * Method called by {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}
-     * with the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener}
+     * Method called by {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}
+     * with the {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener}
      * interface, when the user click on an element of the recyclerview.
-     * To be precise, the call comes from {@link it.polimi.wifidirectmultichat.discovery.services.WiFiServicesAdapter} to the
-     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment} using
-     * {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener} to
+     * To be precise, the call comes from {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter} to the
+     * {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment} using
+     * {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment.DeviceClickListener} to
      * check if the clickedPosition is correct and finally calls this method.
+     *
      * @param position int that represents the lists's clicked position inside
-     *                 the {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}
+     *                 the {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}
      */
     public void tryToConnectToAService(int position) {
         WiFiP2pService service = ServiceList.getInstance().getElementByPosition(position);
@@ -488,12 +499,13 @@ public class MainActivity extends ActionBarActivity implements
         this.connectP2p(service);
     }
 
-//    /**
-//     * Method to send the {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MAGICADDRESSKEYWORD with the macaddress
-//     * of this device to the other device.
-//     * @param deviceMacAddress String that represents the macaddress of the destination device.
-//     * @param name String that represents the name of the destination device.
-//     */
+    /**
+     * Method to send the {@link it.polimi.deib.p2pchat.discovery.Configuration}.MAGICADDRESSKEYWORD with the macaddress
+     * of this device to the other device.
+     *
+     * @param deviceMacAddress String that represents the macaddress of the destination device.
+     * @param name             String that represents the name of the destination device.
+     */
     private void sendAddress(String deviceMacAddress, String name, ChatManager chatManager) {
         if (chatManager != null) {
             //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i will have always
@@ -503,10 +515,10 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     /**
-     * Method to disable all {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}'s.
+     * Method to disable all {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}'s.
      * This method iterates over all ChatManagers inside
-     * the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}'s list
-     * (in {@link it.polimi.wifidirectmultichat.discovery.TabFragment} ) and calls "setDisable(true);".
+     * the {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}'s list
+     * (in {@link it.polimi.deib.p2pchat.discovery.TabFragment} ) and calls "setDisable(true);".
      */
     public void setDisableAllChatManagers() {
         for (WiFiChatFragment chatFragment : TabFragment.getWiFiChatFragmentList()) {
@@ -518,27 +530,28 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method to set the current item of the {@link android.support.v4.view.ViewPager} used
-     * in {@link it.polimi.wifidirectmultichat.discovery.TabFragment}.
+     * in {@link it.polimi.deib.p2pchat.discovery.TabFragment}.
+     *
      * @param numPage int that represents the index of the tab to show.
      */
     public void setTabFragmentToPage(int numPage) {
         TabFragment tabfrag1 = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
-        if (tabfrag1 != null && tabfrag1.getMViewPager()!=null) {
+        if (tabfrag1 != null && tabfrag1.getMViewPager() != null) {
             tabfrag1.getMViewPager().setCurrentItem(numPage);
         }
     }
 
     /**
      * This Method changes the color of all messages in
-     * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}.
      * Attention, you can't specify which tabs or which message must be updated.
      *
      * @param grayScale a boolean that if is true removes all colors inside
-     *                  {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment},
+     *                  {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment},
      *                  if false activates all colors only in the active
-     *                  {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment},
+     *                  {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment},
      *                  based on the value of tabNum to select the correct tab in
-     *                  {@link it.polimi.wifidirectmultichat.discovery.TabFragment}.
+     *                  {@link it.polimi.deib.p2pchat.discovery.TabFragment}.
      */
     public void addColorActiveTabs(boolean grayScale) {
         for (WiFiChatFragment chatFragment : TabFragment.getWiFiChatFragmentList()) {
@@ -550,10 +563,11 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     /**
-     * This method sets the name of this {@link it.polimi.wifidirectmultichat.discovery.LocalP2PDevice}
+     * This method sets the name of this {@link it.polimi.deib.p2pchat.discovery.LocalP2PDevice}
      * in the UI and inside the device. In this way, all other devices can see this updated name during the discovery phase.
-     * Attention, WifiP2pManager uses ad annotation called @hide to hide the method called setDeviceName, in Android SDK.
+     * Attention, WifiP2pManager uses an annotation called @hide to hide the method setDeviceName, in Android SDK.
      * This method uses Java reflection to call this hidden method.
+     *
      * @param deviceName String that represents the visible device name of a device, during discovery.
      */
     public void setDeviceNameWithReflection(String deviceName) {
@@ -572,7 +586,7 @@ public class MainActivity extends ActionBarActivity implements
                             "Error, device name not changed",
                             "Error, device name not changed"));
         } catch (Exception e) {
-            Log.e(TAG, "Exception during setDeviceNameWithReflection" , e);
+            Log.e(TAG, "Exception during setDeviceNameWithReflection", e);
             Toast.makeText(MainActivity.this, "Impossible to change the device name", Toast.LENGTH_SHORT).show();
         }
     }
@@ -597,7 +611,6 @@ public class MainActivity extends ActionBarActivity implements
      */
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
-
         /*
          * The group owner accepts connections using a server socket and then spawns a
          * client socket for every client. This is handled by {@code
@@ -636,23 +649,21 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method called automatically by Android when
-     * {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}
+     * {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}
      * calls handler.obtainMessage(***).sendToTarget().
      */
     @Override
     public boolean handleMessage(Message msg) {
-
         Log.d(TAG, "handleMessage, tabNum in this activity is: " + tabNum);
 
         switch (msg.what) {
             //called by every device at the beginning of every connection (new or previously removed and now recreated)
             case Configuration.FIRSTMESSAGEXCHANGE:
                 final Object obj = msg.obj;
+
                 Log.d(TAG, "handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " case");
 
-
                 chatManager = (ChatManager) obj;
-
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
@@ -672,11 +683,7 @@ public class MainActivity extends ActionBarActivity implements
                         }
                     }
                 });
-
-
-
                 break;
-
             case Configuration.MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
 
@@ -697,8 +704,9 @@ public class MainActivity extends ActionBarActivity implements
                 }
 
 
-                //i check if tabNum is valid to be sure that no exception will throwed
-                /* example to undestand
+                //i check if tabNum is valid only to be sure.
+                //i using this if, because this peace of code is critical and "sometimes can throw exceptions".
+                /* example to understand
                 ----------------------------------------------------------------------------------
                 getWiFiChatFragmentList 0 1 2 3 4 5 6 7 8   <-Index of the list. The Size() == 9
                 tabNum                  1 2 3 4 5 6 7 8 9   <-number of tabs.
@@ -712,14 +720,20 @@ public class MainActivity extends ActionBarActivity implements
 
                 if (tabNum >= 1 && tabNum <= tabFragment.getWiFiChatFragmentList().size()) {
 
-                    //i use this to re-format the message (not really necessary because in the "commercial"
-                    //version, if a message contains MAGICADDRESSKEYWORD, this message should be removed and used
-                    // only by the logic without display anything.
-                    if(readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
-                        readMessage = readMessage.replace("+","");
-                        readMessage = readMessage.replace(Configuration.MAGICADDRESSKEYWORD , "Mac Address");
+                    if(Configuration.DEBUG_VERSION) {
+                        //i use this to re-format the message (not really necessary because in the "commercial"
+                        //version, if a message contains MAGICADDRESSKEYWORD, this message should be removed and used
+                        // only by the logic without display anything.
+                        if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
+                            readMessage = readMessage.replace("+", "");
+                            readMessage = readMessage.replace(Configuration.MAGICADDRESSKEYWORD, "Mac Address");
+                        }
+                        tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
+                    } else {
+                        if (!readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
+                            tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
+                        }
                     }
-                    tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
 
                     //if the WaitingToSendQueue is not empty, send all his messages to target device.
                     if (!WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNum).isEmpty()) {
@@ -734,11 +748,11 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     /**
-     * Method to select the correct tab {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}
-     * in {@link it.polimi.wifidirectmultichat.discovery.TabFragment}
+     * Method to select the correct tab {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}
+     * in {@link it.polimi.deib.p2pchat.discovery.TabFragment}
      * and to prepare and to initialize everything to make chatting possible.
      * @param readMessage String that represent the message received
-     *                    form {@link it.polimi.wifidirectmultichat.discovery.socketmanagers.ChatManager}.
+     *                    form {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}.
      */
     private void manageAddressMessageReceiption(String readMessage) {
         WifiP2pDevice p2pDevice = new WifiP2pDevice();
@@ -777,17 +791,20 @@ public class MainActivity extends ActionBarActivity implements
 
         Log.d(TAG, "handleMessage, updated tabNum = " + tabNum);
 
-        Log.d(TAG, "handleMessage, chatManager!=null? " + (chatManager!=null));
+        Log.d(TAG, "handleMessage, chatManager!=null? " + (chatManager != null));
 
-        if(chatManager!=null) {
-            //add a new tab, initilize and preprare the correct tab
-
-            if(tabNum > tabFragment.getWiFiChatFragmentList().size()) {
+        //if chatManager != null i'm receiving the message with MAGICADDRESSKEYWORD from another device
+        if (chatManager != null) {
+            //add a new tab, only if necessary.
+            //i mean that if there is a conversation created and stopped,
+            // i must restart this one and i don't create another one.
+            if (tabNum > tabFragment.getWiFiChatFragmentList().size()) {
                 WiFiChatFragment frag = WiFiChatFragment.newInstance();
                 //adds a new fragment, sets the tabNumber with listsize+1, because i want to add an element to this list and get
                 //this position, but at the moment the list is not updated. When i use listsize+1
                 // i'm considering "+1" as the new element that i want to add.
                 frag.setTabNumber(tabFragment.getWiFiChatFragmentList().size() + 1);
+                //add new tab
                 tabFragment.getWiFiChatFragmentList().add(frag);
                 tabFragment.getMSectionsPagerAdapter().notifyDataSetChanged();
             }
@@ -803,7 +820,7 @@ public class MainActivity extends ActionBarActivity implements
             //or after a disconnect event and GroupInfo is available.
             tabFragment.getChatFragmentByTab(tabNum).setChatManager(chatManager);
 
-
+            //because i don't want to re-execute the code inside this if, every received message.
             chatManager = null;
         }
 
@@ -834,7 +851,6 @@ public class MainActivity extends ActionBarActivity implements
 
         this.getSupportFragmentManager().executePendingTransactions();
     }
-
 
 
     @Override

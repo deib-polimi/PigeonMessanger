@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery.socketmanagers;
+package it.polimi.deib.p2pchat.discovery.socketmanagers;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import it.polimi.wifidirectmultichat.discovery.Configuration;
+import it.polimi.deib.p2pchat.discovery.Configuration;
 
 /**
  * Class the implements the ServerSocket Handler. It's used only by the Group Owner.

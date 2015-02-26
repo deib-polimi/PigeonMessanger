@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.deib.p2pchat.discovery;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -31,7 +31,7 @@ import android.util.Log;
 /**
  * A BroadcastReceiver that notifies of important wifi p2p events.
  * This class works without callback interface, because is necessary to call a huge
- * amount of method inside the {@link it.polimi.wifidirectmultichat.discovery.MainActivity}
+ * amount of method inside the {@link it.polimi.deib.p2pchat.discovery.MainActivity}
  *
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
  */

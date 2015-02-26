@@ -1,5 +1,5 @@
 
-package it.polimi.wifidirectmultichat.discovery.services;
+package it.polimi.deib.p2pchat.discovery.services;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project

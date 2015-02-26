@@ -1,14 +1,14 @@
-package it.polimi.wifidirectmultichat.discovery.services;
+package it.polimi.deib.p2pchat.discovery.services;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.polimi.wifidirectmultichat.discovery.utilities.UseOnlyPrivateHere;
+import it.polimi.deib.p2pchat.discovery.utilities.UseOnlyPrivateHere;
 
 /**
- * Class that represents a list of {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pService }.
+ * Class that represents a list of {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pService }.
  * This list contains all the device found during discovery phase of the wifi direct protocol.
  * This class use Singleton pattern.
  *

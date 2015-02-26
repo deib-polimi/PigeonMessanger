@@ -1,4 +1,4 @@
-package it.polimi.wifidirectmultichat.discovery;
+package it.polimi.deib.p2pchat.discovery;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.support.annotation.NonNull;
@@ -6,12 +6,12 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.polimi.wifidirectmultichat.discovery.utilities.UseOnlyPrivateHere;
+import it.polimi.deib.p2pchat.discovery.utilities.UseOnlyPrivateHere;
 
 /**
- * Class that represent the tab's list of {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}
+ * Class that represent the tab's list of {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}
  * This class contains a logic to "remap" the tab index to the List<{@link android.net.wifi.p2p.WifiP2pDevice}> index.
- * Because the first tab is reserved to {@link it.polimi.wifidirectmultichat.discovery.services.WiFiP2pServicesFragment}.
+ * Because the first tab is reserved to {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}.
  * Created by Stefano Cappa on 12/02/15.
  */
 public class DeviceTabList {
