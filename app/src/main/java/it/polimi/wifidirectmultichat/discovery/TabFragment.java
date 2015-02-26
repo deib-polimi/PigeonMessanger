@@ -80,7 +80,6 @@ public class TabFragment extends Fragment {
         Log.d("prova", "wiFiChatFragmentList.size : " + wiFiChatFragmentList.size());
         Log.d("prova", "DeviceTablist.size : " + DeviceTabList.getInstance().getSize());
         Log.d("prova", "mViewPager.getAdapter.size : " + mViewPager.getAdapter().getCount());
-        Log.d("prova", "mSectionsPagerAdapter.size : " + mSectionsPagerAdapter.getCount());
 
 
         //i need this because i need to add a new tab, only if its necessary
@@ -109,7 +108,6 @@ public class TabFragment extends Fragment {
         Log.d("prova-3", "wiFiChatFragmentList.size : " + wiFiChatFragmentList.size());
         Log.d("prova-3", "DeviceTablist.size : " + DeviceTabList.getInstance().getSize());
         Log.d("prova-3", "mViewPager.getAdapter.size : " + mViewPager.getAdapter().getCount());
-        Log.d("prova-3", "mSectionsPagerAdapter.size : " + mSectionsPagerAdapter.getCount());
     }
 
     /**
@@ -119,6 +117,7 @@ public class TabFragment extends Fragment {
      * @return The {@link WiFiChatFragment } at position tabNumber in the list of
      * {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment}.
      */
+
     public WiFiChatFragment getChatFragmentByTab(int tabNumber) {
         return wiFiChatFragmentList.get(tabNumber - 1);
     }
