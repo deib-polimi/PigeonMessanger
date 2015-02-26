@@ -65,7 +65,7 @@ public class TabFragment extends Fragment {
      * I mean,
      *
      * @param callerMessage A message that contains one of this strings:
-     *                      {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MY_HANDLE_MSG or
+     *                      {@link it.polimi.wifidirectmultichat.discovery.Configuration}.FIRSTMESSAGEXCHANGE_MSG or
      *                      {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MESSAGE_READ_MSG.
      */
     public void addNewTabChatFragment(String callerMessage) {
@@ -85,18 +85,18 @@ public class TabFragment extends Fragment {
         //i need this because i need to add a new tab, only if its necessary
 
         //first check to know if is the first message exchanged between this device and our go/client.
-        if (callerMessage.contains(Configuration.MY_HANDLE_MSG)) {
-            Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG)");
+        if (callerMessage.contains(Configuration.FIRSTMESSAGEXCHANGE_MSG)) {
+            Log.d("prova", "logMessage.contains(Configuration.FIRSTMESSAGEXCHANGE_MSG)");
             //probably this if is useless
             if (wiFiChatFragmentList.size() <= DeviceTabList.getInstance().getSize()) {
-                Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG) - tabNum = " + ((MainActivity) getActivity()).getTabNum());
+                Log.d("prova", "logMessage.contains(Configuration.FIRSTMESSAGEXCHANGE_MSG) - tabNum = " + ((MainActivity) getActivity()).getTabNum());
                 //really necessary if to be sure that tabNum is higher that the size of wiFiChatFragmentList.
                 //this represents a new chat and obviously a new tab to add
                 //Otherwise if this condition is false, i re-enabling a older chat, and obviously is not necessary to add a new tabb, because
                 //this app can reactivate previous conversations.
                 if (((MainActivity) getActivity()).getTabNum() - 1 > wiFiChatFragmentList.size() - 1) {
                     wiFiChatFragmentList.add(frag);
-                    Log.d("prova", "logMessage.contains(Configuration.MY_HANDLE_MSG) - ADDED!!!");
+                    Log.d("prova", "logMessage.contains(Configuration.FIRSTMESSAGEXCHANGE_MSG) - ADDED!!!");
                 }
             }
         } else if (callerMessage.contains(Configuration.MESSAGE_READ_MSG)) {

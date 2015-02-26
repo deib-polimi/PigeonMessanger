@@ -71,8 +71,8 @@ public class ChatManager implements Runnable {
             byte[] buffer = new byte[1024];
             int bytes;
 
-            //this method's call is used to call handleMessage's case Configuration.MY_HANDLE in the MainActivity.
-            handler.obtainMessage(Configuration.MY_HANDLE, this).sendToTarget();
+            //this method's call is used to call handleMessage's case Configuration.FIRSTMESSAGEXCHANGE in the MainActivity.
+            handler.obtainMessage(Configuration.FIRSTMESSAGEXCHANGE, this).sendToTarget();
 
             while (!disable) { //...if enabled
                 try {

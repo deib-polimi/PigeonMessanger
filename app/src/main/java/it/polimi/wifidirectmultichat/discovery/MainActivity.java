@@ -277,7 +277,7 @@ public class MainActivity extends ActionBarActivity implements
                         MainActivity.this,
                         "discoverService",
                         "Added service discovery request",
-                        "Added service discovery request",
+                        null,
                         "Failed adding service discovery request",
                         "Failed adding service discovery request"));
 
@@ -410,7 +410,7 @@ public class MainActivity extends ActionBarActivity implements
                         MainActivity.this,
                         "startRegistration",
                         "Added Local Service",
-                        "Added Local Service",
+                        null,
                         "Failed to add a service",
                         "Failed to add a service"));
     }
@@ -498,7 +498,7 @@ public class MainActivity extends ActionBarActivity implements
         if (frag.getChatManager() != null) {
             //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i will have always
             //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
-            frag.getChatManager().write(("+++++++" + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
+            frag.getChatManager().write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
         }
     }
 
@@ -673,6 +673,9 @@ public class MainActivity extends ActionBarActivity implements
 
                 //i check if tabNum>=1 to be sure that no exception will raised
                 if (tabNum >= 1) {
+                    if(readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
+                        readMessage = readMessage.replace("+","");
+                    }
                     tabFragment.getChatFragmentByTab(tabNum).pushMessage("Buddy: " + readMessage);
 
                     //if the WaitingToSendQueue is not empty, send all his messages to target device.
@@ -685,18 +688,18 @@ public class MainActivity extends ActionBarActivity implements
 
                 break;
 
-
-            case Configuration.MY_HANDLE:
+            //called by every device at the beginning of a connection
+            case Configuration.FIRSTMESSAGEXCHANGE:
                 final Object obj = msg.obj;
-                Log.d(TAG, "handleMessage, " + Configuration.MY_HANDLE_MSG + " case");
+                Log.d(TAG, "handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " case");
 
                 //add a new tab, initilize and preprare the correct tab
-                initializeAndPrepareCorrectTabs("handleMessage, " + Configuration.MY_HANDLE_MSG + " tab added with tabnum: ");
+                initializeAndPrepareCorrectTabs("handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " tab added with tabnum: ");
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
                     public void onGroupInfoAvailable(WifiP2pGroup group) {
-                        //the GO sends the address to the client
+                        //a device sends the address to the client
                         if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
 
                             //if this message is not an initialization's message with
@@ -705,7 +708,7 @@ public class MainActivity extends ActionBarActivity implements
                                 tabNumFixForHandleMessages();
                             }
 
-                            //i set chatmanager, because if i am in Configuration.MY_HANDLE's case is
+                            //i set chatmanager, because if i am in Configuration.FIRSTMESSAGEXCHANGE's case is
                             //when two devices starting to connect each other for the first time
                             //or after a disconnect event and GroupInfo is available.
                             tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
@@ -718,8 +721,7 @@ public class MainActivity extends ActionBarActivity implements
                             sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress, LocalP2PDevice.getInstance().getLocalDevice().deviceName);
                         }
 
-                        Log.d(TAG, "handleMessage, " + Configuration.MY_HANDLE_MSG + " sendForcedWaitingToSendQueue with tabNum = " + tabNum);
-                        tabFragment.getChatFragmentByTab(tabNum).sendForcedWaitingToSendQueue();
+                        Log.d(TAG, "handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " sendForcedWaitingToSendQueue with tabNum = " + tabNum);
 
                     }
                 });
