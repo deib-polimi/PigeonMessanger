@@ -96,6 +96,7 @@ public class MainActivity extends ActionBarActivity implements
     private Thread socketHandler;
     private final Handler handler = new Handler(this);
 
+    private ChatManager chatManager;
 
     /**
      * Method to get the {@link android.os.Handler}.
@@ -424,7 +425,7 @@ public class MainActivity extends ActionBarActivity implements
     private void connectP2p(WiFiP2pService service) {
         Log.d(TAG, "connectP2p, tabNum before = " + tabNum);
 
-        this.tabNum = 1; //TODO in every experiment i used this, i don't know if is really necessary, probably not.
+        this.tabNum = 1; //TODO FIX: in every experiment i used this, i don't know if it's really necessary, probably not :)
 
         if (DeviceTabList.getInstance().containsElement(service.getDevice())) {
             this.tabNum = DeviceTabList.getInstance().indexOfElement(service.getDevice()) + 1;
@@ -487,18 +488,17 @@ public class MainActivity extends ActionBarActivity implements
         this.connectP2p(service);
     }
 
-    /**
-     * Method to send the {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MAGICADDRESSKEYWORD with the macaddress
-     * of this device to the other device.
-     * @param deviceMacAddress String that represents the macaddress of the destination device.
-     * @param name String that represents the name of the destination device.
-     */
-    private void sendAddress(String deviceMacAddress, String name) {
-        WiFiChatFragment frag = tabFragment.getChatFragmentByTab(tabNum);
-        if (frag.getChatManager() != null) {
+//    /**
+//     * Method to send the {@link it.polimi.wifidirectmultichat.discovery.Configuration}.MAGICADDRESSKEYWORD with the macaddress
+//     * of this device to the other device.
+//     * @param deviceMacAddress String that represents the macaddress of the destination device.
+//     * @param name String that represents the name of the destination device.
+//     */
+    private void sendAddress(String deviceMacAddress, String name, ChatManager chatManager) {
+        if (chatManager != null) {
             //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i will have always
             //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
-            frag.getChatManager().write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
+            chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
         }
     }
 
@@ -650,8 +650,9 @@ public class MainActivity extends ActionBarActivity implements
                 final Object obj = msg.obj;
                 Log.d(TAG, "handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " case");
 
-                //add a new tab, initilize and preprare the correct tab
-                initializeAndPrepareCorrectTabs("handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " tab added with tabnum: ");
+
+                chatManager = (ChatManager) obj;
+
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
@@ -659,29 +660,21 @@ public class MainActivity extends ActionBarActivity implements
                         //a device sends the address to the client
                         if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
 
-                            //if this message is not an initialization's message with
-                            // Configuration.MAGICADDRESSKEYWORD, check if tabNum is correct
-                            if (tabNum <= 0) {
-                                tabNumFixForHandleMessages();
-                            }
-
-                            //i set chatmanager, because if i am in Configuration.FIRSTMESSAGEXCHANGE's case is
-                            //when two devices starting to connect each other for the first time
-                            //or after a disconnect event and GroupInfo is available.
-                            tabFragment.getChatFragmentByTab(tabNum).setChatManager((ChatManager) obj);
-
                             Log.d(TAG, "handleMessage, requestGroupInfo with isGO= " + group.isGroupOwner()
                                     + ". Sending address: " + LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
 
-                            //send address from LocalDevice to the device associated to the
-                            //WiFiChatFragment selected with tabNum
-                            sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress, LocalP2PDevice.getInstance().getLocalDevice().deviceName);
+                            //send address from LocalDevice to the destination device
+                            //after this call i can look inside case "Configuration.MESSAGE_READ:"
+                            sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress,
+                                    LocalP2PDevice.getInstance().getLocalDevice().deviceName,
+                                    chatManager);
+
                         }
-
-                        Log.d(TAG, "handleMessage, " + Configuration.FIRSTMESSAGEXCHANGE_MSG + " sendForcedWaitingToSendQueue with tabNum = " + tabNum);
-
                     }
                 });
+
+
+
                 break;
 
             case Configuration.MESSAGE_READ:
@@ -703,17 +696,23 @@ public class MainActivity extends ActionBarActivity implements
                     manageAddressMessageReceiption(readMessage);
                 }
 
-                //if this message is not an initialization's message with Configuration.MAGICADDRESSKEYWORD
-                // keyword, check if tabNum is correct
-                if (tabNum <= 0) {
-                    tabNumFixForHandleMessages();
-                }
 
+                //i check if tabNum is valid to be sure that no exception will throwed
+                /* example to undestand
+                ----------------------------------------------------------------------------------
+                getWiFiChatFragmentList 0 1 2 3 4 5 6 7 8   <-Index of the list. The Size() == 9
+                tabNum                  1 2 3 4 5 6 7 8 9   <-number of tabs.
+                ----------------------------------------------------------------------------------
+                Condition for tabNum:
+                1] 0 is reserved to servicelist  ----> tabNum>=1
+                2] 9 <= size()=9 ----> tabNum <= tabFragment.getWiFiChatFragmentList().size()
+                Finally 1 && 2!!!
+                ----------------------------------------------------------------------------------
+                 */
 
-                //i check if tabNum>=1 to be sure that no exception will raised
-                if (tabNum >= 1) {
+                if (tabNum >= 1 && tabNum <= tabFragment.getWiFiChatFragmentList().size()) {
 
-                    //i use this if only to re-format the message (not really necessary because in the "commercial"
+                    //i use this to re-format the message (not really necessary because in the "commercial"
                     //version, if a message contains MAGICADDRESSKEYWORD, this message should be removed and used
                     // only by the logic without display anything.
                     if(readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
@@ -751,6 +750,8 @@ public class MainActivity extends ActionBarActivity implements
         if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
             Log.d(TAG, "handleMessage, p2pDevice IS NOT in the DeviceTabList -> OK! ;)");
 
+            Log.d(TAG, "manageAddressMessageReceiption, tabNum = " + tabNum);
+
             if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
 
                 DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
@@ -776,47 +777,38 @@ public class MainActivity extends ActionBarActivity implements
 
         Log.d(TAG, "handleMessage, updated tabNum = " + tabNum);
 
-        //if tabNum is not correct for some reasons is because there are no tabs associated to this p2pDevice.
-        //For this reason i need to create a new tab for p2pDevice.
-        this.initializeAndPrepareCorrectTabs("handleMessage, " + Configuration.MESSAGE_READ_MSG + " tab added with tabnum: ");
-    }
+        Log.d(TAG, "handleMessage, chatManager!=null? " + (chatManager!=null));
 
+        if(chatManager!=null) {
+            //add a new tab, initilize and preprare the correct tab
 
+            if(tabNum > tabFragment.getWiFiChatFragmentList().size()) {
+                WiFiChatFragment frag = WiFiChatFragment.newInstance();
+                //adds a new fragment, sets the tabNumber with listsize+1, because i want to add an element to this list and get
+                //this position, but at the moment the list is not updated. When i use listsize+1
+                // i'm considering "+1" as the new element that i want to add.
+                frag.setTabNumber(tabFragment.getWiFiChatFragmentList().size() + 1);
+                tabFragment.getWiFiChatFragmentList().add(frag);
+                tabFragment.getMSectionsPagerAdapter().notifyDataSetChanged();
+            }
 
-    /**
-     * Method to initialize/add the {@link it.polimi.wifidirectmultichat.discovery.chatmessages.WiFiChatFragment},
-     * to show him and finally to color the messages.
-     * @param logMessage String to use the correct message in Log.d, not really necessary for the logic of this method.
-     */
-    private void initializeAndPrepareCorrectTabs(String logMessage) {
-        if (tabNum <= 0 || TabFragment.getWiFiChatFragmentList().size() - 1 < tabNum || tabFragment.getChatFragmentByTab(tabNum) == null) {
-            tabFragment.addNewTabChatFragment(logMessage);
             //update current displayed tab and the color.
             this.setTabFragmentToPage(tabNum);
             addColorActiveTabs(false);
 
-            Log.d(TAG, logMessage + tabNum);
+            Log.d(TAG, "tabNum is : " + tabNum);
+
+            //i set chatmanager, because if i am in Configuration.FIRSTMESSAGEXCHANGE's case is
+            //when two devices starting to connect each other for the first time
+            //or after a disconnect event and GroupInfo is available.
+            tabFragment.getChatFragmentByTab(tabNum).setChatManager(chatManager);
+
+
+            chatManager = null;
         }
+
     }
 
-    /**
-     * Method used as a quickfix to set tabNum variable when, for some unpredictable reasons, tabNum<=0
-     */
-    private void tabNumFixForHandleMessages() {
-        //if this tabNum is wrong (<=0), i check:
-        //if the current tab is 0 i.e. WifiP2pServicesFragment, i set tabNum=1, a generic value with a chat
-        //else i use the current item tab's index.
-        //this trick solves an exception inside "public void onGroupInfoAvailable(WifiP2pGroup group)". This exception
-        //raised because onGroupInfoAvailable, is called asynchronously by the android framework and sometime, is impossible to
-        //know if i have all the necessary informations.
-        Log.w(TAG, "handleMessage, Error tabnum=" + tabNum + "<=0");
-        if (tabFragment.getMViewPager().getCurrentItem() == 0) {
-            tabNum = 1;
-        } else {
-            tabNum = tabFragment.getMViewPager().getCurrentItem();
-        }
-        Log.e(TAG, "handleMessage, Updated tabNum = " + tabNum);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -917,11 +909,6 @@ public class MainActivity extends ActionBarActivity implements
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

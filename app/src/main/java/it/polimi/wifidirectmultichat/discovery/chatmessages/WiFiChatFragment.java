@@ -73,6 +73,9 @@ public class WiFiChatFragment extends Fragment {
      * to send the message to other devices.
      */
     public void sendForcedWaitingToSendQueue() {
+
+        Log.d(TAG, "sendForcedWaitingToSendQueue() called");
+
         String combineMessages = "";
         List<String> listCopy = WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNumber);
         for (String message : listCopy) {
