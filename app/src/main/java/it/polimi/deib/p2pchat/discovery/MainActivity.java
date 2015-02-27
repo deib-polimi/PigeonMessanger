@@ -435,8 +435,6 @@ public class MainActivity extends ActionBarActivity implements
     private void connectP2p(WiFiP2pService service) {
         Log.d(TAG, "connectP2p, tabNum before = " + tabNum);
 
-        this.tabNum = 1; //TODO FIX: in every experiment i used this, i don't know if it's really necessary, probably not :)
-
         if (DeviceTabList.getInstance().containsElement(service.getDevice())) {
             this.tabNum = DeviceTabList.getInstance().indexOfElement(service.getDevice()) + 1;
         }
@@ -508,6 +506,7 @@ public class MainActivity extends ActionBarActivity implements
      */
     private void sendAddress(String deviceMacAddress, String name, ChatManager chatManager) {
         if (chatManager != null) {
+            Log.d(TAG, "sending message with MAGICADDRESSKEYWORD");
             //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i will have always
             //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
             chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
@@ -665,24 +664,10 @@ public class MainActivity extends ActionBarActivity implements
 
                 chatManager = (ChatManager) obj;
 
-                manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-                    @Override
-                    public void onGroupInfoAvailable(WifiP2pGroup group) {
-                        //a device sends the address to the client
-                        if (LocalP2PDevice.getInstance().getLocalDevice() != null) {
+                sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress,
+                        LocalP2PDevice.getInstance().getLocalDevice().deviceName,
+                        chatManager);
 
-                            Log.d(TAG, "handleMessage, requestGroupInfo with isGO= " + group.isGroupOwner()
-                                    + ". Sending address: " + LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
-
-                            //send address from LocalDevice to the destination device
-                            //after this call i can look inside case "Configuration.MESSAGE_READ:"
-                            sendAddress(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress,
-                                    LocalP2PDevice.getInstance().getLocalDevice().deviceName,
-                                    chatManager);
-
-                        }
-                    }
-                });
                 break;
             case Configuration.MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
