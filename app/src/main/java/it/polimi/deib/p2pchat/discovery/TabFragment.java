@@ -94,6 +94,29 @@ public class TabFragment extends Fragment {
 
 
     /**
+     * Method to check if tabNum is valid.
+     * tabNum is valid if tabNum >= 1 && tabNum <= this.getWiFiChatFragmentList().size().
+     * </br>
+     * ----------------------------------------------------------------------------------
+     * Example:
+     * getWiFiChatFragmentList 0 1 2 3 4 5 6 7 8   <-Index of the list. The Size() == 9
+     * tabNum                  1 2 3 4 5 6 7 8 9   <-number of tabs
+     * </br>
+     * Condition for tabNum:
+     * 1] 0 is reserved to servicelist  ----> tabNum>=1
+     * 2] 9 <= size()=9 ----> tabNum <= tabFragment.getWiFiChatFragmentList().size()
+     * </br>
+     * Finally 1 && 2!!!
+     * ----------------------------------------------------------------------------------
+     * </br>
+     * @param tabNum int that represents the tab number to check
+     * @return true of false, if the condition is valid or not.
+     */
+    public boolean isValidTabNum (int tabNum) {
+        return tabNum >= 1 && tabNum <= this.getWiFiChatFragmentList().size();
+    }
+
+    /**
      * Class that represents the FragmentPagerAdapter of this Fragment, that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */

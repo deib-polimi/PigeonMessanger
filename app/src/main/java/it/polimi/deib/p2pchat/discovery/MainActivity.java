@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
@@ -543,7 +542,6 @@ public class MainActivity extends ActionBarActivity implements
     /**
      * This Method changes the color of all messages in
      * {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}.
-     * Attention, you can't specify which tabs or which message must be updated.
      *
      * @param grayScale a boolean that if is true removes all colors inside
      *                  {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment},
@@ -553,11 +551,12 @@ public class MainActivity extends ActionBarActivity implements
      *                  {@link it.polimi.deib.p2pchat.discovery.TabFragment}.
      */
     public void addColorActiveTabs(boolean grayScale) {
-        for (WiFiChatFragment chatFragment : TabFragment.getWiFiChatFragmentList()) {
-            if (chatFragment != null) {
-                chatFragment.setGrayScale(grayScale);
-                chatFragment.updateChatMessageListAdapter();
-            }
+        Log.d(TAG, "addColorActiveTabs() called, tabNum= " + tabNum);
+
+        //27-02-15 : new implementation of this feature.
+        if (tabFragment.isValidTabNum(tabNum) && tabFragment.getChatFragmentByTab(tabNum) != null) {
+            tabFragment.getChatFragmentByTab(tabNum).setGrayScale(grayScale);
+            tabFragment.getChatFragmentByTab(tabNum).updateChatMessageListAdapter();
         }
     }
 
@@ -685,27 +684,15 @@ public class MainActivity extends ActionBarActivity implements
 
                 //if the message received contains Configuration.MAGICADDRESSKEYWORD is because now someone want to connect to this device
                 if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD) && readMessage.split("___").length == 3) {
-                    manageAddressMessageReceiption(readMessage);
+                    manageAddressMessageReception(readMessage);
                 }
 
 
                 //i check if tabNum is valid only to be sure.
                 //i using this if, because this peace of code is critical and "sometimes can throw exceptions".
-                /* example to understand
-                ----------------------------------------------------------------------------------
-                getWiFiChatFragmentList 0 1 2 3 4 5 6 7 8   <-Index of the list. The Size() == 9
-                tabNum                  1 2 3 4 5 6 7 8 9   <-number of tabs.
-                ----------------------------------------------------------------------------------
-                Condition for tabNum:
-                1] 0 is reserved to servicelist  ----> tabNum>=1
-                2] 9 <= size()=9 ----> tabNum <= tabFragment.getWiFiChatFragmentList().size()
-                Finally 1 && 2!!!
-                ----------------------------------------------------------------------------------
-                 */
+                if (tabFragment.isValidTabNum(tabNum)) {
 
-                if (tabNum >= 1 && tabNum <= tabFragment.getWiFiChatFragmentList().size()) {
-
-                    if(Configuration.DEBUG_VERSION) {
+                    if (Configuration.DEBUG_VERSION) {
                         //i use this to re-format the message (not really necessary because in the "commercial"
                         //version, if a message contains MAGICADDRESSKEYWORD, this message should be removed and used
                         // only by the logic without display anything.
@@ -736,10 +723,12 @@ public class MainActivity extends ActionBarActivity implements
      * Method to select the correct tab {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}
      * in {@link it.polimi.deib.p2pchat.discovery.TabFragment}
      * and to prepare and to initialize everything to make chatting possible.
+     * </br>
+     * This is a critical method. Don't remove the Log.d messages.
      * @param readMessage String that represent the message received
      *                    form {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}.
      */
-    private void manageAddressMessageReceiption(String readMessage) {
+    private void manageAddressMessageReception(String readMessage) {
         WifiP2pDevice p2pDevice = new WifiP2pDevice();
         p2pDevice.deviceAddress = readMessage.split("___")[1];
         p2pDevice.deviceName = readMessage.split("___")[2];
@@ -749,16 +738,12 @@ public class MainActivity extends ActionBarActivity implements
         if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
             Log.d(TAG, "handleMessage, p2pDevice IS NOT in the DeviceTabList -> OK! ;)");
 
-            Log.d(TAG, "manageAddressMessageReceiption, tabNum = " + tabNum);
-
             if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
 
                 DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
 
                 Log.d(TAG, "handleMessage, p2pDevice in DeviceTabList at position tabnum= " + (tabNum - 1) + " is null");
-                Log.d(TAG, "handleMessage, p2pDevice setted = " + DeviceTabList.getInstance().getDevice(tabNum - 1));
             } else {
-
                 DeviceTabList.getInstance().addDeviceIfRequired(p2pDevice);
 
                 Log.d(TAG, "handleMessage, p2pDevice in DeviceTabList at position tabnum= " + (tabNum - 1) + " isn't null");
@@ -796,7 +781,7 @@ public class MainActivity extends ActionBarActivity implements
 
             //update current displayed tab and the color.
             this.setTabFragmentToPage(tabNum);
-            addColorActiveTabs(false);
+            this.addColorActiveTabs(false);
 
             Log.d(TAG, "tabNum is : " + tabNum);
 
