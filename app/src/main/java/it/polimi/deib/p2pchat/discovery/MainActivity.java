@@ -40,6 +40,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import it.polimi.deib.p2pchat.R;
@@ -751,7 +752,6 @@ public class MainActivity extends ActionBarActivity implements
             //because i don't want to re-execute the code inside this if, every received message.
             chatManager = null;
         }
-
     }
 
 
@@ -760,6 +760,8 @@ public class MainActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         this.setupToolBar();
 
