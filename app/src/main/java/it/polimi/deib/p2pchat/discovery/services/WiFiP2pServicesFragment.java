@@ -26,7 +26,7 @@ import lombok.Getter;
  * If you click on the local device cardview, a {@link it.polimi.deib.p2pchat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment}
  * appears. Here you can change the local device name, and
  * with the DialogCallbackInterface obtain the data inserted in the dialogfragment.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15.
  */
 public class WiFiP2pServicesFragment extends Fragment implements
@@ -84,7 +84,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
      * Method called by {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter}
      * with the {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter.ItemClickListener}
      * interface, when the user click on an element of the {@link android.support.v7.widget.RecyclerView}.
-     * @param view {@link android.view.View} clicked.
+     * @param view The clicked view.
      */
     @Override
     public void itemClicked(View view) {

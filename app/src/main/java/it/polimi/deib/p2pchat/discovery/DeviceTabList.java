@@ -10,8 +10,9 @@ import it.polimi.deib.p2pchat.discovery.utilities.UseOnlyPrivateHere;
 
 /**
  * Class that represent the tab's list of {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}
- * This class contains a logic to "remap" the tab index to the List<{@link android.net.wifi.p2p.WifiP2pDevice}> index.
+ * This class contains a logic to "remap" the tab index to the List of WifiP2pDevice index.
  * Because the first tab is reserved to {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}.
+ * <p></p>
  * Created by Stefano Cappa on 12/02/15.
  */
 public class DeviceTabList {
@@ -39,11 +40,11 @@ public class DeviceTabList {
 
 
     /**
-     * Method to get a {@link android.net.wifi.p2p.WifiP2pDevice}
+     * Method to get a WifiP2pDevice
      * specifying the position of the element in the list.
-     * If the condition (pos>=0 && pos <= deviceList.size() - 1) is false, return null.
+     * If the condition {@code pos>=0 && pos <= deviceList.size() - 1 } is false, return null.
      * @param pos integer position
-     * @return {@link android.net.wifi.p2p.WifiP2pDevice} element at position pos, inside the deviceList or null.
+     * @return WifiP2pDevice element at position pos, inside the deviceList or null.
      */
     public WifiP2pDevice getDevice(int pos) {
         if (pos>=0 && pos <= deviceList.size() - 1) {
@@ -53,13 +54,13 @@ public class DeviceTabList {
     }
 
     /**
-     * Method that sets a {@link android.net.wifi.p2p.WifiP2pDevice} at position pos inside the deviceList.
+     * Method that sets a WifiP2pDevice at position pos inside the deviceList.
      * This method replaces the element at position pos, if this deviceList.size() have an element at this position.
      * If not, the device will be added to the deviceList, at position pos.
      * This method never fails! You have the warranty that the element will be added to the list.
      * If you pass a device==null, in the list you will get a null element. Be careful!
      * @param pos integer position
-     * @param device {@link android.net.wifi.p2p.WifiP2pDevice} element the you want add to the deviceList.
+     * @param device WifiP2pDevice element the you want add to the deviceList.
      */
     public void setDevice(int pos, @NonNull WifiP2pDevice device) {
         if (pos>=0 && pos <= deviceList.size() - 1) {
@@ -70,12 +71,13 @@ public class DeviceTabList {
     }
 
     /**
-     * Method to add a {@link android.net.wifi.p2p.WifiP2pDevice} in the list, only if it isn't already in.
+     * Method to add a WifiP2pDevice in the list, only if it isn't already in.
      * If the list contains null elements, this method search the first one and it replaces with the device parameter.
      * If all the element in the list are !=null, it adds the new device ad the end.
+     * <p></p>
      * This method never fails! You have the warranty that the element will be added to the list.
      * If you pass a device==null, in the list you will get a null element. Be careful!
-     * @param device {@link android.net.wifi.p2p.WifiP2pDevice} element the you want add to the deviceList.
+     * @param device WifiP2pDevice element the you want add to the deviceList.
      */
     public void addDeviceIfRequired(@NonNull WifiP2pDevice device) {
         boolean add = true;
@@ -102,9 +104,9 @@ public class DeviceTabList {
     }
 
     /**
-     * Method that check if a {@link android.net.wifi.p2p.WifiP2pDevice} is in the deviceList.
+     * Method that check if a WifiP2pDevice is in the deviceList.
      * If the device parameter is null, this method returns false!
-     * @param device {@link android.net.wifi.p2p.WifiP2pDevice} element.
+     * @param device WifiP2pDevice element.
      * @return true if the element is in the list, false otherwise or if the device parameter is null.
      */
     public boolean containsElement(WifiP2pDevice device) {
@@ -121,12 +123,13 @@ public class DeviceTabList {
     }
 
     /**
-     * Method to get the index position of a {@link android.net.wifi.p2p.WifiP2pDevice} from deviceList.
+     * Method to get the index position of a WifiP2pDevice from deviceList.
      * If the device is not contained in the list or device == null, it returns -1.
+     * <p></p>
      * Attention: sometimes Android gives a WifiP2pDevice without the deviceName. For this reason i check
      * the element in the list only with the deviceAddress.
-     * @param device {@link android.net.wifi.p2p.WifiP2pDevice} element.
-     * @return int that represents the index inside the {@link java.util.List} deviceList.
+     * @param device WifiP2pDevice element.
+     * @return int that represents the index inside the List deviceList.
      */
     public int indexOfElement(WifiP2pDevice device) {
         if(device==null) {

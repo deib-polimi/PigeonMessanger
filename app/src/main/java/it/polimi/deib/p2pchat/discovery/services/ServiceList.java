@@ -11,7 +11,7 @@ import it.polimi.deib.p2pchat.discovery.utilities.UseOnlyPrivateHere;
  * Class that represents a list of {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pService }.
  * This list contains all the device found during discovery phase of the wifi direct protocol.
  * This class use Singleton pattern.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15.
  */
 public class ServiceList {
@@ -65,8 +65,8 @@ public class ServiceList {
      * Method to get a service from the list, using only the device.
      * This method use only the deviceAddress, not the device name, because sometimes Android doesn't
      * get the name, but only the mac address.
-     * @param device {@link WifiP2pDevice} that you want to use to search the service.
-     * @return The {@link WiFiP2pService } associated to the device or null, if the device isn't in the list.
+     * @param device WifiP2pDevice that you want to use to search the service.
+     * @return The WiFiP2pService associated to the device or null, if the device isn't in the list.
      */
     public WiFiP2pService getServiceByDevice(WifiP2pDevice device) {
         if(device==null) {

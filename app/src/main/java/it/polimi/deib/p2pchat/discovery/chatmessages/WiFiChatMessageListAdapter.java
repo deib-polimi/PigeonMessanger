@@ -12,6 +12,7 @@ import it.polimi.deib.p2pchat.R;
 /**
  * This class is the ArrayAdapter to represents data inside the {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment}.
  * No visibility modifier, this implies that you can access to this class only in this package.
+ * <p></p>
  * Created by Stefano Cappa on 10/02/15.
  */
 class WiFiChatMessageListAdapter extends ArrayAdapter<String> {

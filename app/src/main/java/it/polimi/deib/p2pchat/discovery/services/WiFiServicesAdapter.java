@@ -15,6 +15,7 @@ import it.polimi.deib.p2pchat.R;
  * {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter.ViewHolder}
  * for performance reasons.
  * This class is the Adapter to represents data inside the {@link it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment}
+ * <p></p>
  * Created by Stefano Cappa on 10/02/15.
  */
 public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapter.ViewHolder> {

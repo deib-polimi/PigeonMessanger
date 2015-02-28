@@ -26,9 +26,8 @@ import lombok.Setter;
 /**
  * Class fragment that handles chat related UI which includes a list view for messages
  * and a message entry field with send button.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
- *
  */
 public class WiFiChatFragment extends Fragment {
 
@@ -48,7 +47,7 @@ public class WiFiChatFragment extends Fragment {
      * Callback interface to call methods reconnectToService in {@link it.polimi.deib.p2pchat.discovery.MainActivity}.
      * MainActivity implements this interface.
      */
-    public interface CallbackActivity {
+    public interface AutomaticReconnectionListener {
         public void reconnectToService(WiFiP2pService wifiP2pService);
     }
 
@@ -133,7 +132,7 @@ public class WiFiChatFragment extends Fragment {
             Log.d(TAG, "device address: " + device.deviceAddress + ", service: " + service);
 
             //call reconnectToService in MainActivity
-            ((CallbackActivity) getActivity()).reconnectToService(service);
+            ((AutomaticReconnectionListener) getActivity()).reconnectToService(service);
 
         } else {
             Log.d(TAG,"addToWaitingToSendQueueAndTryReconnect device == null, i can't do anything");

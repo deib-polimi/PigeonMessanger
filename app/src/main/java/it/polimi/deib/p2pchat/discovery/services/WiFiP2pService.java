@@ -24,7 +24,6 @@ import lombok.Setter;
 
 /**
  * A structure to hold service information.
- * Created by Stefano Cappa on 04/02/15.
  */
 public class WiFiP2pService {
     @Getter @Setter private WifiP2pDevice device;

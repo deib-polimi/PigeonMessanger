@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * Class that represents an ArrayList's element of the WaitingToSendQueue list.
  * No visibility modifier, this implies that you can access to this class only in this package.
- *
+ * <p></p>
  * Created by Stefano Cappa on 14/02/15.
  */
 class WaitingToSendListElement {

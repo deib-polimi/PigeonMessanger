@@ -8,7 +8,7 @@ import java.util.List;
  * Contains the waitingToSend list (ArrayList of
  * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}'s ArrayLists) and
  * the logic to obtain elements.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15.
  */
 public class WaitingToSendQueue {
@@ -42,7 +42,7 @@ public class WaitingToSendQueue {
      * at the specified tabNumber-1 position.
      * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}.
      * @param tabNumber int that represents the tabNumber used to retrieve the ArrayList.
-     * @return List<String> element of the waitingToSend list.
+     * @return List element of the waitingToSend list.
      */
     public List<String> getWaitingToSendItemsList(int tabNumber) {
 

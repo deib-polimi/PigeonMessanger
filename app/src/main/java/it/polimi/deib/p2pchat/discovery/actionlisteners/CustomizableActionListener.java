@@ -10,7 +10,9 @@ import android.widget.Toast;
  * Extremely customizable WifiP2pManager.ActionListener.
  * The only parameter of the constructor the can't be null, is context.
  * If tag==null, this class chooses a default tag "ActionListenerTag".
+ * <p></p>
  * For example, if successToast==null, the Toasts in onSuccess will never displayed.
+ * <p></p>
  * Created by Stefano Cappa on 18/02/15.
  */
 public class CustomizableActionListener implements WifiP2pManager.ActionListener {
@@ -22,12 +24,12 @@ public class CustomizableActionListener implements WifiP2pManager.ActionListener
     /**
      * Constructor of CustomizableActionListener.
      * successLog, successToast, failLog, failToast can be == null, and if this happens the associated action is skipped.
-     * @param context Context necessary for {@link android.widget.Toast}
+     * @param context Context necessary to display Toasts.
      * @param tag String that represents the tag for Log.d, but if is == null, this constructor uses "ActionListenerTag" as tag.
      * @param successLog String that represent the message for Log.d in onSuccess
-     * @param successToast String that represent the message for {@link android.widget.Toast} in onSuccess
+     * @param successToast String that represent the message for Toasts in onSuccess
      * @param failLog String that represent the message for Log.d in onFailure. The failure code will be added automatically.
-     * @param failToast String that represent the message for {@link android.widget.Toast} in onFailure
+     * @param failToast String that represent the message for Toasts in onFailure
      */
     public CustomizableActionListener(@NonNull Context context,
                                       String tag,

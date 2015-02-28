@@ -7,6 +7,7 @@ import lombok.Setter;
 
 /**
  * Class that represents the device where this app is running.
+ * <p></p>
  * Created by Stefano Cappa on 11/02/15.
 */
 public class LocalP2PDevice {

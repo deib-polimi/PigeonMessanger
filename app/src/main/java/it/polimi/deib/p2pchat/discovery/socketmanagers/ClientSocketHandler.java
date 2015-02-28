@@ -30,7 +30,7 @@ import it.polimi.deib.p2pchat.discovery.Configuration;
 
 /**
  * Class the implements the ClientSocket Handler. It's used only by the clients/peers.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
  */
 public class ClientSocketHandler extends Thread {

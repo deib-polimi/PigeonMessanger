@@ -29,8 +29,6 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
-import android.net.wifi.p2p.WifiP2pManager.DnsSdServiceResponseListener;
-import android.net.wifi.p2p.WifiP2pManager.DnsSdTxtRecordListener;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Bundle;
@@ -45,6 +43,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import it.polimi.deib.p2pchat.R;
+import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsSdTxtRecordListener;
+import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsServiceResponseListener;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomizableActionListener;
 import it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment;
 import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
@@ -66,12 +66,12 @@ import lombok.Setter;
 
 /**
  * Main Activity.
- * <p/>
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15.
  */
 public class MainActivity extends ActionBarActivity implements
         WiFiP2pServicesFragment.DeviceClickListener,
-        WiFiChatFragment.CallbackActivity,
+        WiFiChatFragment.AutomaticReconnectionListener,
         Handler.Callback,
         ConnectionInfoListener {
 
@@ -116,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method called by WiFiChatFragment using the
-     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment.CallbackActivity}
+     * {@link it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment.AutomaticReconnectionListener}
      * interface, implemented here, by this class.
      * If the wifiP2pService is null, this method return directly, without doing anything.
      *
@@ -174,6 +174,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * Method that asks to the manager to stop discovery phase.
+     * <p></p>
      * Attention, Never call this method directly, but you should use for example {@link #forceDiscoveryStop()}
      */
     private void internalStopDiscovery() {
@@ -231,50 +232,7 @@ public class MainActivity extends ActionBarActivity implements
          * by the system when a service is actually discovered.
          */
         manager.setDnsSdResponseListeners(channel,
-                new DnsSdServiceResponseListener() {
-
-                    @Override
-                    public void onDnsSdServiceAvailable(String instanceName,
-                                                        String registrationType,
-                                                        WifiP2pDevice srcDevice) {
-
-                        // A service has been discovered. Is this our app?
-                        if (instanceName.equalsIgnoreCase(Configuration.SERVICE_INSTANCE)) {
-
-                            // update the UI and add the item the discovered device.
-                            WiFiP2pServicesFragment fragment = TabFragment.getWiFiP2pServicesFragment();
-                            if (fragment != null) {
-                                WiFiServicesAdapter adapter = fragment.getMAdapter();
-                                WiFiP2pService service = new WiFiP2pService();
-                                service.setDevice(srcDevice);
-                                service.setInstanceName(instanceName);
-                                service.setServiceRegistrationType(registrationType);
-
-
-                                ServiceList.getInstance().addServiceIfNotPresent(service);
-
-                                if (adapter != null) {
-                                    adapter.notifyItemInserted(ServiceList.getInstance().getSize() - 1);
-                                }
-                                Log.d(TAG, "onBonjourServiceAvailable " + instanceName);
-                            }
-                        }
-
-                    }
-                }, new DnsSdTxtRecordListener() {
-
-                    /**
-                     * A new TXT record is available. Pick up the advertised
-                     * buddy name.
-                     */
-                    @Override
-                    public void onDnsSdTxtRecordAvailable(
-                            String fullDomainName, Map<String, String> record,
-                            WifiP2pDevice device) {
-                        Log.d(TAG, "onDnsSdTxtRecordAvail: " + device.deviceName + " is " +
-                                record.get(Configuration.TXTRECORD_PROP_AVAILABLE));
-                    }
-                });
+                new CustomDnsServiceResponseListener(), new CustomDnsSdTxtRecordListener());
 
         // After attaching listeners, create a service request and initiate
         // discovery.

@@ -34,7 +34,7 @@ import lombok.Setter;
  * to send messages to the GUI, i.e. the Android's UI Thread.
  * This class is used by {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ClientSocketHandler}
  * and {@link it.polimi.deib.p2pchat.discovery.socketmanagers.GroupOwnerSocketHandler}.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
  *
  */
@@ -51,7 +51,7 @@ public class ChatManager implements Runnable {
     /**
      * Constructor of the class
      * @param socket Represents the {@link java.net.Socket} required in order to communicate
-     * @param handler Represents the {@link android.os.Handler} required in order to communicate
+     * @param handler Represents the Handler required in order to communicate
      */
     public ChatManager(@NonNull Socket socket, @NonNull Handler handler) {
         this.socket = socket;

@@ -31,7 +31,7 @@ import it.polimi.deib.p2pchat.discovery.Configuration;
 
 /**
  * Class the implements the ServerSocket Handler. It's used only by the Group Owner.
- *
+ * <p></p>
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
  */
 public class GroupOwnerSocketHandler extends Thread {
@@ -43,7 +43,7 @@ public class GroupOwnerSocketHandler extends Thread {
 
     /**
      * Class constructor.
-     * @param handler Represents the {@link android.os.Handler} required in order to communicate
+     * @param handler Represents the Handler required in order to communicate
      * @throws IOException Exception throwed by {@link ServerSocket} (SERVERPORT).
      */
     public GroupOwnerSocketHandler(@NonNull Handler handler) throws IOException {

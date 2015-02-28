@@ -23,6 +23,7 @@ import lombok.Getter;
 
 /**
  * Class that represents a Fragment with other Fragments as Tabs.
+ * <p></p>
  * Created by Stefano Cappa on 05/02/15.
  */
 public class TabFragment extends Fragment {
@@ -94,21 +95,21 @@ public class TabFragment extends Fragment {
 
 
     /**
-     * Method to check if tabNum is valid.
-     * tabNum is valid if tabNum >= 1 && tabNum <= this.getWiFiChatFragmentList().size().
-     * </br>
+     * Method to check if tabNum is valid. <p></p>
+     * tabNum is valid if {@code tabNum >= 1 && tabNum <= this.getWiFiChatFragmentList().size()}.
+     * <p></p>
+     * ---------------------------------------------------------------------------------- <p></p>
+     * Example: <p></p>
+     * getWiFiChatFragmentList 0 1 2 3 4 5 6 7 8   : Index of the list. Size is equals to 9 <p></p>
+     * tabNum                  1 2 3 4 5 6 7 8 9   : number of tabs
+     * <p></p>
+     * Condition for tabNum: <p></p>
+     * 1] 0 is reserved to servicelist  i.e. {@code tabNum>=1 } <p></p>
+     * 2] {@code 9 <= size()=9 } i.e. {@code tabNum <= tabFragment.getWiFiChatFragmentList().size()}
+     * <p></p>
+     * Finally 1 AND 2!!! <p></p>
      * ----------------------------------------------------------------------------------
-     * Example:
-     * getWiFiChatFragmentList 0 1 2 3 4 5 6 7 8   <-Index of the list. The Size() == 9
-     * tabNum                  1 2 3 4 5 6 7 8 9   <-number of tabs
-     * </br>
-     * Condition for tabNum:
-     * 1] 0 is reserved to servicelist  ----> tabNum>=1
-     * 2] 9 <= size()=9 ----> tabNum <= tabFragment.getWiFiChatFragmentList().size()
-     * </br>
-     * Finally 1 && 2!!!
-     * ----------------------------------------------------------------------------------
-     * </br>
+     * <p></p>
      * @param tabNum int that represents the tab number to check
      * @return true of false, if the condition is valid or not.
      */

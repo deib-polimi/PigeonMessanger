@@ -15,7 +15,7 @@ import it.polimi.deib.p2pchat.R;
 /**
  * Class that represents the DialogFragment to change the local device name, not only in the GUI
  * but also to be discoverable with this new name, by other devices.
- *
+ * <p></p>
  * Created by Stefano Cappa on 16/02/15.
  */
 public class LocalDeviceDialogFragment extends DialogFragment {
