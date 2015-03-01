@@ -79,6 +79,152 @@ Questo mostra che è possibile rendere scalabile il protocollo WiFi Direct in An
 8. Riattivare la discovery e riconnettersi al dispositivo in uno dei metodi specificati nel caso "Reconnection usage", step 7. 
 9. I messaggi accodati saranno inviati a destinazione in un unico messaggio
 
+
+## Important things
+
+### Configuration
+If you want to configure this app as you prefer, pay attention to: Configuration.java.
+
+If you want to realese this application without debug messages inside chats, change this constant to "false" :
+```java
+    public static final boolean DEBUG_VERSION = true;
+```
+
+If you want to change client's and groupowner's ports, change this:
+```java
+    public static final int GROUPOWNER_PORT = 4545;
+    public static final int CLIENT_PORT = 5000;
+```
+
+If you want to change the maximum number of devices that a GO can manage for the chat, change this:
+```java
+    public static final int THREAD_COUNT = 20;
+```
+
+This attributes are used inside this app to exchange informations betweend devices, like a protocol, to initialize the associated chat:
+```java
+    public static final String MAGICADDRESSKEYWORD = "4<D<D<R<3<5<5";
+    public static final String PLUSSYMBOLS = "++++++++++++++++++++++++++";
+```
+
+If yuo want to change the termination String of all device's names change this attribute :
+```java
+    public static final String SERVICE_INSTANCE = "polimip2p";
+```
+
+The following attributes are used inside this app:
+```java
+    public static final int THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME = 10; //don't touch this!
+    public static final String TXTRECORD_PROP_AVAILABLE = "available";
+    public static final String SERVICE_REG_TYPE = "_presence._tcp";
+    public static final int MESSAGE_READ = 0x400 + 1;
+    public static final int FIRSTMESSAGEXCHANGE = 0x400 + 2;
+    public static final String MESSAGE_READ_MSG = "MESSAGE_READ";
+    public static final String FIRSTMESSAGEXCHANGE_MSG = "FIRSTMESSAGEXCHANGE";
+```
+### Message Filter
+To change/add blacklisted words pay attention to chatmessages.messagefilter.MessageFilter.java.
+Every message that contains one or more of this words will be filtered on reception.
+
+Example: i want remove every message that contains al least on of this words: "illegal", "piracy", "crack", "Piracy".
+Add to the lowerCaseBlackList this words in this way:
+
+```java
+    /**
+     * Private constructor, because is a singleton class.
+     */
+    private MessageFilter() {
+        lowerCaseBlackList = new ArrayList<>();
+        //add here all the words that you want to blacklist
+        lowerCaseBlackList.add("illegal"); // OK
+        lowerCaseBlackList.add("piracy"); // OK
+        lowerCaseBlackList.add("crack"); // OK
+        
+        //useless because ev
+        ery words in this list are elaborated as "lower case".
+        //lowerCaseBlackList.add("Piracy"); // USELESS
+    }
+```
+### The "@UseOnlyPrivateHere" annotation
+I created this annotation as a custom java annotation to advise developers that some attributes must be private.
+Obviously, if you want you can make every public attribute, also with this annotation, but can be very dangerous.
+As you can see in DestinationDeviceTabList (attribute deviceList) and ServiceList (attribute serviceList) there is this annotation because if you access or change this attributes without the custom logicm that i implemented in these classes, to do secure operations, you can obtain Eceptions or other problems.
+These classes remap list's indexes, add/set object without duplicates and in a particular way, that is very necessary to this software. Every time that you want to change something here, you should create a secure method to manage these attributes.
+
+### P2pDestinationDevice, a WifiP2pDevice abstraction
+Nelle API di Android c'è una mancanza enorme, cioè devi metodi per ottenere l'indirizzo ip del dispositivo corrente in modo rapido, facile e sicuro.
+Esistono due modi per farlo, il primo richiede l'esecuzione di comandi linux nella shell, il secondo (quello che ho scelto) è il seguente: per ottenere l'ip del group owner è in onConnectionInfoAvailable, soluzione molto facile, ma per il client bisogna ottenerlo dal Socket, una volta che il client ha stabilito la connessione. Quindi è il GO a ottenere tutti gli indirizzi IP, mentre i client possono conoscere solo quello del proprio GO, ma non il loro.
+Quindi è necessario trasmette l'indirizzo del Client al client stesso, perchè esso lo salvi e lo possa utilizzare per visualizzarlo nell'interfaccia grafica.
+
+#### GO IP Address
+In MainActivity.java
+```java
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
+    (...)
+    //set Group Owner ip address
+    TabFragment.getWiFiP2pServicesFragment().setLocalDeviceIpAddress(p2pInfo.groupOwnerAddress.getHostAddress());
+    (..)
+    }
+```
+
+#### Client IP Address
+In GroupOwnerSocketHandler.java  (GO)
+```java
+    Socket clientSocket = socket.accept(); //because now i'm connected with the client/peer device
+    pool.execute(new ChatManager(clientSocket, handler));
+    ipAddress = clientSocket.getInetAddress(); //local variable with a get method
+```
+
+In MainActivity.java (GO)
+```java
+private void sendAddress(String deviceMacAddress, String name, ChatManager chatManager) {
+    if (chatManager != null) {
+        InetAddress ipAddress;
+        if (socketHandler instanceof GroupOwnerSocketHandler) {
+            ipAddress = ((GroupOwnerSocketHandler) socketHandler).getIpAddress();
+
+            Log.d(TAG, "sending message with MAGICADDRESSKEYWORD, with ipaddress= " + ipAddress.getHostAddress());
+
+            chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD +
+                        "___" + deviceMacAddress + "___" + name + "___" + ipAddress.getHostAddress()).getBytes());
+        } else {
+            Log.d(TAG, "sending message with MAGICADDRESSKEYWORD, without ipaddress");
+            //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i'll have always
+            //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
+            chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD +
+                        "___" + deviceMacAddress + "___" + name).getBytes());
+        }
+    }
+}
+```
+
+In MainActivity.java (CLIENT)
+```java
+if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
+    WifiP2pDevice p2pDevice = new WifiP2pDevice();
+    p2pDevice.deviceAddress = readMessage.split("___")[1];
+    p2pDevice.deviceName = readMessage.split("___")[2];
+    P2pDestinationDevice device = new P2pDestinationDevice(p2pDevice);
+
+    if (readMessage.split("___").length == 3) {
+    Log.d(TAG, "handleMessage, p2pDevice created with: " + p2pDevice.deviceName + ", " + p2pDevice.deviceAddress);
+                        manageAddressMessageReception(device);
+    } else if (readMessage.split("___").length == 4) {
+            device.setDestinationIpAddress(readMessage.split("___")[3]);
+
+            //set client ip address
+            TabFragment.getWiFiP2pServicesFragment().setLocalDeviceIpAddress(device.getDestinationIpAddress());
+
+            Log.d(TAG, "handleMessage, p2pDevice created with: " + p2pDevice.deviceName + ", "
+                                + p2pDevice.deviceAddress + ", " + device.getDestinationIpAddress());
+            manageAddressMessageReception(device);
+    }
+}
+```
+
+
+
 ## License
 
 
