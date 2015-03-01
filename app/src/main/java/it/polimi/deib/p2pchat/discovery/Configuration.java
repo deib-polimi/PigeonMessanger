@@ -26,7 +26,5 @@ public class Configuration {
     public static final String FIRSTMESSAGEXCHANGE_MSG = "FIRSTMESSAGEXCHANGE";
 
     public static final String MAGICADDRESSKEYWORD = "4<D<D<R<3<5<5";
-    public static final String PLUSSYMBOLS = "++++++++++++++++++++++++++" +
-            "++++++++++++++++++++++++++++++++++++++++++++++++++++" +
-            "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+    public static final String PLUSSYMBOLS = "++++++++++++++++++++++++++";
 }

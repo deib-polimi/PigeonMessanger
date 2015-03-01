@@ -648,6 +648,8 @@ public class MainActivity extends ActionBarActivity implements
             case Configuration.MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
 
+                Log.d(TAG, "handleMessage, " + Configuration.MESSAGE_READ_MSG + " case");
+
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
 

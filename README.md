@@ -1,7 +1,7 @@
 # WiFiDirect MultiChat
 
 ## Informations
-WiFiDirect MultiChat (aka MultiChat) is a demostrative Android's application that try to overcome some WiFi-Direct limitations.
+WiFiDirect MultiChat (aka MultiChat) is a demo Android's application that try to overcome some WiFi-Direct limitations.
 I driver degli smarphone commerciali disponibili, al momento, non permettono ad un device di partecipare contemporaneamente a due gruppi WiFi Direct.
 Questa app cerca di superare questo limite facendo si che un utente possa comunicare con un vasto numero di persone nelle vicinanza senza una connessione ad internet, sfruttando comunicazioni point-to-point.
 L'obiettivo principale è quello di gestire contemporaneamente più chat, accodando i messaggi inviati quando la connessione non è disponibile, per inviarli contemporaneamente appena possibile.
@@ -83,7 +83,7 @@ Questo mostra che è possibile rendere scalabile il protocollo WiFi Direct in An
 ## Important things
 
 ### Configuration
-If you want to configure this app as you prefer, pay attention to: Configuration.java.
+If you want to configure this app as you prefer, pay attention to: `Configuration.java`.
 
 If you want to realese this application without debug messages inside chats, change this constant to "false" :
 ```java
@@ -123,7 +123,7 @@ The following attributes are used inside this app:
     public static final String FIRSTMESSAGEXCHANGE_MSG = "FIRSTMESSAGEXCHANGE";
 ```
 ### Message Filter
-To change/add blacklisted words pay attention to chatmessages.messagefilter.MessageFilter.java.
+To change/add blacklisted words pay attention to c`MessageFilter.java`.
 Every message that contains one or more of this words will be filtered on reception.
 
 Example: i want remove every message that contains al least on of this words: "illegal", "piracy", "crack", "Piracy".
@@ -148,7 +148,7 @@ Add to the lowerCaseBlackList this words in this way:
 ### The "@UseOnlyPrivateHere" annotation
 I created this annotation as a custom java annotation to advise developers that some attributes must be private.
 Obviously, if you want you can make every public attribute, also with this annotation, but can be very dangerous.
-As you can see in DestinationDeviceTabList (attribute deviceList) and ServiceList (attribute serviceList) there is this annotation because if you access or change this attributes without the custom logicm that i implemented in these classes, to do secure operations, you can obtain Eceptions or other problems.
+As you can see in `DestinationDeviceTabList` (attribute deviceList) and `ServiceList` (attribute serviceList) there is this annotation because if you access or change this attributes without the custom logic that i implemented in these classes, to do secure operations, you can obtain Exceptions or other problems.
 These classes remap list's indexes, add/set object without duplicates and in a particular way, that is very necessary to this software. Every time that you want to change something here, you should create a secure method to manage these attributes.
 
 ### P2pDestinationDevice, a WifiP2pDevice abstraction
@@ -157,7 +157,7 @@ Esistono due modi per farlo, il primo richiede l'esecuzione di comandi linux nel
 Quindi è necessario trasmette l'indirizzo del Client al client stesso, perchè esso lo salvi e lo possa utilizzare per visualizzarlo nell'interfaccia grafica.
 
 #### GO IP Address
-In MainActivity.java
+In `MainActivity.java`
 ```java
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
@@ -169,14 +169,14 @@ In MainActivity.java
 ```
 
 #### Client IP Address
-In GroupOwnerSocketHandler.java  (GO)
+In `GroupOwnerSocketHandler.java`  (GO)
 ```java
     Socket clientSocket = socket.accept(); //because now i'm connected with the client/peer device
     pool.execute(new ChatManager(clientSocket, handler));
     ipAddress = clientSocket.getInetAddress(); //local variable with a get method
 ```
 
-In MainActivity.java (GO)
+In `MainActivity.java` (GO)
 ```java
 private void sendAddress(String deviceMacAddress, String name, ChatManager chatManager) {
     if (chatManager != null) {
@@ -199,7 +199,7 @@ private void sendAddress(String deviceMacAddress, String name, ChatManager chatM
 }
 ```
 
-In MainActivity.java (CLIENT)
+In `MainActivity.java` (CLIENT)
 ```java
 if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
     WifiP2pDevice p2pDevice = new WifiP2pDevice();
