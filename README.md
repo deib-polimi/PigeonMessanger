@@ -123,10 +123,10 @@ The following attributes are used inside this app:
     public static final String FIRSTMESSAGEXCHANGE_MSG = "FIRSTMESSAGEXCHANGE";
 ```
 ### Message Filter
-To change/add blacklisted words pay attention to c`MessageFilter.java`.
+To change/add blacklisted words pay attention to `MessageFilter.java`.
 Every message that contains one or more of this words will be filtered on reception.
 
-Example: i want remove every message that contains al least on of this words: "illegal", "piracy", "crack", "Piracy".
+Example: i want remove every message that contains at least one of this words: "illegal", "piracy", "crack", "Piracy".
 Add to the lowerCaseBlackList this words in this way:
 
 ```java
@@ -140,8 +140,7 @@ Add to the lowerCaseBlackList this words in this way:
         lowerCaseBlackList.add("piracy"); // OK
         lowerCaseBlackList.add("crack"); // OK
         
-        //useless because ev
-        ery words in this list are elaborated as "lower case".
+        //useless because ev ery words in this list are elaborated as "lower case".
         //lowerCaseBlackList.add("Piracy"); // USELESS
     }
 ```
@@ -226,24 +225,8 @@ if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
 
 
 ## License
+TODO
 
-
-
-
-
-
-
-``` bash
-    $ cd learnDCL
-    $ git branch dcl
-    $ git checkout dcl
-```
-* Open the project contained in the root folder with *Android Studio*.
-* Read **carefully** the class `MainActivity.java` in the `app` module. 
-
-```
-    https://dl.dropboxusercontent.com/blablabla
-```
 
 
 *Stefano*
