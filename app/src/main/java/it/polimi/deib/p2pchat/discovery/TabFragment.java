@@ -114,7 +114,7 @@ public class TabFragment extends Fragment {
      * @return true of false, if the condition is valid or not.
      */
     public boolean isValidTabNum (int tabNum) {
-        return tabNum >= 1 && tabNum <= this.getWiFiChatFragmentList().size();
+        return tabNum >= 1 && tabNum <= wiFiChatFragmentList.size();
     }
 
     /**

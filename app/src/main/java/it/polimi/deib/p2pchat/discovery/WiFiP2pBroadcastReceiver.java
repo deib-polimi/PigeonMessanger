@@ -28,6 +28,8 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.util.Log;
 
+import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
+
 /**
  * A BroadcastReceiver that notifies of important wifi p2p events.
  * This class works without callback interface, because is necessary to call a huge
@@ -112,6 +114,9 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
 
                 //to be sure that the GO icon inside the local device cardview is removed, i call the method to hide this icon
                 TabFragment.getWiFiP2pServicesFragment().hideLocalDeviceGoIcon();
+
+                //to be sure that the ip address inside the local device cardview is removed
+                TabFragment.getWiFiP2pServicesFragment().resetLocalDeviceIpAddress();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

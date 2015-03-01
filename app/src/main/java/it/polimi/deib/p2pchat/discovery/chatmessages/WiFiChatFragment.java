@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.polimi.deib.p2pchat.R;
+import it.polimi.deib.p2pchat.discovery.DestinationDeviceTabList;
 import it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager;
-import it.polimi.deib.p2pchat.discovery.DeviceTabList;
 import it.polimi.deib.p2pchat.discovery.services.ServiceList;
 import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
 import it.polimi.deib.p2pchat.discovery.services.WiFiP2pService;
@@ -126,7 +126,7 @@ public class WiFiChatFragment extends Fragment {
         WaitingToSendQueue.getInstance().getWaitingToSendItemsList(tabNumber).add(chatLine.getText().toString());
 
         //try to reconnect
-        WifiP2pDevice device = DeviceTabList.getInstance().getDevice(tabNumber - 1);
+        WifiP2pDevice device = DestinationDeviceTabList.getInstance().getDevice(tabNumber - 1);
         if(device!=null) {
             WiFiP2pService service = ServiceList.getInstance().getServiceByDevice(device);
             Log.d(TAG, "device address: " + device.deviceAddress + ", service: " + service);

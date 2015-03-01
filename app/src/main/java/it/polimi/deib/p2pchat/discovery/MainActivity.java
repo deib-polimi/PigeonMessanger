@@ -49,11 +49,14 @@ import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsServiceResponse
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomizableActionListener;
 import it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment;
 import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
+import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
+import it.polimi.deib.p2pchat.discovery.model.P2pDestinationDevice;
 import it.polimi.deib.p2pchat.discovery.services.ServiceList;
 import it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -131,7 +134,7 @@ public class MainActivity extends ActionBarActivity implements
 
             //Finally, add device to the DeviceTabList, only if required.
             //Go to addDeviceIfRequired()'s javadoc for more informations.
-            DeviceTabList.getInstance().addDeviceIfRequired(service.getDevice());
+            DestinationDeviceTabList.getInstance().addDeviceIfRequired(new P2pDestinationDevice(service.getDevice()));
 
             this.connectP2p(service);
         }
@@ -393,8 +396,8 @@ public class MainActivity extends ActionBarActivity implements
     private void connectP2p(WiFiP2pService service) {
         Log.d(TAG, "connectP2p, tabNum before = " + tabNum);
 
-        if (DeviceTabList.getInstance().containsElement(service.getDevice())) {
-            this.tabNum = DeviceTabList.getInstance().indexOfElement(service.getDevice()) + 1;
+        if (DestinationDeviceTabList.getInstance().containsElement(new P2pDestinationDevice(service.getDevice()))) {
+            this.tabNum = DestinationDeviceTabList.getInstance().indexOfElement(new P2pDestinationDevice(service.getDevice())) + 1;
         }
 
         if (this.tabNum == -1) {
@@ -450,7 +453,7 @@ public class MainActivity extends ActionBarActivity implements
 
         //Finally, add device to the DeviceTabList, only if required.
         //Go to addDeviceIfRequired()'s javadoc for more informations.
-        DeviceTabList.getInstance().addDeviceIfRequired(service.getDevice());
+        DestinationDeviceTabList.getInstance().addDeviceIfRequired(new P2pDestinationDevice(service.getDevice()));
 
         this.connectP2p(service);
     }
@@ -464,10 +467,21 @@ public class MainActivity extends ActionBarActivity implements
      */
     private void sendAddress(String deviceMacAddress, String name, ChatManager chatManager) {
         if (chatManager != null) {
-            Log.d(TAG, "sending message with MAGICADDRESSKEYWORD");
-            //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i will have always
-            //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
-            chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD + "___" + deviceMacAddress + "___" + name).getBytes());
+            InetAddress ipAddress;
+            if (socketHandler instanceof GroupOwnerSocketHandler) {
+                ipAddress = ((GroupOwnerSocketHandler) socketHandler).getIpAddress();
+
+                Log.d(TAG, "sending message with MAGICADDRESSKEYWORD, with ipaddress= " + ipAddress.getHostAddress());
+
+                chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD +
+                        "___" + deviceMacAddress + "___" + name + "___" + ipAddress.getHostAddress()).getBytes());
+            } else {
+                Log.d(TAG, "sending message with MAGICADDRESSKEYWORD, without ipaddress");
+                //i use "+" symbols as initial spacing to be sure that also if some initial character will be lost i'll have always
+                //the Configuration.MAGICADDRESSKEYWORD and i can set the associated device to the correct WifiChatFragment.
+                chatManager.write((Configuration.PLUSSYMBOLS + Configuration.MAGICADDRESSKEYWORD +
+                        "___" + deviceMacAddress + "___" + name).getBytes());
+            }
         }
     }
 
@@ -520,7 +534,7 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     /**
-     * This method sets the name of this {@link it.polimi.deib.p2pchat.discovery.LocalP2PDevice}
+     * This method sets the name of this {@link it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice}
      * in the UI and inside the device. In this way, all other devices can see this updated name during the discovery phase.
      * Attention, WifiP2pManager uses an annotation called @hide to hide the method setDeviceName, in Android SDK.
      * This method uses Java reflection to call this hidden method.
@@ -580,6 +594,9 @@ public class MainActivity extends ActionBarActivity implements
                 socketHandler = new GroupOwnerSocketHandler(this.getHandler());
                 socketHandler.start();
 
+                //set Group Owner ip address
+                TabFragment.getWiFiP2pServicesFragment().setLocalDeviceIpAddress(p2pInfo.groupOwnerAddress.getHostAddress());
+
                 //if this device is the Group Owner, i sets the GO's
                 //ImageView of the cardview inside the WiFiP2pServicesFragment.
                 TabFragment.getWiFiP2pServicesFragment().showLocalDeviceGoIcon();
@@ -602,7 +619,6 @@ public class MainActivity extends ActionBarActivity implements
 
         this.setTabFragmentToPage(tabNum);
     }
-
 
     /**
      * Method called automatically by Android when
@@ -642,8 +658,26 @@ public class MainActivity extends ActionBarActivity implements
 
 
                 //if the message received contains Configuration.MAGICADDRESSKEYWORD is because now someone want to connect to this device
-                if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD) && readMessage.split("___").length == 3) {
-                    manageAddressMessageReception(readMessage);
+                if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
+
+                    WifiP2pDevice p2pDevice = new WifiP2pDevice();
+                    p2pDevice.deviceAddress = readMessage.split("___")[1];
+                    p2pDevice.deviceName = readMessage.split("___")[2];
+                    P2pDestinationDevice device = new P2pDestinationDevice(p2pDevice);
+
+                    if (readMessage.split("___").length == 3) {
+                        Log.d(TAG, "handleMessage, p2pDevice created with: " + p2pDevice.deviceName + ", " + p2pDevice.deviceAddress);
+                        manageAddressMessageReception(device);
+                    } else if (readMessage.split("___").length == 4) {
+                        device.setDestinationIpAddress(readMessage.split("___")[3]);
+
+                        //set client ip address
+                        TabFragment.getWiFiP2pServicesFragment().setLocalDeviceIpAddress(device.getDestinationIpAddress());
+
+                        Log.d(TAG, "handleMessage, p2pDevice created with: " + p2pDevice.deviceName + ", "
+                                + p2pDevice.deviceAddress + ", " + device.getDestinationIpAddress());
+                        manageAddressMessageReception(device);
+                    }
                 }
 
 
@@ -684,26 +718,23 @@ public class MainActivity extends ActionBarActivity implements
      * and to prepare and to initialize everything to make chatting possible.
      * </br>
      * This is a critical method. Don't remove the Log.d messages.
-     * @param readMessage String that represent the message received
-     *                    form {@link it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager}.
+     *
+     * @param p2pDevice {@link it.polimi.deib.p2pchat.discovery.model.P2pDestinationDevice} that represent
+     *                  the device from the string message obtained in {@link #handleMessage(android.os.Message)} in
+     *                  {@code case Configuration.MESSAGE_READ}.
      */
-    private void manageAddressMessageReception(String readMessage) {
-        WifiP2pDevice p2pDevice = new WifiP2pDevice();
-        p2pDevice.deviceAddress = readMessage.split("___")[1];
-        p2pDevice.deviceName = readMessage.split("___")[2];
+    private void manageAddressMessageReception(P2pDestinationDevice p2pDevice) {
 
-        Log.d(TAG, "handleMessage, p2pDevice created with: " + p2pDevice.deviceName + ", " + p2pDevice.deviceAddress);
-
-        if (!DeviceTabList.getInstance().containsElement(p2pDevice)) {
+        if (!DestinationDeviceTabList.getInstance().containsElement(p2pDevice)) {
             Log.d(TAG, "handleMessage, p2pDevice IS NOT in the DeviceTabList -> OK! ;)");
 
-            if (DeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
+            if (DestinationDeviceTabList.getInstance().getDevice(tabNum - 1) == null) {
 
-                DeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
+                DestinationDeviceTabList.getInstance().setDevice(tabNum - 1, p2pDevice);
 
                 Log.d(TAG, "handleMessage, p2pDevice in DeviceTabList at position tabnum= " + (tabNum - 1) + " is null");
             } else {
-                DeviceTabList.getInstance().addDeviceIfRequired(p2pDevice);
+                DestinationDeviceTabList.getInstance().addDeviceIfRequired(p2pDevice);
 
                 Log.d(TAG, "handleMessage, p2pDevice in DeviceTabList at position tabnum= " + (tabNum - 1) + " isn't null");
             }
@@ -716,7 +747,7 @@ public class MainActivity extends ActionBarActivity implements
         // and i need to choose a correct index to prevent Exception
 
         //update tabNum to select the tab associated to p2pDevice
-        tabNum = DeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
+        tabNum = DestinationDeviceTabList.getInstance().indexOfElement(p2pDevice) + 1;
 
         Log.d(TAG, "handleMessage, updated tabNum = " + tabNum);
 
@@ -727,14 +758,14 @@ public class MainActivity extends ActionBarActivity implements
             //add a new tab, only if necessary.
             //i mean that if there is a conversation created and stopped,
             // i must restart this one and i don't create another one.
-            if (tabNum > tabFragment.getWiFiChatFragmentList().size()) {
+            if (tabNum > TabFragment.getWiFiChatFragmentList().size()) {
                 WiFiChatFragment frag = WiFiChatFragment.newInstance();
                 //adds a new fragment, sets the tabNumber with listsize+1, because i want to add an element to this list and get
                 //this position, but at the moment the list is not updated. When i use listsize+1
                 // i'm considering "+1" as the new element that i want to add.
-                frag.setTabNumber(tabFragment.getWiFiChatFragmentList().size() + 1);
+                frag.setTabNumber(TabFragment.getWiFiChatFragmentList().size() + 1);
                 //add new tab
-                tabFragment.getWiFiChatFragmentList().add(frag);
+                TabFragment.getWiFiChatFragmentList().add(frag);
                 tabFragment.getMSectionsPagerAdapter().notifyDataSetChanged();
             }
 
@@ -761,6 +792,7 @@ public class MainActivity extends ActionBarActivity implements
 
         setContentView(R.layout.main);
 
+        //activate the wakelock
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         this.setupToolBar();

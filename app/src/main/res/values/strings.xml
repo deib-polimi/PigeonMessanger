@@ -5,5 +5,6 @@
     <string name="txt_hint">Type Message</string>
     <string name="app_name">WiFiDirect Chat</string>
     <string name="choose_device_name">Choose your device name"</string>
+    <string name="ip_not_available">IP not available</string>
 
 </resources>

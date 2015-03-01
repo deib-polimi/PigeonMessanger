@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import it.polimi.deib.p2pchat.R;
-import it.polimi.deib.p2pchat.discovery.LocalP2PDevice;
+import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
 
 import it.polimi.deib.p2pchat.discovery.MainActivity;
 import it.polimi.deib.p2pchat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment;
@@ -111,6 +111,29 @@ public class WiFiP2pServicesFragment extends Fragment implements
     }
 
     /**
+     * Method that remove the ip address in the local device card view to replace
+     * with a warning that the ip is not available.
+     */
+    public void resetLocalDeviceIpAddress() {
+        if(getView()!=null && getView().findViewById(R.id.localDeviceIpAddress)!=null) {
+            TextView ipAddress = (TextView) getView().findViewById(R.id.localDeviceIpAddress);
+            ipAddress.setText(getResources().getString(R.string.ip_not_available));
+        }
+    }
+
+    /**
+     * Method that set the ip address in the local device card view.
+     *
+     * @param ipAddress String that represent the IP address to set.
+     */
+    public void setLocalDeviceIpAddress(String ipAddress) {
+        if(getView()!=null && getView().findViewById(R.id.localDeviceIpAddress)!=null) {
+            TextView ipAddressTextView = (TextView) getView().findViewById(R.id.localDeviceIpAddress);
+            ipAddressTextView.setText(ipAddress);
+        }
+    }
+
+    /**
      * Method to hide a GO Icon inside the local device card view.
      * This is useful to remove the icon after a event, like "disconnect".
      */
@@ -149,8 +172,8 @@ public class WiFiP2pServicesFragment extends Fragment implements
         TextView localDeviceAddressText = (TextView) rootView.findViewById(R.id.localDeviceAddress);
         localDeviceAddressText.setText(LocalP2PDevice.getInstance().getLocalDevice().deviceAddress);
 
-        CardView cardviewLocalDevice = (CardView) rootView.findViewById(R.id.cardviewLocalDevice);
-        cardviewLocalDevice.setOnClickListener(new OnClickListenerLocalDevice(this));
+        CardView cardViewLocalDevice = (CardView) rootView.findViewById(R.id.cardviewLocalDevice);
+        cardViewLocalDevice.setOnClickListener(new OnClickListenerLocalDevice(this));
 
         return rootView;
     }

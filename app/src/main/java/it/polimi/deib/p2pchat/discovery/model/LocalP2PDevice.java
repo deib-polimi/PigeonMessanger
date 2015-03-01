@@ -1,4 +1,4 @@
-package it.polimi.deib.p2pchat.discovery;
+package it.polimi.deib.p2pchat.discovery.model;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 

@@ -22,12 +22,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import it.polimi.deib.p2pchat.discovery.Configuration;
+import lombok.Getter;
 
 /**
  * Class the implements the ServerSocket Handler. It's used only by the Group Owner.
@@ -40,6 +43,7 @@ public class GroupOwnerSocketHandler extends Thread {
 
     private ServerSocket socket = null;
     private Handler handler;
+    @Getter InetAddress ipAddress;
 
     /**
      * Class constructor.
@@ -93,7 +97,9 @@ public class GroupOwnerSocketHandler extends Thread {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
                 if(socket!=null && !socket.isClosed()) {
-                    pool.execute(new ChatManager(socket.accept(), handler));
+                    Socket clientSocket = socket.accept(); //because now i'm connected with the client/peer device
+                    pool.execute(new ChatManager(clientSocket, handler));
+                    ipAddress = clientSocket.getInetAddress();
                     Log.d(TAG, "Launching the I/O handler");
                 }
             } catch (IOException e) {
