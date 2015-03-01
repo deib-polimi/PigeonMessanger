@@ -48,6 +48,8 @@ import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsSdTxtRecordList
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsServiceResponseListener;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomizableActionListener;
 import it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment;
+import it.polimi.deib.p2pchat.discovery.chatmessages.messagefilter.MessageException;
+import it.polimi.deib.p2pchat.discovery.chatmessages.messagefilter.MessageFilter;
 import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendQueue;
 import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
 import it.polimi.deib.p2pchat.discovery.model.P2pDestinationDevice;
@@ -651,9 +653,24 @@ public class MainActivity extends ActionBarActivity implements
 
                 Log.d(TAG, "Message: " + readMessage);
 
-                if (readMessage.length() <= 1) {
-                    Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
-                    return true;
+                //message filter usage
+                try {
+                    MessageFilter.getInstance().isFiltered(readMessage);
+                } catch(MessageException e) {
+                    if(e.getReason() == MessageException.Reason.NULLMESSAGE) {
+                        Log.d(TAG, "handleMessage, filter activated because the message is null = " + readMessage);
+                        return true;
+                    } else {
+                        if(e.getReason() == MessageException.Reason.MESSAGETOOSHORT) {
+                            Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
+                            return true;
+                        } else {
+                            if(e.getReason() == MessageException.Reason.MESSAGEBLACKLISTED) {
+                                Log.d(TAG, "handleMessage, filter activated because the message contains blacklisted words. Message = " + readMessage);
+                                return true;
+                            }
+                        }
+                    }
                 }
 
 
