@@ -1,83 +1,82 @@
-# WiFiDirect MultiChat
+# Pidgeot
 
 ## Informations
-WiFiDirect MultiChat (aka MultiChat) is a demo Android's application that try to overcome some WiFi-Direct limitations.
-I driver degli smarphone commerciali disponibili, al momento, non permettono ad un device di partecipare contemporaneamente a due gruppi WiFi Direct.
-Questa app cerca di superare questo limite facendo si che un utente possa comunicare con un vasto numero di persone nelle vicinanza senza una connessione ad internet, sfruttando comunicazioni point-to-point.
-L'obiettivo principale è quello di gestire contemporaneamente più chat, accodando i messaggi inviati quando la connessione non è disponibile, per inviarli contemporaneamente appena possibile.
+WiFiDirect MultiChat (aka Pidgeot) is a DEMO Android's application that try to overcome some WiFi-Direct limitations.
+At the moment, the wifi diver of commercial devices don't allow a device to partecipate simultaneosly in two WiFi-Direct's groups.
+This app tries to overcome this limitation, indeed, a user can communicate with a large number of nearby people without an internet connection, using point-to-point communications.
+The main goal is the simultaneous management of multiple chats, queuing messages sent when the connection is not available and send them at the same time as soon as possible.
 
-MultiChat è stata creata per Android 4.4 (KitKat) o superiore. Questa scelta è legata al fatto che WiFiDirect nelle versioni precedenti si è dimostrato troppo instabile ed inaffidabile.
+Pidgeot requires Android 4.4 KitKat (API 19) or higher. This choice is related to to the fact that in previous versions, this protocol was unstable and unreliable.
 
-E' importante ricordare che si tratta di una applicazione dimostrativa, quindi funzionalità come la gestione della rotazione dello schermo, standby del dispositivo, wifi disattivato and so on, non sono gestite come in un prodotto commerciale.
+It's important to remember that this is a demo application, so features like the management of screen's rotation, standby device, wifi not available and so on, are not managed as a commercial product.
 
 ## Results
 VIDEO YOUTUBE 
 
-Come si nota dal video, l'app funziona perfettamente e con buone performance.<br/>
-Il problema è la fase di Discovery del protocollo / l'implementazione di WiFi-Direct in Android, infatti:<br/>
-1. Il tempo di ricerca dei dispositivi è troppo elevato al crescere del numero di utenti<br/>
-2. Dopo un certo tempo, il dispositivo non risulta più rilevabile dagli altri, quindi bisogna riavviare la Discovery su tutti i device<br/>
-3. A volte la parte wifi di Android crasha e l'unico modo per risolvere il problema è un completo reboot del dispositivo (questa sitauzione è riconoscibile dalle impostazioni Wifi di android, dove improvvisamente non risulta più un grado di scansionare le rete wifi)
+As you can see, Pidgeot works with good performances.<br/>
+The main problems are the "Discovery Phase" of this protocol and the WiFi-Direct implementation in Android, in fact:<br/>
+1. The discovery time is too high when the number of devices increases <br/>
+2. After a certain time, a device is no longer discoverable from others, so you need to restart the Discovery Phase on all devices <br/>
+3. Sometimes, the WiFi part of Android crashes and the only way to solve this annoying problem is a complete reboot of the device (this situation is recognizable when Android can't find other network in WiFi Setting's app).
 
-Questo mostra che è possibile rendere scalabile il protocollo WiFi Direct in Android in un caso particolare di utilizzo .
-
+This shows that it's possible to extend the WiFi-Direct protocol in Android in some particular and limited scenarios, for example a chat.
 
 ## News
-- *03/01/2015* - **MultiChat** public release
+- *03/02/2015* - **Pidgeot** Alpha 1 public release
 
 
 ## Features
-1. **Cambiare il nome del dispositivo** tramite Java Reflection
-2. Visualizzazione dei dispositivi nelle vicinanze
-3. Connessione / disconnessione tra dispositivi
-4. Visualizzazione degli indirizzi ip dei dispositivi tramite scambio di messaggi (funzione non disponibile nelle api ufficiali)
-5. Filtro dei messaggi in ricezione se contengono parole presenti in una blacklist (disattivato di default)
-6. Filtro dei messaggi troppo brevi o vuoti (attivato di default)
-7. Creazione di una chat tra GO e un client
-8. Gestione di infinite chat, accessibili tramite tab
-9. Riconnessione automatica inviando un messaggio in una chat aperta precedentemente, se il dispositivo associato è discoverable
-10. Accodamento dei messaggi scritti in una chat nel caso in cui il dispositivo non sia discoverable, ed invio automatico al successvo tentativo di riconnessione
-11. *"Eternal Discovery"* che permette il riavvio della fase di Discovery ad ogni evento di disconnessione o errore.
+You can:
+1. **change the device name** with Java Reflection
+2. show a list of nearby devices
+3. manage connection and disconnection between devices
+4. show the ip address of a device, also if it's a client (not available in Android's official API)
+5. block incoming messages with blacklisted words (not enabled by default)
+6. block incoming messages if too short or empty (enabled by default)
+7. create a chat between a GO and a client
+8. manage an infinite number of chats
+9. sending messages in a chat, previously stopped, if the associated device is discoverable
+10. enqueue messages if the device is not discoverable, and send all of them at the next attempt to reconnect
+11. use *"Eternal Discovery"*, a way to restart the discovery phase every time there are errors or disconnections
 
-## Possibile future extensions
-- [ ] Connessione di più client allo stesso gruppo owner (ma senza chat di gruppo)
-- [ ] Chat di gruppo, cioè il GO riceve i messaggi di un client e li reinvia a tutti gli altri suoi client in broadcast
-- [ ] Chat di gruppo private tra clients. Cioè un client usa il GO come server per inviare messaggi ad un altro client, con cui non è direttamente connesso. In questo caso è necessario prevedere meccanismi di sicurezza per evitare che il GO possa leggere i messaggi privati.
-- [ ] Utilizzare dispositivi intermedi come "ponti radio" per inviare messaggi a lunga distanza, conoscendo in precedenza il macaddress del dispositivo di destinazione (poichè non discoverable, non essendo nel range del mittente).
+## Future extensions
+- [ ] Connect more clients at the same GO without limitations
+- [ ] Group chats where the GO receives messages from a client and it sends these messages to all other clients in broadcast
+- [ ] Private chats between clients, i.e. a client uses his GO like a server to send private messages to another client, because in WiFi-Direct the communication between clients in a group is impossible. In this case is necessary to provide security mechanisms, like encryption, because a GO should never read private messages between its clients.
 - [ ] and so on... ;)
 
 ## Usage
 ### General usage
-1. Attivare il WiFi su tutti i dispositivi
-2. Aprire l'app su tutti i dispositivi scelti
-3. Scegliere i nomi dei dispositivi toccando la "cardview" sotto la scritta "This device"
-2. Attendere la ricerca dei dispositivi nelle vicinanze
-3. Collegarsi ad un dispositivo toccando l'elemento della lista
-4. Chattare
+1. Activate WiFi on all devices
+2. Open this app on all devices
+3. Touch the "cardview" under the words "This Device" to choose the device name
+2. Wait until devices are discovered
+3. Connect your device to another one touching an element in the list under the words "Other Devices"
+4. Chat with this device
 
 ### Reconnection usage
-1. Attivare il WiFi su tutti i dispositivi
-2. Aprire l'app su tutti i dispositivi scelti
-3. Scegliere i nomi dei dispositivi toccando la "cardview" sotto la scritta "This device"
-2. Attendere la ricerca dei dispositivi nelle vicinanze
-3. Collegarsi ad un dispositivo toccando l'elemento della lista
-4. Chattare
-5. Disconnettere uno dei device, cliccando sulla seconda icona nella toolbar
-6. Attendere alcuni secondi che "Eternal Discovery" trovi nuovamente il dispositivo
-7. Scrivere un messaggio nella chat ed attendere la riconnessione automatica e l'invio di tale messaggeio. In alternativa collegarsi manualmente al dispositivo per continuare la chat.
+1. Activate WiFi on all devices
+2. Open this app on all devices
+3. Touch the "cardview" under the words "This Device" to choose the device name
+2. Wait until devices are discovered
+3. Connect your device to another one touching an element in the list under the words "Other Devices"
+4. Chat with this device
+5. Disconnect one device clicking on the second icon in the toolbar
+6. Wait some seconds, because the "Eternal Discovery" requires some seconds to re-discover this device
+7. Write a message in the chat and wait the automatic reconnection. Alternatively connect manually to the device to continue the chat.
 
 ### Queuing messages usage
-1. Attivare il WiFi su tutti i dispositivi
-2. Aprire l'app su tutti i dispositivi scelti
-3. Scegliere i nomi dei dispositivi toccando la "cardview" sotto la scritta "This device"
-2. Attendere la ricerca dei dispositivi nelle vicinanze
-3. Collegarsi ad un dispositivo toccando l'elemento della lista
-4. Chattare
-5. Disconnettere uno dei device, cliccando sulla seconda icona nella toolbar
-6. Disattivare la discovery riavviata da "Eternal Discovery" in modo che la lista di "Other devices" sia vuota
-7. Scrivere alcuni messaggi nella chat in modo che siano accodati
-8. Riattivare la discovery e riconnettersi al dispositivo in uno dei metodi specificati nel caso "Reconnection usage", step 7. 
-9. I messaggi accodati saranno inviati a destinazione in un unico messaggio
+1. Activate WiFi on all devices
+2. Open this app on all devices
+3. Touch the "cardview" under the words "This Device" to choose the device name
+2. Wait until devices are discovered
+3. Connect your device to another one touching an element in the list under the words "Other Devices"
+4. Chat with this device
+5. Disconnect one device clicking on the second icon in the toolbar
+6. Disable the Discovery Phase that was automatically restarted by "Eternal Discovery", so  the list under "Other Devices" will be empty
+7. Write some messages in the chat. As you can see the connection is not possibile, but don't despare, because this app is able to enqueue your messages
+8. Restart the Discovery Phase e reconnect to the device in one of the methods described above ("Reconnection usage", step 7) 
+9. All messages in the queue will be automatically sent to destination in only one message 
 
 
 ## Important things
@@ -85,12 +84,12 @@ Questo mostra che è possibile rendere scalabile il protocollo WiFi Direct in An
 ### Configuration
 If you want to configure this app as you prefer, pay attention to: `Configuration.java`.
 
-If you want to realese this application without debug messages inside chats, change this constant to "false" :
+If you want to release this application without debug messages inside chats, change this constant to "false" :
 ```java
     public static final boolean DEBUG_VERSION = true;
 ```
 
-If you want to change client's and groupowner's ports, change this:
+If you want to change client's and GO's ports, change this:
 ```java
     public static final int GROUPOWNER_PORT = 4545;
     public static final int CLIENT_PORT = 5000;
@@ -101,7 +100,7 @@ If you want to change the maximum number of devices that a GO can manage for the
     public static final int THREAD_COUNT = 20;
 ```
 
-This attributes are used inside this app to exchange informations betweend devices, like a protocol, to initialize the associated chat:
+This attributes are used inside this app to exchange information between devices, like a protocol, to initialize the associated chat:
 ```java
     public static final String MAGICADDRESSKEYWORD = "4<D<D<R<3<5<5";
     public static final String PLUSSYMBOLS = "++++++++++++++++++++++++++";
@@ -147,13 +146,15 @@ Add to the lowerCaseBlackList this words in this way:
 ### The "@UseOnlyPrivateHere" annotation
 I created this annotation as a custom java annotation to advise developers that some attributes must be private.
 Obviously, if you want you can make every public attribute, also with this annotation, but can be very dangerous.
-As you can see in `DestinationDeviceTabList` (attribute deviceList) and `ServiceList` (attribute serviceList) there is this annotation because if you access or change this attributes without the custom logic that i implemented in these classes, to do secure operations, you can obtain Exceptions or other problems.
+As you can see in `DestinationDeviceTabList` (attribute deviceList) and `ServiceList` (attribute serviceList) there is this annotation, because if you access or change this attributes without the custom logic that i implemented in these classes, to do secure operations, you can obtain Exceptions or other problems.
 These classes remap list's indexes, add/set object without duplicates and in a particular way, that is very necessary to this software. Every time that you want to change something here, you should create a secure method to manage these attributes.
 
 ### P2pDestinationDevice, a WifiP2pDevice abstraction
-Nelle API di Android c'è una mancanza enorme, cioè devi metodi per ottenere l'indirizzo ip del dispositivo corrente in modo rapido, facile e sicuro.
-Esistono due modi per farlo, il primo richiede l'esecuzione di comandi linux nella shell, il secondo (quello che ho scelto) è il seguente: per ottenere l'ip del group owner è in onConnectionInfoAvailable, soluzione molto facile, ma per il client bisogna ottenerlo dal Socket, una volta che il client ha stabilito la connessione. Quindi è il GO a ottenere tutti gli indirizzi IP, mentre i client possono conoscere solo quello del proprio GO, ma non il loro.
-Quindi è necessario trasmette l'indirizzo del Client al client stesso, perchè esso lo salvi e lo possa utilizzare per visualizzarlo nell'interfaccia grafica.
+In Android you can't retrieve the current IP Address in a quick and easy way, because this method is not available in Google APIs.
+Its possible to do this in two ways: the first one requires to execute a shell's command, the second one requires only java.
+I chose the second solution, because it's quicker to implement. In particular, i get the GO's IP Address inside onConnectionInfoAvailable, but to retrieve the client's IP Address i need to ask this information to the socket on GO's side when the connection has been established.
+Only GOs can retrieve Client's IP addresses, because clients can obtain only the GO's IP address.
+Therefore, it's necessary to send the client's IP address to the client itself from its GO, to be able to store them in a variable and use this information for something else, for example to show the ip in the UI or to open other sockets.
 
 #### GO IP Address
 In `MainActivity.java`
