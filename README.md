@@ -30,21 +30,21 @@ Questo mostra che è possibile rendere scalabile il protocollo WiFi Direct in An
 1. **Cambiare il nome del dispositivo** tramite Java Reflection
 2. Visualizzazione dei dispositivi nelle vicinanze
 3. Connessione / disconnessione tra dispositivi
-4. Connessione di più client allo stesso gruppo owner (ma senza chat di gruppo)
-5. Visualizzazione degli indirizzi ip dei dispositivi tramite scambio di messaggi (funzione non disponibile nelle api ufficiali)
-6. Filtro dei messaggi in ricezione se contengono parole presenti in una blacklist (disattivato di default)
-7. Filtro dei messaggi troppo brevi o vuoti (attivato di default)
-8. Creazione di una chat tra GO e un client
-9. Gestione di infinite chat, accessibili tramite tab
-10. Riconnessione automatica inviando un messaggio in una chat aperta precedentemente, se il dispositivo associato è discoverable
-11. Accodamento dei messaggi scritti in una chat nel caso in cui il dispositivo non sia discoverable, ed invio automatico al successvo tentativo di riconnessione
-12. *"Eternal Discovery"* che permette il riavvio della fase di Discovery ad ogni evento di disconnessione o errore.
+4. Visualizzazione degli indirizzi ip dei dispositivi tramite scambio di messaggi (funzione non disponibile nelle api ufficiali)
+5. Filtro dei messaggi in ricezione se contengono parole presenti in una blacklist (disattivato di default)
+6. Filtro dei messaggi troppo brevi o vuoti (attivato di default)
+7. Creazione di una chat tra GO e un client
+8. Gestione di infinite chat, accessibili tramite tab
+9. Riconnessione automatica inviando un messaggio in una chat aperta precedentemente, se il dispositivo associato è discoverable
+10. Accodamento dei messaggi scritti in una chat nel caso in cui il dispositivo non sia discoverable, ed invio automatico al successvo tentativo di riconnessione
+11. *"Eternal Discovery"* che permette il riavvio della fase di Discovery ad ogni evento di disconnessione o errore.
 
 ## Possibile future extensions
-* Chat di gruppo, cioè il GO riceve i messaggi di un client e li reinvia a tutti gli altri suoi client in broadcast
-* Chat di gruppo private tra clients. Cioè un client usa il GO come server per inviare messaggi ad un altro client, con cui non è direttamente connesso. In questo caso è necessario prevedere meccanismi di sicurezza per evitare che il GO possa leggere i messaggi privati.
-* Utilizzare dispositivi intermedi come "ponti radio" per inviare messaggi a lunga distanza, conoscendo in precedenza il macaddress del dispositivo di destinazione (poichè non discoverable, non essendo nel range del mittente).
-* and so on... ;)
+- [ ] Connessione di più client allo stesso gruppo owner (ma senza chat di gruppo)
+- [ ] Chat di gruppo, cioè il GO riceve i messaggi di un client e li reinvia a tutti gli altri suoi client in broadcast
+- [ ] Chat di gruppo private tra clients. Cioè un client usa il GO come server per inviare messaggi ad un altro client, con cui non è direttamente connesso. In questo caso è necessario prevedere meccanismi di sicurezza per evitare che il GO possa leggere i messaggi privati.
+- [ ] Utilizzare dispositivi intermedi come "ponti radio" per inviare messaggi a lunga distanza, conoscendo in precedenza il macaddress del dispositivo di destinazione (poichè non discoverable, non essendo nel range del mittente).
+- [ ] and so on... ;)
 
 ## Usage
 ### General usage
