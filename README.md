@@ -1,19 +1,19 @@
-# Pidgeot
+# Pigeon Messenger
 
 ## Informations
-WiFiDirect MultiChat (aka Pidgeot) is a DEMO Android's application that try to overcome some WiFi-Direct limitations.
+WiFiDirect MultiChat (aka Pigeon Messenger) is a DEMO Android's application that try to overcome some WiFi-Direct limitations.
 At the moment, the wifi diver of commercial devices don't allow a device to partecipate simultaneosly in two WiFi-Direct's groups.
 This app tries to overcome this limitation, indeed, a user can communicate with a large number of nearby people without an internet connection, using point-to-point communications.
 The main goal is the simultaneous management of multiple chats, queuing messages sent when the connection is not available and send them at the same time as soon as possible.
 
-Pidgeot requires Android 4.4 KitKat (API 19) or higher. This choice is related to to the fact that in previous versions, this protocol was unstable and unreliable.
+Pigeon Messenger requires Android 4.4 KitKat (API 19) or higher. This choice is related to to the fact that in previous versions, this protocol was unstable and unreliable.
 
 It's important to remember that this is a demo application, so features like the management of screen's rotation, standby device, wifi not available and so on, are not managed as a commercial product.
 
 ## Results
 VIDEO YOUTUBE 
 
-As you can see, Pidgeot works with good performances.<br/>
+As you can see, Pigeon Messenger works with good performances.<br/>
 The main problems are the "Discovery Phase" of this protocol and the WiFi-Direct implementation in Android, in fact:<br/>
 1. The discovery time is too high when the number of devices increases <br/>
 2. After a certain time, a device is no longer discoverable from others, so you need to restart the Discovery Phase on all devices <br/>
@@ -22,7 +22,7 @@ The main problems are the "Discovery Phase" of this protocol and the WiFi-Direct
 This shows that it's possible to extend the WiFi-Direct protocol in Android in some particular and limited scenarios, for example a chat.
 
 ## News
-- *03/02/2015* - **Pidgeot** Alpha 1 public release
+- *03/02/2015* - **Pigeon Messenger** Alpha 1 public release
 
 
 ## Features

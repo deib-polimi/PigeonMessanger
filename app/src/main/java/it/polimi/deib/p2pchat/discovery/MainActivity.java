@@ -572,7 +572,7 @@ public class MainActivity extends ActionBarActivity implements
     private void setupToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("WiFiDirect Chat");
+            toolbar.setTitle(getResources().getString(R.string.app_name));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.inflateMenu(R.menu.action_items);
             this.setSupportActionBar(toolbar);
