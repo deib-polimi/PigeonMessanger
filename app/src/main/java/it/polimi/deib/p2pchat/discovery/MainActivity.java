@@ -77,7 +77,6 @@ import lombok.Setter;
  */
 public class MainActivity extends ActionBarActivity implements
         WiFiP2pServicesFragment.DeviceClickListener,
-        WifiP2pManager.ChannelListener,
         WiFiChatFragment.AutomaticReconnectionListener,
         Handler.Callback,
         ConnectionInfoListener {
@@ -805,20 +804,21 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    @Override
-    public void onChannelDisconnected() {
-        // we will try once more
-        if (manager != null && !retryChannel) {
-            Toast.makeText(this, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
-//            resetData();
-            this.setTabFragmentToPage(0);
-            retryChannel = true;
-            manager.initialize(this, getMainLooper(), this);
-        } else {
-            Toast.makeText(this, "Severe! Channel is probably lost permanently. Try Disable/Re-Enable P2P.", Toast.LENGTH_LONG).show();
-//            P2PGroups.getInstance().getGroupList().clear();
-        }
-    }
+    //NOT IMPLEMENTED BUT CAN BE USEFUL
+//    @Override
+//    public void onChannelDisconnected() {
+//        // we will try once more
+//        if (manager != null && !retryChannel) {
+//            Toast.makeText(this, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
+////            resetData();
+//            this.setTabFragmentToPage(0);
+//            retryChannel = true;
+//            manager.initialize(this, getMainLooper(), this);
+//        } else {
+//            Toast.makeText(this, "Severe! Channel is probably lost permanently. Try Disable/Re-Enable P2P.", Toast.LENGTH_LONG).show();
+////            P2PGroups.getInstance().getGroupList().clear();
+//        }
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
