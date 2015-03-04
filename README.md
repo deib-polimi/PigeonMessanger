@@ -1,5 +1,8 @@
 # Pigeon Messenger
 
+![alt tag](https://dl.dropboxusercontent.com/u/2336896/pigeon_messenger_header_github.png)
+
+
 ## Informations
 WiFiDirect MultiChat (aka Pigeon Messenger) is a DEMO Android's application that try to overcome some WiFi-Direct limitations.
 At the moment, the wifi diver of commercial devices don't allow a device to partecipate simultaneosly in two WiFi-Direct's groups.
