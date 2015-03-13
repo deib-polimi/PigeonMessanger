@@ -7,17 +7,17 @@
         android:id="@+id/discovery"
         android:icon="@drawable/ic_action_search_searching"
         android:title="Discovery"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/disconenct"
         android:icon="@drawable/ic_action_disconnect"
         android:title="Disconnect"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/cancelConnection"
         android:icon="@drawable/ic_action_remove"
         android:title="Cancel connection"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom" />
 </menu>
