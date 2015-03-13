@@ -1,14 +1,17 @@
 # Pigeon Messenger
 
+![alt tag](https://dl.dropboxusercontent.com/u/2336896/pigeon_messenger_header_github.png)
+
+
 ## Informations
-WiFiDirect MultiChat (aka Pigeon Messenger) is a DEMO Android's application that try to overcome some WiFi-Direct limitations.
-At the moment, the wifi diver of commercial devices don't allow a device to partecipate simultaneosly in two WiFi-Direct's groups.
+Wi-Fi Direct MultiChat (aka Pigeon Messenger) is a DEMO Android's application that try to overcome some Wi-Fi Direct limitations.
+At the moment, the wi-fi diver of commercial devices don't allow a device to partecipate simultaneosly in two Wi-Fi Direct's groups.
 This app tries to overcome this limitation, indeed, a user can communicate with a large number of nearby people without an internet connection, using point-to-point communications.
 The main goal is the simultaneous management of multiple chats, queuing messages sent when the connection is not available and send them at the same time as soon as possible.
 
 Pigeon Messenger requires Android 4.4 KitKat (API 19) or higher. This choice is related to to the fact that in previous versions, this protocol was unstable and unreliable.
 
-It's important to remember that this is a demo application, so features like the management of screen's rotation, standby device, wifi not available and so on, are not managed as a commercial product.
+It's important to remember that this is a demo application, so features like the management of screen's rotation, standby device, wi-fi not available and so on, are not managed as a commercial product.
 
 ## Results
 VIDEO YOUTUBE 
@@ -17,9 +20,9 @@ As you can see, Pigeon Messenger works with good performances.<br/>
 The main problems are the "Discovery Phase" of this protocol and the WiFi-Direct implementation in Android, in fact:<br/>
 1. The discovery time is too high when the number of devices increases <br/>
 2. After a certain time, a device is no longer discoverable from others, so you need to restart the Discovery Phase on all devices <br/>
-3. Sometimes, the WiFi part of Android crashes and the only way to solve this annoying problem is a complete reboot of the device (this situation is recognizable when Android can't find other network in WiFi Setting's app).
+3. Sometimes, the Wi-Fi part of Android crashes and the only way to solve this annoying problem is a complete reboot of the device (this situation is recognizable when Android can't find other network in Wi-Fi Setting's app).
 
-This shows that it's possible to extend the WiFi-Direct protocol in Android in some particular and limited scenarios, for example a chat.
+This shows that it's possible to extend the Wi-Fi Direct protocol in Android in some particular and limited scenarios, for example a chat.
 
 ## News
 - *03/02/2015* - **Pigeon Messenger** Alpha 1 public release
@@ -42,12 +45,12 @@ You can:
 ## Future extensions
 - [ ] Connect more clients at the same GO without limitations
 - [ ] Group chats where the GO receives messages from a client and it sends these messages to all other clients in broadcast
-- [ ] Private chats between clients, i.e. a client uses his GO like a server to send private messages to another client, because in WiFi-Direct the communication between clients in a group is impossible. In this case is necessary to provide security mechanisms, like encryption, because a GO should never read private messages between its clients.
+- [ ] Private chats between clients, i.e. a client uses his GO like a server to send private messages to another client, because in Wi-Fi Direct the communication between clients in a group is impossible. In this case is necessary to provide security mechanisms, like encryption, because a GO should never read private messages between its clients.
 - [ ] and so on... ;)
 
 ## Usage
 ### General usage
-1. Activate WiFi on all devices
+1. Activate Wi-Fi on all devices
 2. Open this app on all devices
 3. Touch the "cardview" under the words "This Device" to choose the device name
 2. Wait until devices are discovered
@@ -55,7 +58,7 @@ You can:
 4. Chat with this device
 
 ### Reconnection usage
-1. Activate WiFi on all devices
+1. Activate Wi-Fi on all devices
 2. Open this app on all devices
 3. Touch the "cardview" under the words "This Device" to choose the device name
 2. Wait until devices are discovered
@@ -66,7 +69,7 @@ You can:
 7. Write a message in the chat and wait the automatic reconnection. Alternatively connect manually to the device to continue the chat.
 
 ### Queuing messages usage
-1. Activate WiFi on all devices
+1. Activate Wi-Fi on all devices
 2. Open this app on all devices
 3. Touch the "cardview" under the words "This Device" to choose the device name
 2. Wait until devices are discovered
