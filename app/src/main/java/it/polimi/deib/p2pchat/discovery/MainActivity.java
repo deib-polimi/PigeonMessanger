@@ -804,7 +804,7 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    //NOT IMPLEMENTED BUT CAN BE USEFUL
+    //NOT IMPLEMENTED BUT PLEASE BE USEFUL
 //    @Override
 //    public void onChannelDisconnected() {
 //        // we will try once more
