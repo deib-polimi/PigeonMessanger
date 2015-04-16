@@ -31,18 +31,18 @@ This shows that it's possible to extend the Wi-Fi Direct protocol in Android in 
 
 
 ## Features
-You can:
-1. **change the device name** with Java Reflection
-2. show a list of nearby devices
-3. manage connection and disconnection between devices
-4. show the ip address of a device, also if it's a client (not available in Android's official API)
-5. block incoming messages with blacklisted words (not enabled by default)
-6. block incoming messages if too short or empty (enabled by default)
-7. create a chat between a GO and a client
-8. manage an infinite number of chats
-9. sending messages in a chat, previously stopped, if the associated device is discoverable
-10. enqueue messages if the device is not discoverable, and send all of them at the next attempt to reconnect
-11. use *"Eternal Discovery"*, a way to restart the discovery phase every time that there are errors or disconnections
+You can:<br/>
+1. **change the device name** with Java Reflection<br/>
+2. show a list of nearby devices<br/>
+3. manage connection and disconnection between devices<br/>
+4. show the ip address of a device, also if it's a client (not available in Android's official API)<br/>
+5. block incoming messages with blacklisted words (not enabled by default)<br/>
+6. block incoming messages if too short or empty (enabled by default)<br/>
+7. create a chat between a GO and a client<br/>
+8. manage an infinite number of chats<br/>
+9. sending messages in a chat, previously stopped, if the associated device is discoverable<br/>
+10. enqueue messages if the device is not discoverable, and send all of them at the next attempt to reconnect<br/>
+11. use *"Eternal Discovery"*, a way to restart the discovery phase every time that there are errors or disconnections<br/>
 
 ## Future extensions
 - [ ] Connect more clients at the same GO without limitations
@@ -239,7 +239,7 @@ if (readMessage.contains(Configuration.MAGICADDRESSKEYWORD)) {
 
 ## License
 
-Copyright 2015 Politecnico di Milano
+Copyright 2015 Stefano Cappa, Politecnico di Milano
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
