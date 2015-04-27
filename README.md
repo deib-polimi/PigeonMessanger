@@ -3,7 +3,7 @@
 ![alt tag](http://www.stefanocappa.it/publicfiles/Github_repositories_images/Pigeon_Messenger/pigeon_messenger_header_github.png)
 
 <br>
-This is a mirror of the official page https://github.com/deib-polimi/PigeonMessanger
+**This is a mirror of the official page https://github.com/deib-polimi/PigeonMessanger**
 
 ## Informations
 Wi-Fi Direct MultiChat (aka Pigeon Messenger)  is a demo Android's application that try to overcome some Wi-Fi Direct's limitations.
@@ -16,6 +16,8 @@ Pigeon Messenger requires Android 4.4 KitKat (API 19) or higher. This choice is 
 It's important to remember that this is a demo application, so features like the management of screen's rotation, standby device, wifi not available and so on, are not managed as a commercial product.
 
 ## Results
+
+[![ScreenShot](http://www.stefanocappa.it/publicfiles/Github_repositories_images/Pigeon_Messenger/youtube-video-pigeonmessenger.png)](https://www.youtube.com/watch?v=rW_dcTSOTlo)
 
 Pigeon Messenger works with good performances.<br/>
 The main problems are the "Discovery Phase" of this protocol and the Wi-Fi Direct's implementation in Android, in fact:<br/>
