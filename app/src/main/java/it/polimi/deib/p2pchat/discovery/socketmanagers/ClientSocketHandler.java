@@ -3,6 +3,7 @@ package it.polimi.deib.p2pchat.discovery.socketmanagers;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
+ * Copyright 2015 Stefano Cappa
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -27,16 +27,16 @@ public final class R {
 		public static final int pstsUnderlineHeight = 0x7f010045;
 	}
 	public static final class color {
-		public static final int background_tab_pressed = 0x7f06000b;
+		public static final int background_tab_pressed = 0x7f0a000b;
 	}
 	public static final class drawable {
 		public static final int background_tab = 0x7f02003c;
 	}
 	public static final class id {
-		public static final int bold = 0x7f08001c;
-		public static final int italic = 0x7f08001d;
-		public static final int normal = 0x7f08000b;
-		public static final int tab_title = 0x7f080075;
+		public static final int bold = 0x7f0b001c;
+		public static final int italic = 0x7f0b001d;
+		public static final int normal = 0x7f0b000b;
+		public static final int tab_title = 0x7f0b0075;
 	}
 	public static final class layout {
 		public static final int tab = 0x7f03002c;
