@@ -24,9 +24,12 @@ import lombok.Getter;
  */
 public class MessageException extends Exception {
 
-    public static enum Reason {NULLMESSAGE, MESSAGETOOSHORT, MESSAGEBLACKLISTED};
+    public static enum Reason {NULLMESSAGE, MESSAGETOOSHORT, MESSAGEBLACKLISTED}
 
-    @Getter private Reason reason;
+    ;
+
+    @Getter
+    private Reason reason;
 
     public MessageException() {
         super();
@@ -36,7 +39,7 @@ public class MessageException extends Exception {
      * Constructor
      *
      * @param message String message
-     * @param cause The throwable object
+     * @param cause   The throwable object
      */
     public MessageException(String message, Throwable cause) {
         super(message, cause);
@@ -62,6 +65,7 @@ public class MessageException extends Exception {
 
     /**
      * Constructor
+     *
      * @param reason Enumeration that represents the exception's reason.
      */
     public MessageException(Reason reason) {

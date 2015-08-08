@@ -34,6 +34,7 @@ public class WaitingToSendQueue {
 
     /**
      * Method to get the instance of this class.
+     *
      * @return instance of this class.
      */
     public static WaitingToSendQueue getInstance() {
@@ -56,6 +57,7 @@ public class WaitingToSendQueue {
      * a new {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}
      * at the specified tabNumber-1 position.
      * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}.
+     *
      * @param tabNumber int that represents the tabNumber used to retrieve the ArrayList.
      * @return List element of the waitingToSend list.
      */
@@ -68,7 +70,7 @@ public class WaitingToSendQueue {
         if ((tabNumber - 1) >= 0 && (tabNumber - 1) <= waitingToSend.size() - 1) {
 
             //if this element is null i set the WaitingToSendListElement() at tabNumber-1
-            if(waitingToSend.get((tabNumber - 1)) == null) {
+            if (waitingToSend.get((tabNumber - 1)) == null) {
                 waitingToSend.set((tabNumber - 1), new WaitingToSendListElement());
             }
 

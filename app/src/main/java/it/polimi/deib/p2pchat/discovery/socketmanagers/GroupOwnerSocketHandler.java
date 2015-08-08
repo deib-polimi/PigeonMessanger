@@ -43,10 +43,12 @@ public class GroupOwnerSocketHandler extends Thread {
 
     private ServerSocket socket = null;
     private Handler handler;
-    @Getter InetAddress ipAddress;
+    @Getter
+    InetAddress ipAddress;
 
     /**
      * Class constructor.
+     *
      * @param handler Represents the Handler required in order to communicate
      * @throws IOException Exception throwed by {@link ServerSocket} (SERVERPORT).
      */
@@ -76,7 +78,7 @@ public class GroupOwnerSocketHandler extends Thread {
      * Method to close the group owner sockets and kill this entire thread.
      */
     public void closeSocketAndKillThisThread() {
-        if(socket!=null && !socket.isClosed()) {
+        if (socket != null && !socket.isClosed()) {
             try {
                 socket.close();
             } catch (IOException e) {
@@ -96,7 +98,7 @@ public class GroupOwnerSocketHandler extends Thread {
             try {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
-                if(socket!=null && !socket.isClosed()) {
+                if (socket != null && !socket.isClosed()) {
                     Socket clientSocket = socket.accept(); //because now i'm connected with the client/peer device
                     pool.execute(new ChatManager(clientSocket, handler));
                     ipAddress = clientSocket.getInetAddress();

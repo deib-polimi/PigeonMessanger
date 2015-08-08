@@ -29,9 +29,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import it.polimi.deib.p2pchat.R;
-import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
-
 import it.polimi.deib.p2pchat.discovery.MainActivity;
+import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
 import it.polimi.deib.p2pchat.discovery.services.localdeviceguielement.LocalDeviceDialogFragment;
 import lombok.Getter;
 
@@ -55,7 +54,8 @@ public class WiFiP2pServicesFragment extends Fragment implements
     private static final String TAG = "WiFiP2pServicesFragment";
 
     private RecyclerView mRecyclerView;
-    @Getter private WiFiServicesAdapter mAdapter;
+    @Getter
+    private WiFiServicesAdapter mAdapter;
 
     private TextView localDeviceNameText;
 
@@ -69,6 +69,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
 
     /**
      * Method to obtain a new Fragment's instance.
+     *
      * @return This Fragment instance.
      */
     public static WiFiP2pServicesFragment newInstance() {
@@ -78,34 +79,37 @@ public class WiFiP2pServicesFragment extends Fragment implements
     /**
      * Default Fragment constructor.
      */
-    public WiFiP2pServicesFragment() {}
+    public WiFiP2pServicesFragment() {
+    }
 
 
     /**
      * Method to change the local device name and update the GUI element.
+     *
      * @param deviceName String that represents the device name.
      */
     @Override
     public void changeLocalDeviceName(String deviceName) {
-        if(deviceName==null) {
+        if (deviceName == null) {
             return;
         }
 
         localDeviceNameText.setText(deviceName);
-        ((MainActivity)getActivity()).setDeviceNameWithReflection(deviceName);
+        ((MainActivity) getActivity()).setDeviceNameWithReflection(deviceName);
     }
 
     /**
      * Method called by {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter}
      * with the {@link it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter.ItemClickListener}
      * interface, when the user click on an element of the {@link android.support.v7.widget.RecyclerView}.
+     *
      * @param view The clicked view.
      */
     @Override
     public void itemClicked(View view) {
         int clickedPosition = mRecyclerView.getChildPosition(view);
 
-        if(clickedPosition>=0) { //a little check :)
+        if (clickedPosition >= 0) { //a little check :)
             ((DeviceClickListener) getActivity()).tryToConnectToAService(clickedPosition);
         }
     }
@@ -114,8 +118,8 @@ public class WiFiP2pServicesFragment extends Fragment implements
      * Method to show a GO Icon inside the local device card view.
      * This is useful to identify which device is a GO.
      */
-    public void showLocalDeviceGoIcon(){
-        if(getView() !=null && getView().findViewById(R.id.go_logo)!=null && getView().findViewById(R.id.i_am_a_go_textview)!=null) {
+    public void showLocalDeviceGoIcon() {
+        if (getView() != null && getView().findViewById(R.id.go_logo) != null && getView().findViewById(R.id.i_am_a_go_textview) != null) {
             ImageView goLogoImageView = (ImageView) getView().findViewById(R.id.go_logo);
             TextView i_am_a_go_textView = (TextView) getView().findViewById(R.id.i_am_a_go_textview);
 
@@ -130,7 +134,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
      * with a warning that the ip is not available.
      */
     public void resetLocalDeviceIpAddress() {
-        if(getView()!=null && getView().findViewById(R.id.localDeviceIpAddress)!=null) {
+        if (getView() != null && getView().findViewById(R.id.localDeviceIpAddress) != null) {
             TextView ipAddress = (TextView) getView().findViewById(R.id.localDeviceIpAddress);
             ipAddress.setText(getResources().getString(R.string.ip_not_available));
         }
@@ -142,7 +146,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
      * @param ipAddress String that represent the IP address to set.
      */
     public void setLocalDeviceIpAddress(String ipAddress) {
-        if(getView()!=null && getView().findViewById(R.id.localDeviceIpAddress)!=null) {
+        if (getView() != null && getView().findViewById(R.id.localDeviceIpAddress) != null) {
             TextView ipAddressTextView = (TextView) getView().findViewById(R.id.localDeviceIpAddress);
             ipAddressTextView.setText(ipAddress);
         }
@@ -153,7 +157,7 @@ public class WiFiP2pServicesFragment extends Fragment implements
      * This is useful to remove the icon after a event, like "disconnect".
      */
     public void hideLocalDeviceGoIcon() {
-        if(getView()!=null && getView().findViewById(R.id.go_logo)!=null && getView().findViewById(R.id.i_am_a_go_textview)!=null) {
+        if (getView() != null && getView().findViewById(R.id.go_logo) != null && getView().findViewById(R.id.i_am_a_go_textview) != null) {
             ImageView goLogoImageView = (ImageView) getView().findViewById(R.id.go_logo);
             TextView i_am_a_go_textView = (TextView) getView().findViewById(R.id.i_am_a_go_textview);
 

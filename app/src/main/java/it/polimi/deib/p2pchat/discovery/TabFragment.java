@@ -125,10 +125,11 @@ public class TabFragment extends Fragment {
      * Finally 1 AND 2!!! <p></p>
      * ----------------------------------------------------------------------------------
      * <p></p>
+     *
      * @param tabNum int that represents the tab number to check
      * @return true of false, if the condition is valid or not.
      */
-    public boolean isValidTabNum (int tabNum) {
+    public boolean isValidTabNum(int tabNum) {
         return tabNum >= 1 && tabNum <= wiFiChatFragmentList.size();
     }
 

@@ -43,6 +43,12 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
+
 import it.polimi.deib.p2pchat.R;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsSdTxtRecordListener;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsServiceResponseListener;
@@ -54,15 +60,8 @@ import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSend
 import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
 import it.polimi.deib.p2pchat.discovery.model.P2pDestinationDevice;
 import it.polimi.deib.p2pchat.discovery.services.ServiceList;
-import it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
-
 import it.polimi.deib.p2pchat.discovery.services.WiFiP2pService;
+import it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment;
 import it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter;
 import it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager;
 import it.polimi.deib.p2pchat.discovery.socketmanagers.ClientSocketHandler;
@@ -658,16 +657,16 @@ public class MainActivity extends ActionBarActivity implements
                 //message filter usage
                 try {
                     MessageFilter.getInstance().isFiltered(readMessage);
-                } catch(MessageException e) {
-                    if(e.getReason() == MessageException.Reason.NULLMESSAGE) {
+                } catch (MessageException e) {
+                    if (e.getReason() == MessageException.Reason.NULLMESSAGE) {
                         Log.d(TAG, "handleMessage, filter activated because the message is null = " + readMessage);
                         return true;
                     } else {
-                        if(e.getReason() == MessageException.Reason.MESSAGETOOSHORT) {
+                        if (e.getReason() == MessageException.Reason.MESSAGETOOSHORT) {
                             Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
                             return true;
                         } else {
-                            if(e.getReason() == MessageException.Reason.MESSAGEBLACKLISTED) {
+                            if (e.getReason() == MessageException.Reason.MESSAGEBLACKLISTED) {
                                 Log.d(TAG, "handleMessage, filter activated because the message contains blacklisted words. Message = " + readMessage);
                                 return true;
                             }

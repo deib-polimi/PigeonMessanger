@@ -28,12 +28,13 @@ import lombok.Getter;
  */
 class WaitingToSendListElement {
 
-    @Getter private final List<String> waitingToSendList;
+    @Getter
+    private final List<String> waitingToSendList;
 
     /**
      * Constructor of the class.
      */
-    public WaitingToSendListElement () {
+    public WaitingToSendListElement() {
         waitingToSendList = new ArrayList<>();
     }
 }

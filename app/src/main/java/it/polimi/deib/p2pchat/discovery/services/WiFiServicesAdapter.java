@@ -40,6 +40,7 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
 
     /**
      * Constructor of the adapter.
+     *
      * @param itemClickListener ClickListener to obtain click actions over the recyclerview's elements.
      */
     public WiFiServicesAdapter(@NonNull ItemClickListener itemClickListener) {
@@ -115,6 +116,7 @@ public class WiFiServicesAdapter extends RecyclerView.Adapter<WiFiServicesAdapte
 
     /**
      * Private method used by this adapter to obtain the status, from the status code.
+     *
      * @param statusCode int that represents the status code.
      * @return A String that represent the status associated to the statusCode.
      */

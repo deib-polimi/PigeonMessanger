@@ -31,12 +31,16 @@ import lombok.Setter;
  */
 public class P2pDestinationDevice {
 
-    @Getter private WifiP2pDevice p2pDevice;
-    @Getter @Setter private String destinationIpAddress; //it's the ip address
+    @Getter
+    private WifiP2pDevice p2pDevice;
+    @Getter
+    @Setter
+    private String destinationIpAddress; //it's the ip address
 
 
     /**
      * Constructor of the class
+     *
      * @param p2pDevice A {@code WifiP2pDevice}
      */
     public P2pDestinationDevice(WifiP2pDevice p2pDevice) {
@@ -46,7 +50,8 @@ public class P2pDestinationDevice {
     /**
      * Another constructor of the class without parameters.
      */
-    public P2pDestinationDevice() {}
+    public P2pDestinationDevice() {
+    }
 
     @Override
     public String toString() {

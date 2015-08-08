@@ -36,13 +36,14 @@ class WiFiChatMessageListAdapter extends ArrayAdapter<String> {
 
     /**
      * Constructor of the adapter.
-     * @param context Context object.
+     *
+     * @param context            Context object.
      * @param textViewResourceId TextView id
-     * @param chatFragment ChatFragment used to call some methods inside the getView();
+     * @param chatFragment       ChatFragment used to call some methods inside the getView();
      */
     public WiFiChatMessageListAdapter(Context context, int textViewResourceId,
                                       WiFiChatFragment chatFragment) {
-        super(context,textViewResourceId,chatFragment.getItems());
+        super(context, textViewResourceId, chatFragment.getItems());
         this.chatFragment = chatFragment;
     }
 
@@ -50,7 +51,7 @@ class WiFiChatMessageListAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
 
-        if(v==null) {
+        if (v == null) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatmessage_row, parent, false);
         }
 
@@ -60,8 +61,8 @@ class WiFiChatMessageListAdapter extends ArrayAdapter<String> {
                     .findViewById(R.id.message);
             if (nameText != null) {
                 nameText.setText(message);
-                nameText.setTextAppearance(chatFragment.getActivity(),R.style.normalText);
-                if(chatFragment.isGrayScale()) {
+                nameText.setTextAppearance(chatFragment.getActivity(), R.style.normalText);
+                if (chatFragment.isGrayScale()) {
                     nameText.setTextColor(chatFragment.getResources().getColor(R.color.gray));
                 } else {
                     if (message.startsWith("Me: ")) {

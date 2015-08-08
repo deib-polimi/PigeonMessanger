@@ -39,12 +39,13 @@ public class CustomizableActionListener implements WifiP2pManager.ActionListener
     /**
      * Constructor of CustomizableActionListener.
      * successLog, successToast, failLog, failToast can be == null, and if this happens the associated action is skipped.
-     * @param context Context necessary to display Toasts.
-     * @param tag String that represents the tag for Log.d, but if is == null, this constructor uses "ActionListenerTag" as tag.
-     * @param successLog String that represent the message for Log.d in onSuccess
+     *
+     * @param context      Context necessary to display Toasts.
+     * @param tag          String that represents the tag for Log.d, but if is == null, this constructor uses "ActionListenerTag" as tag.
+     * @param successLog   String that represent the message for Log.d in onSuccess
      * @param successToast String that represent the message for Toasts in onSuccess
-     * @param failLog String that represent the message for Log.d in onFailure. The failure code will be added automatically.
-     * @param failToast String that represent the message for Toasts in onFailure
+     * @param failLog      String that represent the message for Log.d in onFailure. The failure code will be added automatically.
+     * @param failToast    String that represent the message for Toasts in onFailure
      */
     public CustomizableActionListener(@NonNull Context context,
                                       String tag,
@@ -56,7 +57,7 @@ public class CustomizableActionListener implements WifiP2pManager.ActionListener
         this.failLog = failLog;
         this.failToast = failToast;
 
-        if(tag==null) {
+        if (tag == null) {
             this.tag = "ActionListenerTag";
         } else {
             this.tag = tag;
@@ -65,20 +66,20 @@ public class CustomizableActionListener implements WifiP2pManager.ActionListener
 
     @Override
     public void onSuccess() {
-        if(successLog != null) {
+        if (successLog != null) {
             Log.d(tag, successLog);
         }
-        if(context!=null && successToast != null) {
+        if (context != null && successToast != null) {
             Toast.makeText(context, successToast, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onFailure(int reason) {
-        if(failLog != null) {
+        if (failLog != null) {
             Log.d(tag, failLog + ", reason: " + reason);
         }
-        if(context!=null && failToast != null) {
+        if (context != null && failToast != null) {
             Toast.makeText(context, failToast, Toast.LENGTH_SHORT).show();
         }
     }
