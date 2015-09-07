@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
-        <!--<item name="android:popupMenuStyle">@style/MyApp.PopupMenu</item>-->
-        <!--<item name="android:popupBackground">#622389</item>-->
-        <!--<item name="actionBarPopupTheme">@color/primary</item>-->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary</item>
         <item name="colorAccent">@color/accent</item>
 
         <item name= "android:textColor">@color/text_color</item>
 
-        <!--<item name="textColorPrimary"></item>-->
-        <!--<item name="windowBackground"></item>-->
         <item name="android:statusBarColor">@color/status_bar</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
 
@@ -28,22 +20,4 @@
     <style name="ToolbarStyle" parent="Theme.AppCompat">
         <item name="android:background">@color/primary</item>
     </style>
-
-    <!-- AlertDialog styles -->
-    <!--<style name="alertDialogStyle" parent="Theme.AppCompat.Dialog">-->
-        <!--<item name="android:background">#FF0000</item>-->
-    <!--</style>-->
-
-
-    <!--<style name="ToolbarPopup" parent="Widget.AppCompat.Light.PopupMenu">-->
-        <!--<item name="android:background">@color/accent</item>-->
-        <!--<item name="android:textSize">14sp</item>-->
-    <!--</style>-->
-    <!---->
-    <!--<style name="ActionBar" parent="Widget.AppCompat.Toolbar">-->
-        <!--<item name="android:textColorSecondary">@color/accent_material_light</item>-->
-        <!--<item name="actionMenuTextColor">@color/accent_material_light</item>-->
-        <!--<item name="android:textColorPrimary">@color/accent_material_light</item>-->
-    <!--</style>-->
-
 </resources>

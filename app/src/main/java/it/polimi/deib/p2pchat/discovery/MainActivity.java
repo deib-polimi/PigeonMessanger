@@ -1,4 +1,3 @@
-
 package it.polimi.deib.p2pchat.discovery;
 
 /*
@@ -36,7 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -50,6 +49,8 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import it.polimi.deib.p2pchat.R;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsSdTxtRecordListener;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsServiceResponseListener;
@@ -71,18 +72,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Main Activity of Pidgeot / WiFiDirect MultiChat
+ * Main Activity of Pigeon Messenger / WiFiDirect MultiChat
  * <p></p>
  * Created by Stefano Cappa on 04/02/15.
  */
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends AppCompatActivity implements
         WiFiP2pServicesFragment.DeviceClickListener,
         WiFiChatFragment.AutomaticReconnectionListener,
         Handler.Callback,
         ConnectionInfoListener {
 
-    private static final String TAG = "MainActivity";
-    private boolean retryChannel = false;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Setter
     private boolean connected = false;
     @Getter
@@ -96,7 +97,8 @@ public class MainActivity extends ActionBarActivity implements
     private TabFragment tabFragment;
     @Getter
     @Setter
-    private Toolbar toolbar;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private WifiP2pManager manager;
     private WifiP2pDnsSdServiceRequest serviceRequest;
@@ -509,8 +511,8 @@ public class MainActivity extends ActionBarActivity implements
      */
     public void setTabFragmentToPage(int numPage) {
         TabFragment tabfrag1 = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
-        if (tabfrag1 != null && tabfrag1.getMViewPager() != null) {
-            tabfrag1.getMViewPager().setCurrentItem(numPage);
+        if (tabfrag1 != null && tabfrag1.mViewPager != null) {
+            tabfrag1.mViewPager.setCurrentItem(numPage);
         }
     }
 
@@ -568,16 +570,14 @@ public class MainActivity extends ActionBarActivity implements
      * Method to setup the {@link android.support.v7.widget.Toolbar}
      * as supportActionBar in this {@link android.support.v7.app.ActionBarActivity}.
      */
-    private void setupToolBar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+    public void setupToolBar() {
         if (toolbar != null) {
-            toolbar.setTitle(getResources().getString(R.string.app_name));
+            toolbar.setTitle("TDM");
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.inflateMenu(R.menu.action_items);
             this.setSupportActionBar(toolbar);
         }
     }
-
 
     /**
      * Method called automatically by Android.
@@ -804,7 +804,7 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    //NOT IMPLEMENTED BUT PLEASE BE USEFUL
+    //NOT IMPLEMENTED BUT PLEASE DON'T REMOVE THIS, BECAUSE USEFUL
 //    @Override
 //    public void onChannelDisconnected() {
 //        // we will try once more
@@ -825,6 +825,8 @@ public class MainActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+
+        ButterKnife.bind(this);
 
         //activate the wakelock
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -859,7 +861,7 @@ public class MainActivity extends ActionBarActivity implements
 
         TabFragment tabfrag = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
         if (tabfrag != null) {
-            tabfrag.getMViewPager().setCurrentItem(0);
+            tabfrag.mViewPager.setCurrentItem(0);
         }
 
         super.onRestart();

@@ -1,33 +1,30 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".WiFiDirectActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame">
 
-    <!--<include layout="@layout/toolbar" />-->
+    <!--<include layout="@layout/toolbar"/>-->
 
-    <com.astuetz.PagerSlidingTabStrip
+    <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/primary"
-        android:textColor="#FFFFFF"
-        app:pstsIndicatorColor="#FFFFFF"
-        app:pstsPaddingMiddle="true"
-        android:maxHeight="20dp"
         android:elevation="5dp"
-    />
+        android:maxHeight="5dp"
+        android:minHeight="?attr/actionBarSize"
+        android:textColor="#FFFFFF"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="it.polimi.wifidirect.TabFragment"/>
-
-    </LinearLayout>
+</LinearLayout>
 
