@@ -3,7 +3,6 @@
 ![alt tag](http://www.stefanocappa.it/publicfiles/Github_repositories_images/Pigeon_Messenger/pigeon_messenger_header_github.png)
 
 <br>
-**This is a mirror of the official page https://github.com/deib-polimi/PigeonMessanger**
 
 ## Informations
 Wi-Fi Direct MultiChat (aka Pigeon Messenger)  is a demo Android's application that try to overcome some Wi-Fi Direct's limitations.

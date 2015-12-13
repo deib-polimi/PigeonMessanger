@@ -572,7 +572,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     public void setupToolBar() {
         if (toolbar != null) {
-            toolbar.setTitle("TDM");
+            toolbar.setTitle("Pigeon Messenger");
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.inflateMenu(R.menu.action_items);
             this.setSupportActionBar(toolbar);
