@@ -14,6 +14,12 @@ Pigeon Messenger requires Android 4.4 KitKat (API 19) or higher. This choice is 
 
 It's important to remember that this is a demo application, so features like the management of screen's rotation, standby device, wifi not available and so on, are not managed as a commercial product.
 
+
+## Requirenments
+- AndroidStudio
+- **Lombok (automatically downloaded as gradle dependency) + Lombok plugin for IntelliJ / AndroidStudio [Available here](https://plugins.jetbrains.com/plugin/6317)**
+
+
 ## Results
 
 [![ScreenShot](http://www.stefanocappa.it/publicfiles/Github_repositories_images/Pigeon_Messenger/youtube-video-pigeonmessenger.png)](https://www.youtube.com/watch?v=rW_dcTSOTlo)
