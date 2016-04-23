@@ -94,7 +94,7 @@ public class TabFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         Locale l = Locale.getDefault();
-        tabLayout.addTab(tabLayout.newTab().setText("prova".toUpperCase(l)));
+        tabLayout.addTab(tabLayout.newTab().setText("Devices".toUpperCase(l)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Create the adapter that will return a fragment
