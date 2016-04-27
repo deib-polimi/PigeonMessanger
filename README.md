@@ -33,6 +33,7 @@ The main problems are the "Discovery Phase" of this protocol and the Wi-Fi Direc
 This shows that it's possible to extend the Wi-Fi Direct protocol in Android in some particular and limited scenarios, for example a chat.
 
 ## News
+- *04/27/2016* - **Pigeon Messenger** Alpha 3 (updated to Android N, also reverted some commits to fix an [issue](https://github.com/deib-polimi/PigeonMessanger/issues/2))
 - *03/13/2015* - **Pigeon Messenger** Alpha 2 (updated to Android 5.1 with the new support libraries)
 - *03/02/2015* - **Pigeon Messenger** Alpha 1 public release
 
