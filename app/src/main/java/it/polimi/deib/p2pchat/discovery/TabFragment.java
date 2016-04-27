@@ -1,22 +1,6 @@
-/*
-Copyright 2015 Stefano Cappa
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
- */
 package it.polimi.deib.p2pchat.discovery;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -25,17 +9,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import it.polimi.deib.p2pchat.R;
 import it.polimi.deib.p2pchat.discovery.chatmessages.WiFiChatFragment;
 import it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment;
 import lombok.Getter;
 
+/*
+ * Copyright (C) 2015-2016 Stefano Cappa
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
  * Class that represents a Fragment with other Fragments as Tabs.
@@ -43,15 +42,11 @@ import lombok.Getter;
  * Created by Stefano Cappa on 05/02/15.
  */
 public class TabFragment extends Fragment {
-    private static final String TAG = TabFragment.class.getSimpleName();
-
-    @Bind(R.id.pager)
-    ViewPager mViewPager;
-    @Bind(R.id.tabs)
-    TabLayout tabLayout;
 
     @Getter
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    @Getter
+    private ViewPager mViewPager;
     @Getter
     private static WiFiP2pServicesFragment wiFiP2pServicesFragment;
     @Getter
@@ -91,31 +86,25 @@ public class TabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_tab, container, false);
 
-        ButterKnife.bind(this, rootView);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
-        Locale l = Locale.getDefault();
-        tabLayout.addTab(tabLayout.newTab().setText("Devices".toUpperCase(l)));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        // Create the adapter that will return a fragment
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
-
+        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+        // Bind the tabs to the ViewPager
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
+        tabs.setViewPager(mViewPager);
 
+
+        // When swiping between different sections, select the corresponding
+        // tab.
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageSelected(int position) {
+                mSectionsPagerAdapter.notifyDataSetChanged();
             }
         });
+
         return rootView;
     }
 
@@ -136,41 +125,35 @@ public class TabFragment extends Fragment {
      * Finally 1 AND 2!!! <p></p>
      * ----------------------------------------------------------------------------------
      * <p></p>
-     *
      * @param tabNum int that represents the tab number to check
      * @return true of false, if the condition is valid or not.
      */
-    public boolean isValidTabNum(int tabNum) {
+    public boolean isValidTabNum (int tabNum) {
         return tabNum >= 1 && tabNum <= wiFiChatFragmentList.size();
     }
 
-
     /**
-     * A FragmentPagerAdapter that returns a fragment corresponding to
+     * Class that represents the FragmentPagerAdapter of this Fragment, that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
-        private int mNumOfTabs;
-
-        public SectionsPagerAdapter(FragmentManager fm, int numOfTabs) {
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.mNumOfTabs = numOfTabs;
         }
 
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
-                default:
-                case 0:
-                    return wiFiP2pServicesFragment; //the first fragment reserved to the serviceListFragment
-                case 1:
-                    return wiFiChatFragmentList.get(position - 1); //chatFragments associated to this position
+            if (position == 0) {
+                return wiFiP2pServicesFragment; //the first fragment reserved to the serviceListFragment
+            } else {
+                return wiFiChatFragmentList.get(position - 1); //chatFragments associated to this position
             }
         }
 
         @Override
         public int getCount() {
-            return mNumOfTabs;
+            //because the first fragment (not inside into the list) is a WiFiP2pServicesFragment
+            return wiFiChatFragmentList.size() + 1;
         }
 
         @Override
@@ -189,11 +172,5 @@ public class TabFragment extends Fragment {
                     return ("Chat" + position).toUpperCase(l);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
     }
 }

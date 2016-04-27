@@ -2,7 +2,7 @@ package it.polimi.deib.p2pchat.discovery.socketmanagers;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
- * Copyright 2015 Stefano Cappa
+ * Copyright (C) 2015-2016 Stefano Cappa
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import lombok.Setter;
  * and {@link it.polimi.deib.p2pchat.discovery.socketmanagers.GroupOwnerSocketHandler}.
  * <p></p>
  * Created by Stefano Cappa on 04/02/15, based on google code samples.
+ *
  */
 public class ChatManager implements Runnable {
 
@@ -44,16 +45,13 @@ public class ChatManager implements Runnable {
 
     private Socket socket = null;
     private final Handler handler;
-    @Getter
-    @Setter
-    private boolean disable = false; //attribute to stop or start chatmanager
+    @Getter @Setter private boolean disable = false; //attribute to stop or start chatmanager
     private InputStream iStream;
     private OutputStream oStream;
 
     /**
      * Constructor of the class
-     *
-     * @param socket  Represents the {@link java.net.Socket} required in order to communicate
+     * @param socket Represents the {@link java.net.Socket} required in order to communicate
      * @param handler Represents the Handler required in order to communicate
      */
     public ChatManager(@NonNull Socket socket, @NonNull Handler handler) {
@@ -67,7 +65,7 @@ public class ChatManager implements Runnable {
      */
     @Override
     public void run() {
-        Log.d(TAG, "ChatManager started");
+        Log.d(TAG,"ChatManager started");
         try {
             iStream = socket.getInputStream();
             oStream = socket.getOutputStream();
@@ -80,7 +78,7 @@ public class ChatManager implements Runnable {
             while (!disable) { //...if enabled
                 try {
                     // Read from the InputStream
-                    if (iStream != null) {
+                    if(iStream!=null) {
                         bytes = iStream.read(buffer);
                         if (bytes == -1) {
                             break;
@@ -94,20 +92,19 @@ public class ChatManager implements Runnable {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "Exception : " + e.toString());
+            Log.e(TAG,"Exception : " + e.toString());
         } finally {
             try {
                 iStream.close();
                 socket.close();
             } catch (IOException e) {
-                Log.e(TAG, "Exception during close socket or isStream", e);
+                Log.e(TAG,"Exception during close socket or isStream",  e);
             }
         }
     }
 
     /**
      * Method to write a byte array (that can be a message) on the output stream.
-     *
      * @param buffer byte[] array that represents data to write. For example, a String converted in byte[] with ".getBytes();"
      */
     public void write(byte[] buffer) {

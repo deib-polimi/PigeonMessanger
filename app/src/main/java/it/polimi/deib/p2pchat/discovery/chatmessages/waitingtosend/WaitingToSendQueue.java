@@ -1,20 +1,19 @@
-/*
-Copyright 2015 Stefano Cappa
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
- */
 package it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend;
-
+/*
+ * Copyright (C) 2015-2016 Stefano Cappa
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,6 @@ public class WaitingToSendQueue {
 
     /**
      * Method to get the instance of this class.
-     *
      * @return instance of this class.
      */
     public static WaitingToSendQueue getInstance() {
@@ -57,7 +55,6 @@ public class WaitingToSendQueue {
      * a new {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}
      * at the specified tabNumber-1 position.
      * {@link it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSendListElement}.
-     *
      * @param tabNumber int that represents the tabNumber used to retrieve the ArrayList.
      * @return List element of the waitingToSend list.
      */
@@ -70,7 +67,7 @@ public class WaitingToSendQueue {
         if ((tabNumber - 1) >= 0 && (tabNumber - 1) <= waitingToSend.size() - 1) {
 
             //if this element is null i set the WaitingToSendListElement() at tabNumber-1
-            if (waitingToSend.get((tabNumber - 1)) == null) {
+            if(waitingToSend.get((tabNumber - 1)) == null) {
                 waitingToSend.set((tabNumber - 1), new WaitingToSendListElement());
             }
 

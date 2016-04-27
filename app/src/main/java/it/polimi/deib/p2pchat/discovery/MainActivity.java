@@ -1,8 +1,9 @@
+
 package it.polimi.deib.p2pchat.discovery;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
- * Copyright 2015 Stefano Cappa
+ * Copyright (C) 2015-2016 Stefano Cappa
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +35,9 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -43,14 +45,6 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import it.polimi.deib.p2pchat.R;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsSdTxtRecordListener;
 import it.polimi.deib.p2pchat.discovery.actionlisteners.CustomDnsServiceResponseListener;
@@ -62,8 +56,15 @@ import it.polimi.deib.p2pchat.discovery.chatmessages.waitingtosend.WaitingToSend
 import it.polimi.deib.p2pchat.discovery.model.LocalP2PDevice;
 import it.polimi.deib.p2pchat.discovery.model.P2pDestinationDevice;
 import it.polimi.deib.p2pchat.discovery.services.ServiceList;
-import it.polimi.deib.p2pchat.discovery.services.WiFiP2pService;
 import it.polimi.deib.p2pchat.discovery.services.WiFiP2pServicesFragment;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
+
+import it.polimi.deib.p2pchat.discovery.services.WiFiP2pService;
 import it.polimi.deib.p2pchat.discovery.services.WiFiServicesAdapter;
 import it.polimi.deib.p2pchat.discovery.socketmanagers.ChatManager;
 import it.polimi.deib.p2pchat.discovery.socketmanagers.ClientSocketHandler;
@@ -72,18 +73,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Main Activity of Pigeon Messenger / WiFiDirect MultiChat
+ * Main Activity of Pidgeon / WiFiDirect MultiChat
  * <p></p>
  * Created by Stefano Cappa on 04/02/15.
  */
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends ActionBarActivity implements
         WiFiP2pServicesFragment.DeviceClickListener,
         WiFiChatFragment.AutomaticReconnectionListener,
         Handler.Callback,
         ConnectionInfoListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
+    private static final String TAG = "MainActivity";
+    private boolean retryChannel = false;
     @Setter
     private boolean connected = false;
     @Getter
@@ -97,8 +98,7 @@ public class MainActivity extends AppCompatActivity implements
     private TabFragment tabFragment;
     @Getter
     @Setter
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    private Toolbar toolbar;
 
     private WifiP2pManager manager;
     private WifiP2pDnsSdServiceRequest serviceRequest;
@@ -511,8 +511,8 @@ public class MainActivity extends AppCompatActivity implements
      */
     public void setTabFragmentToPage(int numPage) {
         TabFragment tabfrag1 = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
-        if (tabfrag1 != null && tabfrag1.mViewPager != null) {
-            tabfrag1.mViewPager.setCurrentItem(numPage);
+        if (tabfrag1 != null && tabfrag1.getMViewPager() != null) {
+            tabfrag1.getMViewPager().setCurrentItem(numPage);
         }
     }
 
@@ -570,14 +570,16 @@ public class MainActivity extends AppCompatActivity implements
      * Method to setup the {@link android.support.v7.widget.Toolbar}
      * as supportActionBar in this {@link android.support.v7.app.ActionBarActivity}.
      */
-    public void setupToolBar() {
+    private void setupToolBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("Pigeon Messenger");
+            toolbar.setTitle(getResources().getString(R.string.app_name));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.inflateMenu(R.menu.action_items);
             this.setSupportActionBar(toolbar);
         }
     }
+
 
     /**
      * Method called automatically by Android.
@@ -658,16 +660,16 @@ public class MainActivity extends AppCompatActivity implements
                 //message filter usage
                 try {
                     MessageFilter.getInstance().isFiltered(readMessage);
-                } catch (MessageException e) {
-                    if (e.getReason() == MessageException.Reason.NULLMESSAGE) {
+                } catch(MessageException e) {
+                    if(e.getReason() == MessageException.Reason.NULLMESSAGE) {
                         Log.d(TAG, "handleMessage, filter activated because the message is null = " + readMessage);
                         return true;
                     } else {
-                        if (e.getReason() == MessageException.Reason.MESSAGETOOSHORT) {
+                        if(e.getReason() == MessageException.Reason.MESSAGETOOSHORT) {
                             Log.d(TAG, "handleMessage, filter activated because the message is too short = " + readMessage);
                             return true;
                         } else {
-                            if (e.getReason() == MessageException.Reason.MESSAGEBLACKLISTED) {
+                            if(e.getReason() == MessageException.Reason.MESSAGEBLACKLISTED) {
                                 Log.d(TAG, "handleMessage, filter activated because the message contains blacklisted words. Message = " + readMessage);
                                 return true;
                             }
@@ -804,7 +806,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    //NOT IMPLEMENTED BUT PLEASE DON'T REMOVE THIS, BECAUSE USEFUL
+    //NOT IMPLEMENTED BUT PLEASE BE USEFUL
 //    @Override
 //    public void onChannelDisconnected() {
 //        // we will try once more
@@ -824,9 +826,15 @@ public class MainActivity extends AppCompatActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
+        //FIXME TODO TODO FIXME
+        //this is a temporary quick fix for Android N developer preview
+        //use the strict mode with permit all is absolutely a bad practice,
+        //but at the moment there is an open issue (not fixed) reported to google.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //-----------------------------------------
 
-        ButterKnife.bind(this);
+        setContentView(R.layout.main);
 
         //activate the wakelock
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -861,7 +869,7 @@ public class MainActivity extends AppCompatActivity implements
 
         TabFragment tabfrag = ((TabFragment) getSupportFragmentManager().findFragmentByTag("tabfragment"));
         if (tabfrag != null) {
-            tabfrag.mViewPager.setCurrentItem(0);
+            tabfrag.getMViewPager().setCurrentItem(0);
         }
 
         super.onRestart();

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
@@ -13,9 +14,20 @@
 
         <item name= "android:textColor">@color/text_color</item>
 
+        <!--<item name="textColorPrimary"></item>-->
+        <!--<item name="windowBackground"></item>-->
+        <!--<item name="android:statusBarColor">@color/material_deep_teal_200</item>-->
+        <!--<item name="android:navigationBarColor">@color/material_deep_teal_200</item>-->
+
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="windowActionBar">false</item>
     </style>
+
+
+    <!-- AlertDialog styles -->
+    <!--<style name="alertDialogStyle" parent="Theme.AppCompat.Dialog">-->
+    <!--<item name="android:background">#FF0000</item>-->
+    <!--</style>-->
 
 </resources>

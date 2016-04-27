@@ -94,8 +94,8 @@ You can:<br/>
 5. Disconnect one device clicking on the second icon in the toolbar
 6. Disable the Discovery Phase that was automatically restarted by "Eternal Discovery", so  the list under "Other Devices" will be empty
 7. Write some messages in the chat. As you can see the connection is not possible, but don't despair, because this app is able to enqueue your messages
-8. Restart the Discovery Phase e reconnect to the device in one of the methods described above ("Reconnection usage", step 7) 
-9. All messages in the queue will be automatically sent to destination in only one message 
+8. Restart the Discovery Phase e reconnect to the device in one of the methods described above ("Reconnection usage", step 7)
+9. All messages in the queue will be automatically sent to destination in only one message
 
 
 ## Important things
@@ -157,7 +157,7 @@ Add to the lowerCaseBlackList this words in this way:
         lowerCaseBlackList.add("illegal"); // OK
         lowerCaseBlackList.add("piracy"); // OK
         lowerCaseBlackList.add("crack"); // OK
-        
+
         //useless because ev ery words in this list are elaborated as "lower case".
         //lowerCaseBlackList.add("Piracy"); // USELESS
     }
